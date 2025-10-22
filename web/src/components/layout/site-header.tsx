@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -18,6 +18,18 @@ const links = [
 export function SiteHeader() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isMenuOpen) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setIsMenuOpen(false);
+    }, 0);
+
+    return () => window.clearTimeout(timeout);
+  }, [isMenuOpen, pathname]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-card-border/80 bg-white/95 backdrop-blur">
@@ -60,9 +72,9 @@ export function SiteHeader() {
           className="md:hidden"
           aria-expanded={isMenuOpen}
           aria-controls="mobile-menu"
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           onClick={() => setIsMenuOpen((prev) => !prev)}
         >
-          <span className="sr-only">Toggle menu</span>
           {isMenuOpen ? <X className="h-5 w-5" aria-hidden /> : <Menu className="h-5 w-5" aria-hidden />}
         </Button>
         {isMenuOpen ? (
