@@ -2,7 +2,10 @@
   display: grid;
   min-height: 100vh;
   grid-template-columns: minmax(0, 520px) minmax(0, 1fr);
-  background: radial-gradient(circle at 0% -10%, rgba(20, 168, 0, 0.15), transparent 55%), var(--background);
+  background:
+    radial-gradient(circle at 0% -20%, rgba(79, 193, 97, 0.18), transparent 60%),
+    radial-gradient(circle at 0% 100%, rgba(141, 222, 160, 0.1), transparent 55%),
+    var(--background);
   color: var(--foreground);
 }
 
@@ -22,8 +25,11 @@
   flex-direction: column;
   gap: 2.5rem;
   padding: 4rem 3rem 3.5rem;
-  background: linear-gradient(180deg, rgba(20, 168, 0, 0.12) 0%, rgba(20, 168, 0, 0.04) 100%), var(--background);
+  background:
+    linear-gradient(180deg, rgba(229, 243, 229, 0.95) 0%, rgba(242, 247, 242, 0.98) 55%, rgba(255, 255, 255, 0.95) 100%),
+    var(--background);
   border-right: 1px solid rgba(205, 231, 205, 0.7);
+  box-shadow: inset 0 -24px 60px rgba(20, 168, 0, 0.08);
 }
 
 .auth-panel::after {
@@ -32,8 +38,9 @@
   inset: 2.5rem 2.75rem auto;
   height: 200px;
   border-radius: 48px;
-  background: radial-gradient(circle at top left, rgba(20, 168, 0, 0.22), transparent 65%);
+  background: radial-gradient(circle at top left, rgba(20, 168, 0, 0.18), rgba(155, 222, 155, 0.08) 65%, transparent 80%);
   z-index: 0;
+  filter: drop-shadow(0 20px 35px rgba(20, 168, 0, 0.08));
 }
 
 .auth-brand {
@@ -67,7 +74,7 @@
 .auth-card__headline p {
   font-size: 0.95rem;
   line-height: 1.65;
-  color: rgba(63, 92, 63, 0.88);
+  color: rgba(63, 92, 63, 0.72);
 }
 
 .auth-content {
@@ -87,13 +94,13 @@
 .auth-stat dt {
   font-size: 1.75rem;
   font-weight: 600;
-  color: var(--foreground);
+  color: rgba(9, 68, 23, 0.92);
 }
 
 .auth-stat dd {
   margin-top: 0.35rem;
   font-size: 0.95rem;
-  color: rgba(63, 92, 63, 0.82);
+  color: rgba(63, 92, 63, 0.65);
 }
 
 .auth-showcase {
