@@ -46,6 +46,24 @@ body {
   min-height: 100vh;
 }
 
+.text-foreground {
+  color: #0f172a !important;
+}
+
+.text-muted {
+  color: #4b5563 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .text-foreground {
+    color: #dff7eb !important;
+  }
+
+  .text-muted {
+    color: #94a3b8 !important;
+  }
+}
+
 a {
   color: inherit;
   text-decoration: none;
