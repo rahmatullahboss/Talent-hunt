@@ -1,168 +1,269 @@
 import Link from "next/link";
-import { BadgeCheck, Globe, LayoutGrid, UsersRound } from "lucide-react";
+import {
+  Award,
+  BadgeCheck,
+  Briefcase,
+  CheckCircle2,
+  Compass,
+  Flame,
+  Globe,
+  Handshake,
+  LayoutGrid,
+  Search,
+  Sparkles,
+  UsersRound,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 
-const talentHighlights = [
+const spotlightTalent = [
   {
-    title: "Expert-led onboarding",
-    description:
-      "Get personalized guidance to position your services, set ideal rates, and capture the attention of premium clients.",
-    icon: UsersRound,
+    name: "Sanika Roy",
+    title: "Brand & Product Strategist",
+    rating: "Top Rated Plus",
+    skills: ["Brand systems", "Campaign leadership", "Go-to-market"],
   },
   {
-    title: "Global-ready toolkit",
-    description:
-      "Access contracts, invoice templates, and proposal builders tailored to Bangladeshi regulations and international standards.",
-    icon: Globe,
+    name: "Ayaan Haque",
+    title: "Senior Full-stack Engineer",
+    rating: "Rising Talent",
+    skills: ["Next.js", "NestJS", "Supabase", "Microservices"],
   },
   {
-    title: "Showcase-worthy profiles",
-    description:
-      "Curate portfolios, add verified skills, and share client success metrics with a clean, modern interface.",
+    name: "Mehnaz Islam",
+    title: "Growth Marketing Lead",
+    rating: "Expert-Vetted",
+    skills: ["Lifecycle", "Paid social", "Automation"],
+  },
+];
+
+const categories = [
+  {
+    title: "Development & Tech",
+    description: "Engineers, QA, DevOps, data experts",
+    icon: Sparkles,
+  },
+  {
+    title: "Design & Creative",
+    description: "Product, brand, illustration, motion",
     icon: LayoutGrid,
   },
-];
-
-const membershipTiers = [
   {
-    name: "Starter",
-    price: "Free",
-    features: [
-      "Unlimited proposals",
-      "Secure messaging",
-      "Automated invoicing",
-    ],
+    title: "Sales & Marketing",
+    description: "Growth leads, performance strategists",
+    icon: Flame,
   },
   {
-    name: "Pro",
-    price: "৳1,200/mo",
-    features: [
-      "Priority job invites",
-      "Profile review with experts",
-      "Advanced analytics dashboard",
-    ],
+    title: "Writing & Translation",
+    description: "UX writers, researchers, localization",
+    icon: Compass,
   },
   {
-    name: "Elite",
-    price: "৳4,500/mo",
-    features: [
-      "Dedicated success manager",
-      "Quarterly portfolio spotlight",
-      "Access to enterprise engagements",
-    ],
+    title: "Finance & Operations",
+    description: "Controllers, HR, business ops, legal",
+    icon: Briefcase,
+  },
+  {
+    title: "Customer Success",
+    description: "Account managers, support leaders",
+    icon: UsersRound,
   },
 ];
 
-const successMetrics = [
-  { value: "96%", label: "Projects delivered on time" },
-  { value: "4.9/5", label: "Average freelancer rating" },
-  { value: "68%", label: "Freelancers earning internationally" },
+const assurances = [
+  {
+    title: "Curated Bangladeshi talent",
+    description:
+      "We personally vet every freelancer on communication, delivery history, and domain expertise—mirroring Upwork’s top tiers.",
+    icon: BadgeCheck,
+  },
+  {
+    title: "Seamless onboarding",
+    description:
+      "From NDAs to compliance paperwork, our team handles the admin so you can focus on building the right team.",
+    icon: Handshake,
+  },
+  {
+    title: "Global collaboration ready",
+    description:
+      "Every freelancer is fluent in remote-first tools, async rituals, and timezone collaboration.",
+    icon: Globe,
+  },
+];
+
+const milestones = [
+  {
+    title: "Pitch-perfect profiles",
+    description:
+      "Beautiful Upwork-style profiles with testimonials, case studies, and rate guidance help you evaluate talent in minutes.",
+    icon: Award,
+  },
+  {
+    title: "Outcome-driven engagements",
+    description:
+      "Milestones, agile boards, and transparent reporting keep projects aligned from discovery to delivery.",
+    icon: CheckCircle2,
+  },
+  {
+    title: "Long-term partnerships",
+    description:
+      "Scale from project-based work to retainers with ease. Stay within TalentHunt and keep support close at hand.",
+    icon: Briefcase,
+  },
 ];
 
 export default function TalentPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#eefbf4] via-[#f6fdf8] to-white">
+    <div className="min-h-screen bg-[#f2f7f2] text-[#001e00]">
       <SiteHeader />
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-6 pb-24 pt-16">
-        <header className="grid gap-10 md:grid-cols-[1.2fr_0.8fr] md:items-center">
+        <header className="grid gap-12 rounded-[32px] bg-white/90 p-10 shadow-[0_24px_64px_rgba(0,30,0,0.08)] md:grid-cols-[1.1fr_0.9fr] md:items-center">
           <div className="space-y-6">
-            <Badge className="w-fit bg-white text-accent shadow-sm">Build your light-mode headquarters</Badge>
-            <h1 className="text-4xl font-semibold text-foreground md:text-5xl">
-              Stand out on the premier Bangladeshi freelance marketplace.
+            <Badge className="w-fit bg-[#dff4df] text-accent">Find Bangladeshi freelancers like you do on Upwork</Badge>
+            <h1 className="text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
+              Discover elite independents ready for your next sprint.
             </h1>
-            <p className="text-lg text-muted">
-              TalentHunt BD gives you a polished, Upwork-inspired experience with localized tools, curated opportunities, and concierge support.
+            <p className="text-lg text-[#335c3b]">
+              Search curated profiles, invite Top Rated experts, and collaborate with confidence thanks to escrow protection,
+              transparent reviews, and local success managers.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg">
-                <Link href="/signup?role=freelancer">Create your profile</Link>
+                <Link href="/signup?role=freelancer">Create your freelancer profile</Link>
               </Button>
-              <Button asChild variant="secondary" className="bg-white text-foreground shadow-sm">
-                <Link href="/onboarding">Meet the success team</Link>
+              <Button asChild variant="secondary" size="lg" className="bg-white text-[#001e00] shadow-sm">
+                <Link href="/signup?role=employer">Post a job for free</Link>
               </Button>
             </div>
           </div>
-          <Card className="space-y-6 border border-card-border bg-white p-6 shadow-lg">
-            <h2 className="text-lg font-semibold text-foreground">Freelancer spotlight</h2>
-            <p className="text-sm text-muted">
-              &ldquo;I closed three long-term retainers through TalentHunt BD in under a month because the platform surfaces exactly the work I want.&rdquo;
-            </p>
-            <div className="flex items-center gap-3 text-sm text-muted">
-              <BadgeCheck className="h-5 w-5 text-accent" />
-              <span>Sanika Roy — Brand Strategist</span>
+          <Card className="space-y-5 border border-card-border bg-white/95 p-6 shadow-sm">
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-[#001e00]" htmlFor="talent-search">
+                Search for a skill or role
+              </label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5a7a5f]" />
+                <Input
+                  id="talent-search"
+                  placeholder="Try “UI/UX designer” or “Full-stack developer”"
+                  className="h-12 rounded-2xl border-[#d8e8d8] bg-[#f7fdf7] pl-10 text-sm text-[#001e00]"
+                  readOnly
+                />
+              </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-3">
-              {successMetrics.map((metric) => (
-                <div key={metric.label}>
-                  <p className="text-2xl font-semibold text-foreground">{metric.value}</p>
-                  <p className="text-xs text-muted">{metric.label}</p>
-                </div>
-              ))}
+            <div className="space-y-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-[#5a7a5f]">Spotlight freelancers</p>
+              <div className="space-y-4">
+                {spotlightTalent.map((talent) => (
+                  <div key={talent.name} className="rounded-2xl border border-[#d8e8d8] bg-white p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-semibold text-[#001e00]">{talent.name}</p>
+                        <p className="text-xs text-[#5a7a5f]">{talent.title}</p>
+                      </div>
+                      <Badge className="bg-[#ecf8ec] text-accent">{talent.rating}</Badge>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {talent.skills.map((skill) => (
+                        <span key={skill} className="rounded-full bg-[#f7fdf7] px-3 py-1 text-xs text-[#335c3b]">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
+            <Button asChild size="lg" className="w-full">
+              <Link href="/signup?role=employer">Invite these freelancers</Link>
+            </Button>
           </Card>
         </header>
 
         <section className="space-y-10">
           <header className="space-y-4 text-center">
-            <Badge className="mx-auto bg-white text-accent shadow-sm">All-in-one toolkit</Badge>
-            <h2 className="text-3xl font-semibold md:text-4xl">Designed for the way you work</h2>
-            <p className="mx-auto max-w-2xl text-lg text-muted">
-              From proposal to payout, every interaction feels clean, transparent, and supportive—just like the best light theme experiences.
+            <Badge className="mx-auto bg-[#dff4df] text-accent">Top categories</Badge>
+            <h2 className="text-3xl font-semibold md:text-4xl">Start with battle-tested experts</h2>
+            <p className="mx-auto max-w-2xl text-lg text-[#335c3b]">
+              Explore high-performing categories crafted to reflect Upwork’s marketplace, with a focus on Bangladeshi excellence.
             </p>
           </header>
           <div className="grid gap-6 md:grid-cols-3">
-            {talentHighlights.map((feature) => (
-              <Card key={feature.title} className="h-full space-y-4 border border-card-border bg-white p-6 shadow-sm">
-                <feature.icon className="h-10 w-10 text-accent" />
-                <h3 className="text-lg font-semibold text-foreground">{feature.title}</h3>
-                <p className="text-sm text-muted">{feature.description}</p>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <section className="space-y-6 rounded-[var(--radius-lg)] border border-card-border bg-gradient-to-br from-emerald-500/15 via-white to-emerald-50 p-10 shadow-lg">
-          <div className="flex flex-col gap-6 text-center md:flex-row md:items-center md:justify-between md:text-left">
-            <div className="space-y-4">
-              <h2 className="text-3xl font-semibold text-foreground md:text-4xl">Memberships built to accelerate your journey</h2>
-              <p className="text-lg text-muted">
-                Start free, then unlock growth perks such as instant job invites, analytics, and mentorship with our local experts.
-              </p>
-            </div>
-            <Button asChild size="lg">
-              <Link href="/signup?role=freelancer">Compare plans</Link>
-            </Button>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {membershipTiers.map((tier) => (
-              <Card key={tier.name} className="h-full space-y-4 border border-card-border bg-white p-6 shadow-md">
-                <p className="text-sm font-semibold uppercase tracking-wide text-accent">{tier.name}</p>
-                <p className="text-3xl font-semibold text-foreground">{tier.price}</p>
-                <ul className="space-y-2 text-sm text-muted">
-                  {tier.features.map((feature) => (
-                    <li key={feature}>• {feature}</li>
-                  ))}
-                </ul>
-                <Button asChild variant="secondary" className="bg-white text-foreground shadow-sm">
-                  <Link href="/signup?role=freelancer">Choose {tier.name.toLowerCase()}</Link>
+            {categories.map((category) => (
+              <Card key={category.title} className="h-full space-y-3 border border-card-border bg-white/90 p-6 shadow-sm">
+                <category.icon className="h-8 w-8 text-accent" />
+                <h3 className="text-lg font-semibold">{category.title}</h3>
+                <p className="text-sm text-[#335c3b]">{category.description}</p>
+                <Button asChild variant="link" className="px-0 text-accent">
+                  <Link href="/signup?role=employer">View available talent</Link>
                 </Button>
               </Card>
             ))}
           </div>
         </section>
 
-        <section className="space-y-6 text-center">
-          <h2 className="text-3xl font-semibold text-foreground md:text-4xl">Level up with guidance from people who get it</h2>
-          <p className="mx-auto max-w-2xl text-lg text-muted">
-            Join weekly workshops, portfolio reviews, and community sessions hosted by Bangladesh’s top freelancers and agency leaders.
-          </p>
-          <Button asChild size="lg" className="mx-auto">
-            <Link href="/community">Explore events</Link>
-          </Button>
+        <section className="grid gap-10 rounded-[32px] bg-white/90 p-10 shadow-[0_20px_48px_rgba(0,30,0,0.06)] md:grid-cols-[1fr_1fr]">
+          <div className="space-y-6">
+            <Badge className="bg-[#dff4df] text-accent">Why teams hire here</Badge>
+            <h2 className="text-3xl font-semibold md:text-4xl">Enterprise-grade confidence, freelancer-first experience</h2>
+            <p className="text-lg text-[#335c3b]">
+              Built to mirror the Upwork flow you already know, but with deeper vetting, local billing options, and a community-first ethos.
+            </p>
+            <Button asChild size="lg" className="w-fit">
+              <Link href="/onboarding">Talk to a talent advisor</Link>
+            </Button>
+          </div>
+          <div className="space-y-4">
+            {assurances.map((item) => (
+              <Card key={item.title} className="flex items-start gap-4 border border-card-border bg-white/95 p-5 shadow-sm">
+                <item.icon className="mt-1 h-6 w-6 text-accent" />
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold">{item.title}</h3>
+                  <p className="text-sm text-[#335c3b]">{item.description}</p>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-10">
+          <header className="space-y-4 text-center">
+            <Badge className="mx-auto bg-[#dff4df] text-accent">Work your way</Badge>
+            <h2 className="text-3xl font-semibold md:text-4xl">Designed to help freelancers shine</h2>
+            <p className="mx-auto max-w-2xl text-lg text-[#335c3b]">
+              From polished profiles to milestone tracking, we provide everything you need to deliver confidently and grow sustainably.
+            </p>
+          </header>
+          <div className="grid gap-6 md:grid-cols-3">
+            {milestones.map((milestone) => (
+              <Card key={milestone.title} className="h-full space-y-3 border border-card-border bg-white/90 p-6 shadow-sm">
+                <milestone.icon className="h-8 w-8 text-accent" />
+                <h3 className="text-lg font-semibold">{milestone.title}</h3>
+                <p className="text-sm text-[#335c3b]">{milestone.description}</p>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-[32px] border border-transparent bg-gradient-to-r from-[#dff4df] via-[#b9ebc0] to-[#f0fff0] p-10 text-center shadow-[0_20px_48px_rgba(0,30,0,0.06)]">
+          <div className="mx-auto max-w-3xl space-y-4">
+            <h2 className="text-3xl font-semibold md:text-4xl">Build your dream roster today</h2>
+            <p className="text-lg text-[#335c3b]">
+              Browse the very best of Bangladesh, invite the perfect fit, and start collaborating under the safety of escrow-backed contracts.
+            </p>
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-center">
+              <Button asChild size="lg">
+                <Link href="/signup?role=employer">Find freelancers</Link>
+              </Button>
+              <Button asChild variant="secondary" size="lg" className="bg-white text-[#001e00] shadow-sm">
+                <Link href="/signup?role=freelancer">Become a freelancer</Link>
+              </Button>
+            </div>
+          </div>
         </section>
       </main>
       <SiteFooter />

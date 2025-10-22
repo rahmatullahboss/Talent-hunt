@@ -6,17 +6,17 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 const links = [
-  { href: "/#marketplace", label: "Talent Marketplace" },
-  { href: "/#enterprise", label: "Enterprise" },
-  { href: "/#solutions", label: "Why TalentHunt" },
+  { href: "/talent", label: "Find Freelancers" },
   { href: "/jobs", label: "Find Work" },
+  { href: "/#why-talenthunt", label: "Why TalentHunt" },
+  { href: "/#enterprise", label: "Enterprise" },
 ];
 
 export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-card-border/80 bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-card-border/80 bg-white/90 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground">
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-base font-semibold text-white">
