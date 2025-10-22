@@ -27,7 +27,7 @@ export function SiteFooter() {
   ];
 
   return (
-    <footer className="border-t border-card-border/60 bg-white/90 py-12">
+    <footer className="border-t border-card-border/60 bg-background/90 py-12">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 text-sm text-muted md:flex-row md:justify-between">
         <div className="space-y-3">
           <p className="text-lg font-semibold text-foreground">

@@ -10,9 +10,10 @@ type Size = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<Variant, string> = {
   default: "bg-accent text-accent-foreground hover:opacity-90",
-  secondary: "bg-foreground/5 text-foreground hover:bg-foreground/10",
+  secondary:
+    "border border-card-border bg-card text-foreground shadow-sm hover:border-accent/60 hover:bg-card/80",
   outline: "border border-card-border bg-card text-foreground hover:border-accent hover:text-accent",
-  ghost: "text-foreground hover:bg-foreground/10",
+  ghost: "text-foreground hover:bg-foreground/5",
   destructive: "bg-red-500 text-white hover:bg-red-600",
 };
 

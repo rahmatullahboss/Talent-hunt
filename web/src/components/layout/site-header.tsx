@@ -16,7 +16,7 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-card-border/60 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-card-border/60 bg-background/90 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="text-lg font-semibold tracking-tight text-foreground">
           TalentHunt <span className="font-light text-accent">BD</span>
