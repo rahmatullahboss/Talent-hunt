@@ -1,0 +1,67 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { LucideIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
+import type { Tables } from "@/types/database";
+
+export type SidebarLink = {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  badge?: string;
+};
+
+interface DashboardSidebarProps {
+  profile: Tables<"profiles">;
+  links: SidebarLink[];
+  footer?: React.ReactNode;
+}
+
+export function DashboardSidebar({ profile, links, footer }: DashboardSidebarProps) {
+  const pathname = usePathname();
+
+  return (
+    <aside className="hidden w-72 flex-col border-r border-card-border bg-card/70 px-4 py-6 backdrop-blur lg:flex">
+      <Link href="/" className="mb-8 inline-flex items-center gap-2 text-lg font-semibold text-foreground">
+        TalentHunt <span className="font-light text-accent">BD</span>
+      </Link>
+
+      <div className="mb-8 flex items-center gap-3 rounded-[var(--radius-md)] border border-card-border/80 bg-foreground/5 p-4">
+        <Avatar src={profile.avatar_url} fallback={profile.full_name} />
+        <div className="text-sm">
+          <p className="font-semibold text-foreground">{profile.full_name}</p>
+          <p className="text-muted">{profile.title ?? profile.role.toUpperCase()}</p>
+        </div>
+      </div>
+
+      <nav className="flex-1 space-y-1">
+        {links.map((link) => {
+          const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+          const Icon = link.icon;
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn(
+                "group flex items-center justify-between rounded-[var(--radius-md)] px-4 py-2.5 text-sm font-medium transition",
+                isActive ? "bg-accent/10 text-accent" : "text-muted hover:bg-foreground/5 hover:text-foreground",
+              )}
+            >
+              <span className="inline-flex items-center gap-3">
+                <Icon className={cn("h-4 w-4", isActive ? "text-accent" : "text-muted group-hover:text-foreground")} />
+                {link.label}
+              </span>
+              {link.badge ? <Badge variant="muted">{link.badge}</Badge> : null}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {footer ? <div className="mt-8">{footer}</div> : null}
+    </aside>
+  );
+}
