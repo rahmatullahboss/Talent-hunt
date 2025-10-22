@@ -30,29 +30,53 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ asChild, className, variant = "default", size = "md", loading, children, disabled, ...props }, ref) => {
-  const Component = asChild ? Slot : "button";
-  return (
-    <Component
-      ref={ref}
-      className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-[var(--radius-md)] font-medium transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-60",
-        variants[variant],
-        sizes[size],
-        className,
-      )}
-      disabled={disabled || loading}
-      {...props}
-    >
-      {loading ? (
-        <>
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent" aria-hidden="true" />
-          <span className="sr-only">Loading</span>
-        </>
-      ) : null}
-      <span>{children}</span>
-    </Component>
-  );
-});
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({
+    asChild,
+    className,
+    variant = "default",
+    size = "md",
+    loading,
+    children,
+    disabled,
+    ...props
+  }, ref) => {
+    const Component = asChild ? Slot : "button";
+    const commonClassName = cn(
+      "inline-flex items-center justify-center gap-2 rounded-[var(--radius-md)] font-medium transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-60",
+      variants[variant],
+      sizes[size],
+      className,
+    );
+
+    if (asChild) {
+      return (
+        <Component ref={ref} className={commonClassName} {...props}>
+          {children}
+        </Component>
+      );
+    }
+
+    return (
+      <Component
+        ref={ref}
+        className={commonClassName}
+        disabled={disabled || loading}
+        {...props}
+      >
+        {loading ? (
+          <>
+            <span
+              className="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"
+              aria-hidden="true"
+            />
+            <span className="sr-only">Loading</span>
+          </>
+        ) : null}
+        <span>{children}</span>
+      </Component>
+    );
+  },
+);
 
 Button.displayName = "Button";
