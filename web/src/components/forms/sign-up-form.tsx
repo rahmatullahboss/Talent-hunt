@@ -70,11 +70,17 @@ export function SignUpForm() {
 
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ??
+      (process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://talenthuntbd.vercel.app");
+
     const { data, error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/callback`,
+        emailRedirectTo: `${siteUrl}/callback`,
         data: {
           full_name: values.fullName,
           role: values.role,

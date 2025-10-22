@@ -29,8 +29,13 @@ export function ResetPasswordForm() {
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
     const supabase = createSupabaseBrowserClient();
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ??
+      (process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://talenthuntbd.vercel.app");
     const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/update-password`,
+      redirectTo: `${siteUrl}/update-password`,
     });
 
     if (error) {
