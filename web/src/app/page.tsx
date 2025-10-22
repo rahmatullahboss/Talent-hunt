@@ -43,7 +43,7 @@ const workflow = [
 
 export default function Home() {
   return (
-    <>
+    <div>
       <SiteHeader />
       <main className="relative mx-auto flex min-h-[calc(100vh-76px)] w-full max-w-6xl flex-col gap-24 px-6 pb-24 pt-12 md:pt-24">
       <section className="grid gap-12 lg:grid-cols-[1.2fr_1fr]">
