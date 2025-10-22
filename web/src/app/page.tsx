@@ -117,12 +117,12 @@ const trustedBy = ["Pathao", "ShopUp", "bKash", "iFarmer", "Shikho", "TallyKhata
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#eefbf4] via-[#f6fdf8] to-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-[#f7fdf9] to-white">
       <SiteHeader />
       <main className="relative mx-auto flex w-full max-w-6xl flex-col gap-24 px-6 pb-32 pt-16">
         <section className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-8">
-            <Badge className="w-fit bg-accent/15 text-accent">Bangladeshi talent, global ambitions</Badge>
+            <Badge className="w-fit bg-accent/10 text-accent">Bangladeshi talent, global ambitions</Badge>
             <h1 className="text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-6xl">
               Build, scale, and collaborate in a light, confident workspace.
             </h1>
@@ -149,7 +149,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-          <Card className="border border-card-border bg-gradient-to-br from-white via-white to-emerald-50 p-8 shadow-xl">
+          <Card className="border border-card-border bg-gradient-to-br from-white via-white to-[#ecf8f1] p-8 shadow-xl">
             <div className="space-y-6">
               <div className="rounded-[var(--radius-lg)] border border-card-border bg-white p-6 shadow-sm">
                 <div className="flex items-center justify-between text-xs font-medium text-muted">
@@ -247,7 +247,7 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <Card className="space-y-4 border border-card-border bg-emerald-50/80 p-6">
+            <Card className="space-y-4 border border-card-border bg-emerald-50/60 p-6">
               <h3 className="text-xl font-semibold text-foreground">Concierge onboarding</h3>
               <p className="text-sm text-muted">
                 Share your job post or portfolio and our success team sets up your workspace, recommends milestones, and invites the right collaborators.
@@ -287,7 +287,7 @@ export default function Home() {
           ))}
         </section>
 
-        <section className="space-y-6 rounded-[var(--radius-lg)] border border-card-border bg-gradient-to-br from-emerald-500/15 via-white to-emerald-50 p-10 text-center shadow-xl">
+        <section className="space-y-6 rounded-[var(--radius-lg)] border border-card-border bg-gradient-to-br from-emerald-500/10 via-white to-[#eefcf5] p-10 text-center shadow-xl">
           <h2 className="text-3xl font-semibold md:text-4xl text-foreground">
             Ready to experience the lightest talent marketplace in Bangladesh?
           </h2>
