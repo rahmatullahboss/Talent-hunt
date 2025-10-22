@@ -9,7 +9,7 @@ type Variant = "default" | "secondary" | "ghost" | "outline" | "destructive" | "
 type Size = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<Variant, string> = {
-  default: "bg-accent text-accent-foreground hover:bg-[#108a00]", 
+  default: "bg-accent text-white hover:bg-[#108a00]",
   secondary: "border border-accent bg-white text-accent hover:bg-[#e9f7e9]",
   outline: "border border-card-border bg-card text-foreground hover:border-accent hover:text-accent",
   ghost: "text-foreground hover:bg-[#e9f7e9]",

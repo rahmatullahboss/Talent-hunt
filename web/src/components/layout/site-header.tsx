@@ -22,20 +22,23 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-card-border/80 bg-white/90 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground">
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-lg font-semibold tracking-tight text-black"
+        >
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-base font-semibold text-white">
             TH
           </span>
-          <span className="text-xl">TalentHunt</span>
+          <span className="text-xl text-black">TalentHunt</span>
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium text-muted md:flex">
+        <nav className="hidden items-center gap-6 text-sm font-medium text-black md:flex">
           {links.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "transition hover:text-foreground",
-                pathname === item.href ? "text-foreground" : undefined,
+                "transition hover:text-black",
+                pathname === item.href ? "text-black" : undefined,
               )}
             >
               {item.label}
@@ -90,15 +93,15 @@ export function SiteHeader() {
             "pointer-events-auto translate-y-0 opacity-100",
           )}
         >
-          <nav className="flex flex-col gap-4 text-base font-medium text-foreground/80">
+          <nav className="flex flex-col gap-4 text-base font-medium text-black">
             {links.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={closeMenu}
                 className={cn(
-                  "rounded-md px-2 py-1.5 transition hover:bg-muted/70 hover:text-foreground",
-                  pathname === item.href ? "text-foreground" : undefined,
+                  "rounded-md px-2 py-1.5 transition hover:bg-muted/70 hover:text-black",
+                  pathname === item.href ? "text-black" : undefined,
                 )}
               >
                 {item.label}
