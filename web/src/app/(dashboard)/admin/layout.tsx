@@ -1,15 +1,14 @@
 import { redirect } from "next/navigation";
-import { Shield, Settings, Users, FileWarning, LayoutDashboard } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import type { SidebarLink } from "@/components/dashboard/sidebar";
 import { getCurrentUser } from "@/lib/auth/session";
 
 const links: SidebarLink[] = [
-  { href: "/admin/dashboard", label: "Overview", icon: LayoutDashboard },
-  { href: "/admin/users", label: "Users", icon: Users },
-  { href: "/admin/jobs", label: "Jobs", icon: Shield },
-  { href: "/admin/disputes", label: "Disputes", icon: FileWarning },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/dashboard", label: "Overview", icon: "layoutDashboard" },
+  { href: "/admin/users", label: "Users", icon: "users" },
+  { href: "/admin/jobs", label: "Jobs", icon: "shield" },
+  { href: "/admin/disputes", label: "Disputes", icon: "fileWarning" },
+  { href: "/admin/settings", label: "Settings", icon: "settings" },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

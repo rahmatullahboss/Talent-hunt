@@ -1,16 +1,15 @@
 import { redirect } from "next/navigation";
-import { Briefcase, FileText, LayoutDashboard, Palette, UserRound, Wallet } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import type { SidebarLink } from "@/components/dashboard/sidebar";
 import { getCurrentUser } from "@/lib/auth/session";
 
 const links: SidebarLink[] = [
-  { href: "/freelancer/dashboard", label: "Overview", icon: LayoutDashboard },
-  { href: "/freelancer/jobs", label: "Find Jobs", icon: Briefcase },
-  { href: "/freelancer/proposals", label: "Proposals", icon: FileText },
-  { href: "/freelancer/portfolio", label: "Portfolio", icon: Palette },
-  { href: "/freelancer/profile", label: "Profile settings", icon: UserRound },
-  { href: "/freelancer/wallet", label: "Wallet", icon: Wallet },
+  { href: "/freelancer/dashboard", label: "Overview", icon: "layoutDashboard" },
+  { href: "/freelancer/jobs", label: "Find Jobs", icon: "briefcase" },
+  { href: "/freelancer/proposals", label: "Proposals", icon: "fileText" },
+  { href: "/freelancer/portfolio", label: "Portfolio", icon: "palette" },
+  { href: "/freelancer/profile", label: "Profile settings", icon: "userRound" },
+  { href: "/freelancer/wallet", label: "Wallet", icon: "wallet" },
 ];
 
 export default async function FreelancerLayout({ children }: { children: React.ReactNode }) {
