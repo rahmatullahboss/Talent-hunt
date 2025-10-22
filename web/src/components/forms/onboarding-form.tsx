@@ -32,6 +32,7 @@ const freelancerSchema = z.object({
   phone: z.string().optional(),
 });
 
+type FreelancerFormValues = z.input<typeof freelancerSchema>;
 type FreelancerValues = z.infer<typeof freelancerSchema>;
 
 const employerSchema = z.object({
@@ -47,6 +48,7 @@ const employerSchema = z.object({
   phone: z.string().optional(),
 });
 
+type EmployerFormValues = z.input<typeof employerSchema>;
 type EmployerValues = z.infer<typeof employerSchema>;
 
 interface OnboardingFormProps {
@@ -83,7 +85,7 @@ function FreelancerOnboardingForm({ profile }: { profile: Tables<"profiles"> }) 
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FreelancerValues>({
+  } = useForm<FreelancerFormValues, any, FreelancerValues>({
     resolver: zodResolver(freelancerSchema),
     defaultValues: {
       title: profile.title ?? "",
@@ -210,7 +212,7 @@ function EmployerOnboardingForm({ profile }: { profile: Tables<"profiles"> }) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<EmployerValues>({
+  } = useForm<EmployerFormValues, any, EmployerValues>({
     resolver: zodResolver(employerSchema),
     defaultValues: {
       title: profile.title ?? profile.company_name ?? "",
