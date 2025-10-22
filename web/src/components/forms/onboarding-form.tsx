@@ -22,7 +22,10 @@ const freelancerSchema = z.object({
       (value) => value.split(",").map((skill) => skill.trim()).filter(Boolean).length > 0,
       { message: "Add at least one skill" },
     ),
-  hourlyRate: z.number({ invalid_type_error: "Enter a valid hourly rate" }).min(0, "Hourly rate must be positive.").optional(),
+  hourlyRate: z
+    .number()
+    .min(0, "Hourly rate must be positive.")
+    .optional(),
   location: z.string().min(2, "Add your city"),
   website: z
     .string()
