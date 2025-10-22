@@ -17,7 +17,7 @@ export default async function FreelancerLayout({ children }: { children: React.R
   const auth = await getCurrentUser();
 
   if (!auth?.user) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   if (auth.profile?.role !== "freelancer") {

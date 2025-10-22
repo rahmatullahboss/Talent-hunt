@@ -13,12 +13,14 @@ export function createSupabaseServerClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name) {
-          return cookieStore.get(name)?.value;
+        async get(name) {
+          const store = await cookieStore;
+          return store.get(name)?.value;
         },
-        set(name, value, options: CookieOptions) {
+        async set(name, value, options: CookieOptions) {
           try {
-            cookieStore.set({
+            const store = await cookieStore;
+            store.set?.({
               name,
               value,
               ...options,
@@ -27,9 +29,10 @@ export function createSupabaseServerClient() {
             // Ignore errors when called from a Server Component where the cookies instance is read-only
           }
         },
-        remove(name, options: CookieOptions) {
+        async remove(name, options: CookieOptions) {
           try {
-            cookieStore.set({
+            const store = await cookieStore;
+            store.set?.({
               name,
               value: "",
               ...options,

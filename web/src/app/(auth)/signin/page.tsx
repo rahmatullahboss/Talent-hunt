@@ -16,12 +16,12 @@ export default function SignInPage() {
       </div>
       <SignInForm />
       <div className="flex flex-col gap-2 text-sm text-muted">
-        <Link href="/auth/reset-password" className="text-accent hover:underline">
+        <Link href="/reset-password" className="text-accent hover:underline">
           Forgot your password?
         </Link>
         <p>
           New to TalentHunt BD?{" "}
-          <Link href="/auth/signup" className="text-accent hover:underline">
+          <Link href="/signup" className="text-accent hover:underline">
             Create an account
           </Link>
         </p>

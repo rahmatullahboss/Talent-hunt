@@ -8,7 +8,7 @@ export default async function OnboardingPage() {
   const auth = await getCurrentUser();
 
   if (!auth?.user) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   if (auth.profile?.onboarding_complete) {

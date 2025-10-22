@@ -7,7 +7,7 @@ import { AdminSettingsForm } from "@/components/admin/settings-form";
 export default async function AdminSettingsPage() {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();

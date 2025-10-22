@@ -57,12 +57,12 @@ export default function Home() {
           </p>
           <div className="flex flex-col gap-4 sm:flex-row">
             <Button asChild size="lg">
-              <Link href="/auth/signup?role=employer">
+              <Link href="/signup?role=employer">
                 Post a Job <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
             <Button variant="secondary" asChild>
-              <Link href="/auth/signup?role=freelancer">Join as Freelancer</Link>
+              <Link href="/signup?role=freelancer">Join as Freelancer</Link>
             </Button>
           </div>
           <div className="flex flex-wrap items-center gap-6 text-sm text-muted">
@@ -150,10 +150,10 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-3">
             <Button asChild>
-              <Link href="/auth/signup?role=employer">Start Hiring</Link>
+              <Link href="/signup?role=employer">Start Hiring</Link>
             </Button>
             <Button variant="ghost" asChild>
-              <Link href="/auth/signup?role=freelancer">Browse Opportunities</Link>
+              <Link href="/signup?role=freelancer">Browse Opportunities</Link>
             </Button>
           </div>
         </div>

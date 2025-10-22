@@ -25,7 +25,7 @@ export function DashboardTopbar({ profile, actions }: DashboardTopbarProps) {
     }
 
     toast.success("Signed out successfully");
-    router.push("/auth/signin");
+    router.push("/signin");
     router.refresh();
   };
 

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 export default async function EmployerContractsPage() {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();

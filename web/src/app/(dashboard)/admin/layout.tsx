@@ -16,7 +16,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const auth = await getCurrentUser();
 
   if (!auth?.user) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   if (auth.profile?.role !== "admin") {

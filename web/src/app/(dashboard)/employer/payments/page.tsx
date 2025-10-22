@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 export default async function EmployerPaymentsPage() {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();

@@ -27,7 +27,7 @@ interface ContractPageProps {
 export default async function ContractWorkspacePage({ params }: ContractPageProps) {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();

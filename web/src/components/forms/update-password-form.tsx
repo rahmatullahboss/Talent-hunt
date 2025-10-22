@@ -49,14 +49,14 @@ export function UpdatePasswordForm() {
       .then(({ error }) => {
         if (error) {
           toast.error(error.message);
-          router.replace("/auth/signin");
+          router.replace("/signin");
           return;
         }
         setIsSessionReady(true);
       })
       .catch((error) => {
         toast.error(error.message);
-        router.replace("/auth/signin");
+        router.replace("/signin");
       });
   }, [code, supabase, router]);
 
@@ -73,7 +73,7 @@ export function UpdatePasswordForm() {
     }
 
     toast.success("Password updated. You can now log in with your new credentials.");
-    router.push("/auth/signin");
+    router.push("/signin");
     setLoading(false);
   };
 

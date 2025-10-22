@@ -15,7 +15,7 @@ interface FreelancersPageProps {
 export default async function FreelancersPage({ searchParams }: FreelancersPageProps) {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const query = searchParams.q?.trim() ?? "";

@@ -8,7 +8,7 @@ import { ToggleSuspensionButton } from "@/components/admin/toggle-suspension-but
 export default async function AdminUsersPage() {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();

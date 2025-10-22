@@ -105,7 +105,7 @@ export default async function FreelancerDashboardPage() {
   const auth = await getCurrentUser();
 
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const [stats, jobs, proposals] = await Promise.all([getFreelancerStats(auth.profile), getRecommendedJobs(auth.profile), getRecentProposals(auth.profile)]);

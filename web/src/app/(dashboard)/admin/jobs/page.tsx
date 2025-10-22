@@ -9,7 +9,7 @@ import { CancelJobButton } from "@/components/admin/cancel-job-button";
 export default async function AdminJobsPage() {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();
