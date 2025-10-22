@@ -6,17 +6,40 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_A
 }
 
 export function createSupabaseServerClient() {
+  const cookieStore = cookies();
+
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get() {
-          return null;
+        get(name) {
+          return cookieStore.get(name)?.value;
         },
-        set() {},
-        remove() {}
-      }
+        set(name, value, options: CookieOptions) {
+          try {
+            cookieStore.set({
+              name,
+              value,
+              ...options,
+            });
+          } catch {
+            // Ignore errors when called from a Server Component where the cookies instance is read-only
+          }
+        },
+        remove(name, options: CookieOptions) {
+          try {
+            cookieStore.set({
+              name,
+              value: "",
+              ...options,
+              maxAge: 0,
+            });
+          } catch {
+            // Ignore errors when called from a Server Component where the cookies instance is read-only
+          }
+        },
+      },
     }
   );
 }
