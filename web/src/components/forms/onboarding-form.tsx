@@ -29,15 +29,25 @@ const freelancerSchema = z.object({
   location: z.string().min(2, "Add your city"),
   website: z
     .string()
-    .trim()
-    .refine((value) => value.length === 0 || /^https?:\/\//.test(value), {
-      message: "Enter a valid URL starting with http(s)://",
+    .optional()
+    .transform((value) => {
+      if (!value) {
+        return undefined;
+      }
+
+      const trimmed = value.trim();
+      return trimmed.length === 0 ? undefined : trimmed;
     })
-    .transform((value) => (value.length === 0 ? undefined : value)),
+    .refine((value) => !value || /^https?:\/\//.test(value), {
+      message: "Enter a valid URL starting with http(s)://",
+    }),
   phone: z.string().optional(),
 });
 
-type FreelancerValues = z.infer<typeof freelancerSchema>;
+type FreelancerSchemaOutput = z.infer<typeof freelancerSchema>;
+type FreelancerValues = Omit<FreelancerSchemaOutput, "website"> & {
+  website?: FreelancerSchemaOutput["website"];
+};
 
 const employerSchema = z.object({
   title: z.string().min(3, "Share your hiring focus or team name"),
@@ -103,7 +113,7 @@ function FreelancerOnboardingForm({ profile }: { profile: Tables<"profiles"> }) 
       skills: defaultSkills,
       hourlyRate: profile.hourly_rate ?? undefined,
       location: profile.location ?? "",
-      website: profile.website ?? "",
+      website: profile.website ?? undefined,
       phone: profile.phone ?? "",
     },
   });
