@@ -198,7 +198,7 @@ export default function TalentPage() {
                 <category.icon className="h-8 w-8 text-accent" />
                 <h3 className="text-lg font-semibold">{category.title}</h3>
                 <p className="text-sm text-[#335c3b]">{category.description}</p>
-                <Button asChild variant="link" className="px-0 text-accent">
+                <Button asChild variant="link" className="h-auto px-0 text-accent">
                   <Link href="/signup?role=employer">View available talent</Link>
                 </Button>
               </Card>
