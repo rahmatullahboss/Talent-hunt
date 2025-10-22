@@ -2,16 +2,50 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { LucideIcon } from "lucide-react";
+import {
+  Briefcase,
+  ClipboardCheck,
+  ClipboardList,
+  FileText,
+  FileWarning,
+  LayoutDashboard,
+  MessageSquare,
+  Palette,
+  Search,
+  Settings,
+  Shield,
+  UserRound,
+  Users,
+  Wallet,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import type { Tables } from "@/types/database";
 
+const iconMap = {
+  layoutDashboard: LayoutDashboard,
+  clipboardList: ClipboardList,
+  clipboardCheck: ClipboardCheck,
+  search: Search,
+  messageSquare: MessageSquare,
+  wallet: Wallet,
+  briefcase: Briefcase,
+  fileText: FileText,
+  palette: Palette,
+  userRound: UserRound,
+  shield: Shield,
+  settings: Settings,
+  users: Users,
+  fileWarning: FileWarning,
+} as const;
+
+export type SidebarIcon = keyof typeof iconMap;
+
 export type SidebarLink = {
   href: string;
   label: string;
-  icon: LucideIcon;
+  icon: SidebarIcon;
   badge?: string;
 };
 
@@ -41,7 +75,7 @@ export function DashboardSidebar({ profile, links, footer }: DashboardSidebarPro
       <nav className="flex-1 space-y-1">
         {links.map((link) => {
           const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
-          const Icon = link.icon;
+          const Icon = iconMap[link.icon] ?? LayoutDashboard;
           return (
             <Link
               key={link.href}

@@ -1,16 +1,15 @@
 import { redirect } from "next/navigation";
-import { ClipboardCheck, ClipboardList, LayoutDashboard, MessageSquare, Search, Wallet } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import type { SidebarLink } from "@/components/dashboard/sidebar";
 import { getCurrentUser } from "@/lib/auth/session";
 
 const links: SidebarLink[] = [
-  { href: "/employer/dashboard", label: "Overview", icon: LayoutDashboard },
-  { href: "/employer/jobs/new", label: "Post a job", icon: ClipboardList },
-  { href: "/employer/jobs", label: "Manage jobs", icon: ClipboardCheck },
-  { href: "/employer/freelancers", label: "Find talent", icon: Search },
-  { href: "/employer/contracts", label: "Contracts", icon: MessageSquare },
-  { href: "/employer/payments", label: "Payments", icon: Wallet },
+  { href: "/employer/dashboard", label: "Overview", icon: "layoutDashboard" },
+  { href: "/employer/jobs/new", label: "Post a job", icon: "clipboardList" },
+  { href: "/employer/jobs", label: "Manage jobs", icon: "clipboardCheck" },
+  { href: "/employer/freelancers", label: "Find talent", icon: "search" },
+  { href: "/employer/contracts", label: "Contracts", icon: "messageSquare" },
+  { href: "/employer/payments", label: "Payments", icon: "wallet" },
 ];
 
 export default async function EmployerLayout({ children }: { children: React.ReactNode }) {
