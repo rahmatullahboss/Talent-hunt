@@ -29,19 +29,24 @@ export default async function AdminJobsPage() {
       </div>
 
       <div className="grid gap-4">
-        {jobs.map((job) => (
-          <Card key={job.id} className="flex flex-col gap-3 border border-card-border/70 bg-card/80 p-5 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-lg font-semibold text-foreground">{job.title}</p>
-              <p className="text-xs text-muted">Employer: {job.employer?.full_name ?? "Unknown"}</p>
-              <p className="text-xs text-muted">Posted {new Date(job.created_at).toLocaleString()}</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Badge variant="muted">{job.status}</Badge>
-              <ButtonGroup jobId={job.id} isCancelled={job.status === "cancelled"} />
-            </div>
-          </Card>
-        ))}
+        {jobs.map((job) => {
+          const employer = Array.isArray(job.employer) ? job.employer[0] : job.employer;
+          const employerName = employer?.full_name ?? "Unknown";
+
+          return (
+            <Card key={job.id} className="flex flex-col gap-3 border border-card-border/70 bg-card/80 p-5 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-lg font-semibold text-foreground">{job.title}</p>
+                <p className="text-xs text-muted">Employer: {employerName}</p>
+                <p className="text-xs text-muted">Posted {new Date(job.created_at).toLocaleString()}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <Badge variant="muted">{job.status}</Badge>
+                <ButtonGroup jobId={job.id} isCancelled={job.status === "cancelled"} />
+              </div>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

@@ -81,11 +81,7 @@ export default async function EmployerJobDetailPage({ params }: EmployerJobDetai
     notFound();
   }
 
-  const typedJob = {
-    ...job,
-    proposals: (job.proposals ?? []) as SupabaseProposalRecord[] | null,
-  } as EmployerJobRecord;
-
+  const typedJob = job as EmployerJobRecord;
   const proposals: ProposalWithFreelancer[] = (typedJob.proposals ?? []).map((proposal) => {
     const freelancerCandidate = Array.isArray(proposal.freelancer) ? proposal.freelancer[0] : proposal.freelancer;
 
@@ -99,26 +95,26 @@ export default async function EmployerJobDetailPage({ params }: EmployerJobDetai
     <div className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="space-y-2">
-          <Badge variant="muted">{typedJob.status}</Badge>
-          <h1 className="text-3xl font-semibold text-foreground md:text-4xl">{typedJob.title}</h1>
-          <p className="text-sm text-muted">Posted {new Date(typedJob.created_at).toLocaleString()}</p>
+          <Badge variant="muted">{job.status}</Badge>
+          <h1 className="text-3xl font-semibold text-foreground md:text-4xl">{job.title}</h1>
+          <p className="text-sm text-muted">Posted {new Date(job.created_at).toLocaleString()}</p>
         </div>
-        <JobStatusForm jobId={typedJob.id} currentStatus={typedJob.status} />
+        <JobStatusForm jobId={job.id} currentStatus={job.status} />
       </div>
 
       <Card className="space-y-4 border border-card-border/70 bg-card/80 p-6">
         <h2 className="text-xl font-semibold text-foreground">Project overview</h2>
-        <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted">{typedJob.description}</p>
+        <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted">{job.description}</p>
         <div className="flex flex-wrap items-center gap-3 text-sm text-muted">
-          <span>Experience: {typedJob.experience_level}</span>
+          <span>Experience: {job.experience_level}</span>
           <span>
-            Budget: {typedJob.budget_mode === "hourly" ? "$" : "?"}
-            {typedJob.budget_min ?? "-"}
-            {typedJob.budget_max ? ` - ${typedJob.budget_mode === "hourly" ? "$" : "?"}${typedJob.budget_max}` : ""}
+            Budget: {job.budget_mode === "hourly" ? "$" : "৳"}
+            {job.budget_min ?? "—"}
+            {job.budget_max ? ` - ${job.budget_mode === "hourly" ? "$" : "৳"}${job.budget_max}` : ""}
           </span>
         </div>
         <div className="flex flex-wrap gap-2">
-          {typedJob.skills?.map((skill) => (
+          {job.skills?.map((skill) => (
             <Badge key={skill} variant="outline">
               {skill}
             </Badge>
@@ -151,7 +147,7 @@ export default async function EmployerJobDetailPage({ params }: EmployerJobDetai
                   </div>
                   <div className="text-sm text-muted">
                     <p>
-                      Bid: {proposal.bid_type === "hourly" ? "$" : "?"}
+                      Bid: {proposal.bid_type === "hourly" ? "$" : "৳"}
                       {proposal.bid_amount}
                     </p>
                     {proposal.estimated_hours ? <p>Est. hours: {proposal.estimated_hours}</p> : null}
@@ -163,7 +159,7 @@ export default async function EmployerJobDetailPage({ params }: EmployerJobDetai
                   <p className="mt-2 whitespace-pre-wrap text-sm text-muted">{proposal.cover_letter}</p>
                 </div>
                 {proposal.status !== "hired" ? (
-                  <HireProposalForm jobId={typedJob.id} proposalId={proposal.id} defaultAmount={proposal.bid_amount} />
+                  <HireProposalForm jobId={job.id} proposalId={proposal.id} defaultAmount={proposal.bid_amount} />
                 ) : null}
               </Card>
             ))}

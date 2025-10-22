@@ -18,7 +18,7 @@ export default async function AdminDashboardPage() {
     supabase.from("disputes").select("id", { count: "exact", head: true }).in("status", ["open", "under_review"]),
     supabase
       .from("withdrawal_requests")
-      .select("id, amount, status, created_at, freelancer_id, freelancer:profiles(full_name)")
+      .select("id, amount, status, created_at, freelancer_id, freelancer:profiles!withdrawal_requests_freelancer_id_fkey(full_name)")
       .in("status", ["pending", "processing"])
       .order("created_at", { ascending: false })
       .limit(5),
@@ -53,15 +53,20 @@ export default async function AdminDashboardPage() {
           <p className="text-sm text-muted">No payout requests are waiting for review.</p>
         ) : (
           <div className="grid gap-3">
-            {pendingWithdrawals.map((request) => (
-              <Card key={request.id} className="flex items-center justify-between border border-card-border/70 bg-card/80 p-4 text-sm">
-                <div>
-                  <p className="font-semibold text-foreground">৳{Number(request.amount).toLocaleString()}</p>
-                  <p className="text-xs text-muted">{request.freelancer?.full_name ?? "Freelancer"}</p>
-                </div>
-                <Badge variant="muted">{request.status}</Badge>
-              </Card>
-            ))}
+            {pendingWithdrawals.map((request) => {
+              const freelancer = Array.isArray(request.freelancer) ? request.freelancer[0] : request.freelancer;
+              const freelancerName = freelancer?.full_name ?? "Freelancer";
+
+              return (
+                <Card key={request.id} className="flex items-center justify-between border border-card-border/70 bg-card/80 p-4 text-sm">
+                  <div>
+                    <p className="font-semibold text-foreground">৳{Number(request.amount).toLocaleString()}</p>
+                    <p className="text-xs text-muted">{freelancerName}</p>
+                  </div>
+                  <Badge variant="muted">{request.status}</Badge>
+                </Card>
+              );
+            })}
           </div>
         )}
       </Card>

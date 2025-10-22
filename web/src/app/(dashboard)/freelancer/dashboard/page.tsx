@@ -15,6 +15,21 @@ type Stats = {
   walletBalance: number;
 };
 
+type RecommendedJob = Pick<
+  Tables<"jobs">,
+  "id" | "title" | "category" | "budget_mode" | "budget_min" | "budget_max" | "skills" | "created_at"
+>;
+
+type ProposalJobSummary = Pick<Tables<"jobs">, "id" | "title" | "category" | "budget_mode">;
+
+type ProposalRecord = Tables<"proposals"> & {
+  jobs: ProposalJobSummary | ProposalJobSummary[] | null;
+};
+
+type ProposalSummary = Tables<"proposals"> & {
+  job: ProposalJobSummary | null;
+};
+
 async function getFreelancerStats(profile: Tables<"profiles">): Promise<Stats> {
   const supabase = createSupabaseServerClient();
 
@@ -55,7 +70,7 @@ async function getFreelancerStats(profile: Tables<"profiles">): Promise<Stats> {
   };
 }
 
-async function getRecommendedJobs(profile: Tables<"profiles">) {
+async function getRecommendedJobs(profile: Tables<"profiles">): Promise<RecommendedJob[]> {
   const supabase = createSupabaseServerClient();
 
   const { data } = await supabase
@@ -66,10 +81,10 @@ async function getRecommendedJobs(profile: Tables<"profiles">) {
     .limit(5)
     .overlaps("skills", profile.skills.length ? profile.skills : [""]);
 
-  return data ?? [];
+  return (data ?? []) as RecommendedJob[];
 }
 
-async function getRecentProposals(profile: Tables<"profiles">) {
+async function getRecentProposals(profile: Tables<"profiles">): Promise<ProposalSummary[]> {
   const supabase = createSupabaseServerClient();
   const { data } = await supabase
     .from("proposals")
@@ -78,12 +93,12 @@ async function getRecentProposals(profile: Tables<"profiles">) {
     .order("created_at", { ascending: false })
     .limit(4);
 
-  return (
-    data?.map((proposal) => ({
-      ...proposal,
-      job: proposal.jobs,
-    })) ?? []
-  );
+  const typedData = (data ?? []) as ProposalRecord[];
+
+  return typedData.map(({ jobs, ...proposal }) => ({
+    ...proposal,
+    job: Array.isArray(jobs) ? jobs[0] ?? null : jobs ?? null,
+  }));
 }
 
 export default async function FreelancerDashboardPage() {
@@ -140,9 +155,11 @@ export default async function FreelancerDashboardPage() {
                     <h3 className="text-lg font-semibold text-foreground">{job.title}</h3>
                     <Badge variant="muted">{job.category}</Badge>
                   </div>
-                  <p className="mt-2 text-sm text-muted">Budget {job.budget_mode === "fixed" ? "৳" : "$"} {job.budget_min ?? "—"} - {job.budget_max ?? "—"}</p>
+                  <p className="mt-2 text-sm text-muted">
+                    Budget {job.budget_mode === "fixed" ? "৳" : "$"} {job.budget_min ?? "—"} - {job.budget_max ?? "—"}
+                  </p>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {job.skills?.slice(0, 5).map((skill) => (
+                    {job.skills.slice(0, 5).map((skill) => (
                       <Badge key={skill} variant="outline" className="border-accent/30 text-muted">
                         {skill}
                       </Badge>

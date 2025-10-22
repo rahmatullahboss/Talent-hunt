@@ -42,25 +42,30 @@ export default async function EmployerContractsPage() {
         {contracts.length === 0 ? (
           <Card className="border-dashed p-6 text-sm text-muted">No contracts yet. Hire a freelancer from your job proposals to create a contract.</Card>
         ) : (
-          contracts.map((contract) => (
-            <Card key={contract.id} className="flex flex-col gap-3 border border-card-border/70 bg-card/80 p-5">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <h2 className="text-lg font-semibold text-foreground">{contract.jobs?.title}</h2>
-                  <p className="text-sm text-muted">{contract.freelancer?.full_name}</p>
+          contracts.map((contract) => {
+            const job = Array.isArray(contract.jobs) ? contract.jobs[0] : contract.jobs;
+            const freelancer = Array.isArray(contract.freelancer) ? contract.freelancer[0] : contract.freelancer;
+
+            return (
+              <Card key={contract.id} className="flex flex-col gap-3 border border-card-border/70 bg-card/80 p-5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground">{job?.title ?? "Contract"}</h2>
+                    <p className="text-sm text-muted">{freelancer?.full_name ?? "Freelancer"}</p>
+                  </div>
+                  <Badge variant="muted">{contract.status}</Badge>
                 </div>
-                <Badge variant="muted">{contract.status}</Badge>
-              </div>
-              <div className="flex flex-wrap items-center gap-4 text-sm text-muted">
-                <span>Escrow: ৳{Number(contract.escrow_amount ?? 0).toLocaleString()}</span>
-                <span>Created {new Date(contract.created_at).toLocaleString()}</span>
-              </div>
-              {contract.notes ? <p className="text-sm text-muted">Notes: {contract.notes}</p> : null}
-              <Button variant="ghost" asChild className="w-fit">
-                <Link href={`/contracts/${contract.id}`}>Open workspace</Link>
-              </Button>
-            </Card>
-          ))
+                <div className="flex flex-wrap items-center gap-4 text-sm text-muted">
+                  <span>Escrow: ৳{Number(contract.escrow_amount ?? 0).toLocaleString()}</span>
+                  <span>Created {new Date(contract.created_at).toLocaleString()}</span>
+                </div>
+                {contract.notes ? <p className="text-sm text-muted">Notes: {contract.notes}</p> : null}
+                <Button variant="ghost" asChild className="w-fit">
+                  <Link href={`/contracts/${contract.id}`}>Open workspace</Link>
+                </Button>
+              </Card>
+            );
+          })
         )}
       </div>
     </div>

@@ -40,7 +40,7 @@ const hireSchema = z.object({
   notes: z.string().optional(),
 });
 
-type JobActionState = {
+export type JobActionState = {
   status: "idle" | "success" | "error";
   message?: string;
 };

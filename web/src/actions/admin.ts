@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/session";
+import type { Tables } from "@/types/database";
 
 const toggleSchema = z.object({
   userId: z.string().uuid(),
@@ -34,12 +35,25 @@ type AdminActionState = {
   message?: string;
 };
 
-async function ensureAdmin() {
+type AuthContext = Awaited<ReturnType<typeof getCurrentUser>>;
+type AdminContext = {
+  user: NonNullable<AuthContext>["user"];
+  profile: Tables<"profiles">;
+};
+
+async function ensureAdmin(): Promise<{ auth: AdminContext; supabase: ReturnType<typeof createSupabaseServerClient> }> {
   const auth = await getCurrentUser();
   if (!auth?.profile || auth.profile.role !== "admin") {
     throw new Error("Admin access required");
   }
-  return { auth, supabase: createSupabaseServerClient() };
+
+  return {
+    auth: {
+      user: auth.user,
+      profile: auth.profile,
+    },
+    supabase: createSupabaseServerClient(),
+  };
 }
 
 export async function toggleUserSuspensionAction(_: AdminActionState, formData: FormData): Promise<AdminActionState> {

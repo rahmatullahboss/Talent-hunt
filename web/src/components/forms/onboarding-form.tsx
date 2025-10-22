@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { type Resolver, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -18,13 +18,10 @@ const freelancerSchema = z.object({
   bio: z.string().min(30, "Tell clients how you create impact (minimum 30 characters)"),
   skills: z
     .string()
-    .transform((value) =>
-      value
-        .split(",")
-        .map((skill) => skill.trim())
-        .filter(Boolean),
-    )
-    .pipe(z.array(z.string()).min(1, "Add at least one skill")),
+    .refine(
+      (value) => value.split(",").map((skill) => skill.trim()).filter(Boolean).length > 0,
+      { message: "Add at least one skill" },
+    ),
   hourlyRate: z.coerce.number().nonnegative("Rate must be positive").optional(),
   location: z.string().min(2, "Add your city"),
   website: z
@@ -101,12 +98,17 @@ function FreelancerOnboardingForm({ profile }: { profile: Tables<"profiles"> }) 
 
   const onSubmit = async (values: FreelancerValues) => {
     setLoading(true);
+    const skillArray = values.skills
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter((skill) => skill.length > 0);
+
     const { error } = await supabase
       .from("profiles")
       .update({
         title: values.title,
         bio: values.bio,
-        skills: values.skills,
+        skills: skillArray,
         hourly_rate: values.hourlyRate ?? null,
         location: values.location,
         website: values.website ?? null,

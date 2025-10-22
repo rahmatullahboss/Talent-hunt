@@ -6,6 +6,19 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { WithdrawProposalButton } from "@/components/freelancer/proposals/withdraw-button";
+import type { Tables } from "@/types/database";
+
+type ProposalRow = Tables<"proposals">;
+
+type JobSummary = Pick<Tables<"jobs">, "id" | "title" | "category" | "budget_mode" | "budget_min" | "budget_max">;
+
+type SupabaseProposalRecord = ProposalRow & {
+  jobs: JobSummary | JobSummary[] | null;
+};
+
+type ProposalWithJob = ProposalRow & {
+  job: JobSummary | null;
+};
 
 export default async function ProposalsPage() {
   const auth = await getCurrentUser();
@@ -38,7 +51,10 @@ export default async function ProposalsPage() {
     .eq("freelancer_id", auth.profile.id)
     .order("created_at", { ascending: false });
 
-  const proposals = data ?? [];
+  const proposals: ProposalWithJob[] = ((data ?? []) as SupabaseProposalRecord[]).map(({ jobs, ...proposal }) => ({
+    ...proposal,
+    job: Array.isArray(jobs) ? jobs[0] ?? null : jobs ?? null,
+  }));
 
   return (
     <div className="space-y-8">
@@ -57,7 +73,7 @@ export default async function ProposalsPage() {
             <Card key={proposal.id} className="flex flex-col gap-4 border border-card-border/70 p-6 md:flex-row md:items-center md:justify-between">
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-lg font-semibold text-foreground">{proposal.jobs?.title}</h2>
+                  <h2 className="text-lg font-semibold text-foreground">{proposal.job?.title ?? "Job unavailable"}</h2>
                   <Badge variant="muted">{proposal.status}</Badge>
                 </div>
                 <p className="text-sm text-muted">

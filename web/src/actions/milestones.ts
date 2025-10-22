@@ -31,7 +31,7 @@ const statusSchema = z.object({
   status: z.enum(["approved", "rejected"]),
 });
 
-type MilestoneActionState = {
+export type MilestoneActionState = {
   status: "idle" | "success" | "error";
   message?: string;
 };

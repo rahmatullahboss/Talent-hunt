@@ -7,6 +7,14 @@ import { ProposalForm } from "@/components/freelancer/jobs/proposal-form";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import type { Tables } from "@/types/database";
+
+type EmployerSummary = Pick<Tables<"profiles">, "full_name" | "company_name" | "title" | "location" | "bio">;
+
+type SupabaseJobRecord = Tables<"jobs"> & {
+  employer: EmployerSummary | EmployerSummary[] | null;
+  proposals: { count: number | null }[] | null;
+};
 
 interface JobDetailPageProps {
   params: {
@@ -53,10 +61,14 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     notFound();
   }
 
+  const typedJob = job as SupabaseJobRecord;
+  const employer = Array.isArray(typedJob.employer) ? typedJob.employer[0] ?? null : typedJob.employer ?? null;
+  const proposalCount = typedJob.proposals?.[0]?.count ?? 0;
+
   const { data: existingProposal } = await supabase
     .from("proposals")
     .select("id, status")
-    .eq("job_id", job.id)
+    .eq("job_id", typedJob.id)
     .eq("freelancer_id", auth.profile.id)
     .maybeSingle();
 
@@ -73,9 +85,9 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         <Card className="space-y-6 p-8">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <Badge variant="muted">{job.category}</Badge>
-              <h1 className="mt-2 text-3xl font-semibold text-foreground">{job.title}</h1>
-              <p className="mt-1 text-sm text-muted">Posted {formatDistanceFromNow(job.created_at)}</p>
+              <Badge variant="muted">{typedJob.category}</Badge>
+              <h1 className="mt-2 text-3xl font-semibold text-foreground">{typedJob.title}</h1>
+              <p className="mt-1 text-sm text-muted">Posted {formatDistanceFromNow(typedJob.created_at)}</p>
             </div>
             <Button variant="ghost" size="icon" aria-label="Save job">
               <BookmarkMinus className="h-5 w-5 text-muted" />
@@ -83,20 +95,22 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
           </div>
 
           <section className="grid gap-4 md:grid-cols-3">
-            <JobMeta label="Budget" value={`${job.budget_mode === "hourly" ? "$" : "৳"}${job.budget_min ?? "—"} - ${job.budget_max ?? "—"}`} />
-            <JobMeta label="Experience" value={job.experience_level} />
-            <JobMeta label="Proposals" value={job.proposals?.[0]?.count ?? 0} />
+            <JobMeta label="Budget" value={`${typedJob.budget_mode === "hourly" ? "$" : "৳"}${typedJob.budget_min ?? "-"} - ${typedJob.budget_max ?? "-"}`} />
+            <JobMeta label="Experience" value={typedJob.experience_level} />
+            <JobMeta label="Proposals" value={proposalCount} />
           </section>
 
           <section>
             <h2 className="text-lg font-semibold text-foreground">Project overview</h2>
-            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-muted">{job.description}</p>
+            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-muted">{typedJob.description}</p>
           </section>
 
           <section>
             <h2 className="text-lg font-semibold text-foreground">Skills & tools</h2>
             <div className="mt-3 flex flex-wrap gap-2">
-              {job.skills?.length ? job.skills.map((skill: string) => <Badge key={skill}>{skill}</Badge>) : <p className="text-sm text-muted">No skills specified.</p>}
+              {typedJob.skills.length ? typedJob.skills.map((skill) => <Badge key={skill}>{skill}</Badge>) : (
+                <p className="text-sm text-muted">No skills specified.</p>
+              )}
             </div>
           </section>
         </Card>
@@ -104,16 +118,16 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         <Card className="space-y-5 border border-card-border/70 p-6">
           <div>
             <h2 className="text-lg font-semibold text-foreground">Client details</h2>
-            <p className="mt-2 text-sm text-muted">{job.employer?.company_name ?? job.employer?.full_name}</p>
-            {job.employer?.location ? <p className="text-xs text-muted">Based in {job.employer.location}</p> : null}
+            <p className="mt-2 text-sm text-muted">{employer?.company_name ?? employer?.full_name}</p>
+            {employer?.location ? <p className="text-xs text-muted">Based in {employer.location}</p> : null}
           </div>
-          <p className="text-sm text-muted">{job.employer?.bio ?? "Client bio not provided."}</p>
+          <p className="text-sm text-muted">{employer?.bio ?? "Client bio not provided."}</p>
           {existingProposal ? (
             <div className="rounded-[var(--radius-md)] border border-accent/50 bg-accent/10 p-4 text-sm text-accent">
               You already submitted a proposal. Current status: {existingProposal.status}.
             </div>
           ) : (
-            <ProposalForm jobId={job.id} />
+            <ProposalForm jobId={typedJob.id} />
           )}
         </Card>
       </div>

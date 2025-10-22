@@ -74,15 +74,19 @@ export default async function EmployerDashboardPage() {
             {proposals.length === 0 ? (
               <EmptyState message="No proposals yet. Share more project details or invite freelancers directly." />
             ) : (
-              proposals.map((proposal) => (
-                <Card key={proposal.id} className="flex items-center justify-between border border-card-border/60 bg-card/70 p-4 text-sm">
-                  <div>
-                    <p className="font-semibold text-foreground">{proposal.jobs?.title}</p>
-                    <p className="text-xs text-muted">Received {new Date(proposal.created_at).toLocaleString()}</p>
-                  </div>
-                  <Badge variant="muted">{proposal.status}</Badge>
-                </Card>
-              ))
+              proposals.map((proposal) => {
+                const job = Array.isArray(proposal.jobs) ? proposal.jobs[0] : proposal.jobs;
+
+                return (
+                  <Card key={proposal.id} className="flex items-center justify-between border border-card-border/60 bg-card/70 p-4 text-sm">
+                    <div>
+                      <p className="font-semibold text-foreground">{job?.title ?? "Contract"}</p>
+                      <p className="text-xs text-muted">Received {new Date(proposal.created_at).toLocaleString()}</p>
+                    </div>
+                    <Badge variant="muted">{proposal.status}</Badge>
+                  </Card>
+                );
+              })
             )}
           </div>
         </Card>
@@ -98,15 +102,19 @@ export default async function EmployerDashboardPage() {
             {contracts.length === 0 ? (
               <EmptyState message="No active contracts. Hire a freelancer to kickstart your next project." />
             ) : (
-              contracts.map((contract) => (
-                <Card key={contract.id} className="flex items-center justify-between border border-card-border/60 bg-card/70 p-4 text-sm">
-                  <div>
-                    <p className="font-semibold text-foreground">{contract.jobs?.title}</p>
-                    <p className="text-xs text-muted">{new Date(contract.created_at).toLocaleString()}</p>
-                  </div>
-                  <Badge variant="muted">{contract.status}</Badge>
-                </Card>
-              ))
+              contracts.map((contract) => {
+                const job = Array.isArray(contract.jobs) ? contract.jobs[0] : contract.jobs;
+
+                return (
+                  <Card key={contract.id} className="flex items-center justify-between border border-card-border/60 bg-card/70 p-4 text-sm">
+                    <div>
+                      <p className="font-semibold text-foreground">{job?.title ?? "Contract"}</p>
+                      <p className="text-xs text-muted">{new Date(contract.created_at).toLocaleString()}</p>
+                    </div>
+                    <Badge variant="muted">{contract.status}</Badge>
+                  </Card>
+                );
+              })
             )}
           </div>
         </Card>
