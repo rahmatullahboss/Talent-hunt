@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { type Resolver, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -29,9 +29,11 @@ const freelancerSchema = z.object({
   location: z.string().min(2, "Add your city"),
   website: z
     .string()
-    .optional()
-    .transform((value) => (value && value.length ? value : undefined))
-    .refine((value) => !value || /^https?:\/\//.test(value), { message: "Enter a valid URL starting with http(s)://" }),
+    .trim()
+    .refine((value) => value.length === 0 || /^https?:\/\//.test(value), {
+      message: "Enter a valid URL starting with http(s)://",
+    })
+    .transform((value) => (value.length === 0 ? undefined : value)),
   phone: z.string().optional(),
 });
 
