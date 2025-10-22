@@ -54,3 +54,17 @@ a {
 * {
   box-sizing: border-box;
 }
+
+button[class~="bg-accent"],
+a[class~="bg-accent"],
+[class~="bg-accent"][role="button"] {
+  color: var(--accent-foreground) !important;
+}
+
+button[class~="bg-accent"] *,
+a[class~="bg-accent"] *,
+[class~="bg-accent"][role="button"] * {
+  color: inherit !important;
+  fill: currentColor;
+  stroke: currentColor;
+}
