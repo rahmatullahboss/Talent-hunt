@@ -2,10 +2,10 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #0f172a;
+  --foreground: #000000;
   --card: #ffffff;
   --card-border: #dcefe4;
-  --muted: #334155;
+  --muted: #000000;
   --accent: #0f9d58;
   --accent-foreground: #f1fff6;
   --font-geist-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -47,11 +47,11 @@ body {
 }
 
 .text-foreground {
-  color: #0f172a !important;
+  color: #000000 !important;
 }
 
 .text-muted {
-  color: #4b5563 !important;
+  color: #000000 !important;
 }
 
 @media (prefers-color-scheme: dark) {
