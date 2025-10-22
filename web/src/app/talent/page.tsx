@@ -65,12 +65,12 @@ const successMetrics = [
 
 export default function TalentPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f0fdf4] via-[#f4fbf8] to-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#eefbf4] via-[#f6fdf8] to-white">
       <SiteHeader />
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-6 pb-24 pt-16">
         <header className="grid gap-10 md:grid-cols-[1.2fr_0.8fr] md:items-center">
           <div className="space-y-6">
-            <Badge className="w-fit bg-white text-accent">Build your light-mode headquarters</Badge>
+            <Badge className="w-fit bg-white text-accent shadow-sm">Build your light-mode headquarters</Badge>
             <h1 className="text-4xl font-semibold text-foreground md:text-5xl">
               Stand out on the premier Bangladeshi freelance marketplace.
             </h1>
@@ -81,12 +81,12 @@ export default function TalentPage() {
               <Button asChild size="lg">
                 <Link href="/signup?role=freelancer">Create your profile</Link>
               </Button>
-              <Button asChild variant="secondary" className="bg-white text-foreground">
+              <Button asChild variant="secondary" className="bg-white text-foreground shadow-sm">
                 <Link href="/onboarding">Meet the success team</Link>
               </Button>
             </div>
           </div>
-          <Card className="space-y-6 border border-card-border bg-white/90 p-6 shadow-lg">
+          <Card className="space-y-6 border border-card-border bg-white p-6 shadow-lg">
             <h2 className="text-lg font-semibold text-foreground">Freelancer spotlight</h2>
             <p className="text-sm text-muted">
               &ldquo;I closed three long-term retainers through TalentHunt BD in under a month because the platform surfaces exactly the work I want.&rdquo;
@@ -108,7 +108,7 @@ export default function TalentPage() {
 
         <section className="space-y-10">
           <header className="space-y-4 text-center">
-            <Badge className="mx-auto bg-white text-accent">All-in-one toolkit</Badge>
+            <Badge className="mx-auto bg-white text-accent shadow-sm">All-in-one toolkit</Badge>
             <h2 className="text-3xl font-semibold md:text-4xl">Designed for the way you work</h2>
             <p className="mx-auto max-w-2xl text-lg text-muted">
               From proposal to payout, every interaction feels clean, transparent, and supportive—just like the best light theme experiences.
@@ -116,7 +116,7 @@ export default function TalentPage() {
           </header>
           <div className="grid gap-6 md:grid-cols-3">
             {talentHighlights.map((feature) => (
-              <Card key={feature.title} className="h-full space-y-4 border border-card-border bg-white/95 p-6 shadow-sm">
+              <Card key={feature.title} className="h-full space-y-4 border border-card-border bg-white p-6 shadow-sm">
                 <feature.icon className="h-10 w-10 text-accent" />
                 <h3 className="text-lg font-semibold text-foreground">{feature.title}</h3>
                 <p className="text-sm text-muted">{feature.description}</p>
@@ -125,7 +125,7 @@ export default function TalentPage() {
           </div>
         </section>
 
-        <section className="space-y-6 rounded-[var(--radius-lg)] border border-card-border bg-gradient-to-br from-emerald-500/10 via-white to-emerald-50 p-10 shadow-lg">
+        <section className="space-y-6 rounded-[var(--radius-lg)] border border-card-border bg-gradient-to-br from-emerald-500/15 via-white to-emerald-50 p-10 shadow-lg">
           <div className="flex flex-col gap-6 text-center md:flex-row md:items-center md:justify-between md:text-left">
             <div className="space-y-4">
               <h2 className="text-3xl font-semibold text-foreground md:text-4xl">Memberships built to accelerate your journey</h2>
@@ -139,7 +139,7 @@ export default function TalentPage() {
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {membershipTiers.map((tier) => (
-              <Card key={tier.name} className="h-full space-y-4 border border-card-border bg-white/95 p-6 shadow-md">
+              <Card key={tier.name} className="h-full space-y-4 border border-card-border bg-white p-6 shadow-md">
                 <p className="text-sm font-semibold uppercase tracking-wide text-accent">{tier.name}</p>
                 <p className="text-3xl font-semibold text-foreground">{tier.price}</p>
                 <ul className="space-y-2 text-sm text-muted">
@@ -147,7 +147,7 @@ export default function TalentPage() {
                     <li key={feature}>• {feature}</li>
                   ))}
                 </ul>
-                <Button asChild variant="secondary" className="bg-white text-foreground">
+                <Button asChild variant="secondary" className="bg-white text-foreground shadow-sm">
                   <Link href="/signup?role=freelancer">Choose {tier.name.toLowerCase()}</Link>
                 </Button>
               </Card>

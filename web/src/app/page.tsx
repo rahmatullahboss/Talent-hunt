@@ -117,12 +117,12 @@ const trustedBy = ["Pathao", "ShopUp", "bKash", "iFarmer", "Shikho", "TallyKhata
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f0fdf4] via-[#f4fbf8] to-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#eefbf4] via-[#f6fdf8] to-white">
       <SiteHeader />
       <main className="relative mx-auto flex w-full max-w-6xl flex-col gap-24 px-6 pb-32 pt-16">
         <section className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-8">
-            <Badge className="w-fit bg-accent/10 text-accent">Bangladeshi talent, global ambitions</Badge>
+            <Badge className="w-fit bg-accent/15 text-accent">Bangladeshi talent, global ambitions</Badge>
             <h1 className="text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-6xl">
               Build, scale, and collaborate in a light, confident workspace.
             </h1>
@@ -140,7 +140,7 @@ export default function Home() {
                 <Link href="/signup?role=freelancer">Find work</Link>
               </Button>
             </div>
-            <div className="grid gap-6 rounded-[var(--radius-lg)] border border-card-border bg-white/80 p-6 shadow-sm backdrop-blur-sm sm:grid-cols-2">
+            <div className="grid gap-6 rounded-[var(--radius-lg)] border border-card-border bg-white p-6 shadow-sm sm:grid-cols-2">
               {stats.map((stat) => (
                 <div key={stat.label}>
                   <p className="text-3xl font-semibold text-foreground">{stat.value}</p>
@@ -149,9 +149,9 @@ export default function Home() {
               ))}
             </div>
           </div>
-          <Card className="border-0 bg-gradient-to-br from-white/80 via-white to-emerald-50 p-8 shadow-xl">
+          <Card className="border border-card-border bg-gradient-to-br from-white via-white to-emerald-50 p-8 shadow-xl">
             <div className="space-y-6">
-              <div className="rounded-[var(--radius-lg)] border border-card-border/60 bg-white/90 p-6 shadow-sm">
+              <div className="rounded-[var(--radius-lg)] border border-card-border bg-white p-6 shadow-sm">
                 <div className="flex items-center justify-between text-xs font-medium text-muted">
                   <span className="inline-flex items-center gap-2">
                     <Briefcase className="h-4 w-4 text-accent" /> Milestone in review
@@ -164,16 +164,16 @@ export default function Home() {
                 </p>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Card className="border border-card-border/60 bg-white p-5 shadow-sm">
+                <Card className="border border-card-border bg-white p-5 shadow-sm">
                   <p className="text-sm text-muted">Team assembled</p>
                   <p className="mt-2 text-xl font-semibold text-foreground">Product designer · UX writer · QA</p>
                 </Card>
-                <Card className="border border-card-border/60 bg-white p-5 shadow-sm">
+                <Card className="border border-card-border bg-white p-5 shadow-sm">
                   <p className="text-sm text-muted">Time to hire</p>
                   <p className="mt-2 text-xl font-semibold text-foreground">36 hours</p>
                 </Card>
               </div>
-              <div className="rounded-[var(--radius-md)] border border-card-border/60 bg-white p-5 shadow-sm">
+              <div className="rounded-[var(--radius-md)] border border-card-border bg-white p-5 shadow-sm">
                 <p className="text-sm text-muted">Client rating</p>
                 <div className="mt-3 flex items-center gap-2 text-foreground">
                   <Star className="h-5 w-5 fill-accent text-accent" />
@@ -187,7 +187,7 @@ export default function Home() {
 
         <section className="space-y-10">
           <header className="max-w-3xl space-y-4">
-            <Badge className="bg-white text-accent">Hire with confidence</Badge>
+            <Badge className="bg-white text-accent shadow-sm">Hire with confidence</Badge>
             <h2 className="text-3xl font-semibold md:text-4xl">Why teams choose TalentHunt BD</h2>
             <p className="text-lg text-muted">
               A curated marketplace built specifically for Bangladesh, blending the polish of Upwork with local insight and concierge support.
@@ -195,7 +195,7 @@ export default function Home() {
           </header>
           <div className="grid gap-6 md:grid-cols-3">
             {assurances.map((feature) => (
-              <Card key={feature.title} className="h-full space-y-4 border border-card-border bg-white/90 p-6 shadow-sm">
+              <Card key={feature.title} className="h-full space-y-4 border border-card-border bg-white p-6 shadow-sm">
                 <feature.icon className="h-10 w-10 text-accent" />
                 <h3 className="text-xl font-semibold">{feature.title}</h3>
                 <p className="text-sm text-muted">{feature.description}</p>
@@ -206,7 +206,7 @@ export default function Home() {
 
         <section className="space-y-10">
           <header className="max-w-2xl space-y-4">
-            <Badge className="bg-white text-accent">All the skills you need</Badge>
+            <Badge className="bg-white text-accent shadow-sm">All the skills you need</Badge>
             <h2 className="text-3xl font-semibold md:text-4xl">Explore top categories</h2>
             <p className="text-lg text-muted">
               Flexible engagements across product teams, creative studios, and growth experts ready to plug into your roadmap.
@@ -216,7 +216,7 @@ export default function Home() {
             {categories.map((category) => (
               <Card
                 key={category.title}
-                className="border border-card-border bg-white/90 p-5 shadow-sm transition hover:-translate-y-1 hover:border-accent/60 hover:shadow-md"
+                className="border border-card-border bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-accent/50 hover:shadow-md"
               >
                 <h3 className="text-lg font-semibold text-foreground">{category.title}</h3>
                 <p className="mt-2 text-sm text-muted">{category.description}</p>
@@ -225,17 +225,17 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="space-y-8 rounded-[var(--radius-lg)] border border-card-border bg-white/90 p-10 shadow-lg">
+        <section className="space-y-8 rounded-[var(--radius-lg)] border border-card-border bg-white p-10 shadow-lg">
           <div className="grid gap-8 md:grid-cols-[1.5fr_1fr] md:items-center">
             <div className="space-y-5">
-              <Badge className="bg-accent text-accent-foreground">How it works</Badge>
+              <Badge className="bg-accent text-accent-foreground shadow">How it works</Badge>
               <h2 className="text-3xl font-semibold md:text-4xl">From kickoff to payout in three guided steps</h2>
               <p className="text-lg text-muted">
                 We combine automation with human support so every engagement feels effortless, transparent, and on brand for your company.
               </p>
               <div className="grid gap-4">
                 {workflow.map((item) => (
-                  <div key={item.step} className="flex gap-4 rounded-[var(--radius-md)] border border-card-border/70 bg-white p-5 shadow-sm">
+                  <div key={item.step} className="flex gap-4 rounded-[var(--radius-md)] border border-card-border bg-white p-5 shadow-sm">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-lg font-semibold text-accent">
                       {item.step}
                     </div>
@@ -247,7 +247,7 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <Card className="space-y-4 border border-card-border/70 bg-emerald-50/70 p-6">
+            <Card className="space-y-4 border border-card-border bg-emerald-50/80 p-6">
               <h3 className="text-xl font-semibold text-foreground">Concierge onboarding</h3>
               <p className="text-sm text-muted">
                 Share your job post or portfolio and our success team sets up your workspace, recommends milestones, and invites the right collaborators.
@@ -261,15 +261,15 @@ export default function Home() {
 
         <section className="space-y-10">
           <header className="space-y-4 text-center">
-            <Badge className="mx-auto bg-white text-accent">Trusted by leaders</Badge>
+            <Badge className="mx-auto bg-white text-accent shadow-sm">Trusted by leaders</Badge>
             <h2 className="text-3xl font-semibold md:text-4xl">Bangladesh&rsquo;s fastest growing teams use TalentHunt BD</h2>
             <p className="mx-auto max-w-2xl text-lg text-muted">
               From startups to enterprise innovators, teams rely on our vetted marketplace and light, modern tooling to deliver on every sprint.
             </p>
           </header>
-          <div className="flex flex-wrap items-center justify-center gap-6 rounded-[var(--radius-lg)] border border-card-border bg-white/90 p-8 shadow-sm">
+          <div className="flex flex-wrap items-center justify-center gap-6 rounded-[var(--radius-lg)] border border-card-border bg-white p-8 shadow-sm">
             {trustedBy.map((brand) => (
-              <span key={brand} className="text-lg font-semibold text-foreground/80">
+              <span key={brand} className="text-lg font-semibold text-foreground">
                 {brand}
               </span>
             ))}
@@ -278,16 +278,16 @@ export default function Home() {
 
         <section className="grid gap-8 md:grid-cols-3">
           {testimonials.map((testimonial) => (
-            <Card key={testimonial.name} className="h-full border border-card-border bg-white/95 p-6 shadow-md">
+            <Card key={testimonial.name} className="h-full border border-card-border bg-white p-6 shadow-md">
               <Star className="h-8 w-8 text-accent" />
-              <p className="mt-4 text-base text-foreground/90">“{testimonial.quote}”</p>
+              <p className="mt-4 text-base text-foreground">“{testimonial.quote}”</p>
               <p className="mt-6 text-sm font-semibold text-foreground">{testimonial.name}</p>
               <p className="text-xs text-muted">{testimonial.role}</p>
             </Card>
           ))}
         </section>
 
-        <section className="space-y-6 rounded-[var(--radius-lg)] border border-card-border bg-gradient-to-br from-emerald-500/10 via-white to-emerald-50 p-10 text-center shadow-xl">
+        <section className="space-y-6 rounded-[var(--radius-lg)] border border-card-border bg-gradient-to-br from-emerald-500/15 via-white to-emerald-50 p-10 text-center shadow-xl">
           <h2 className="text-3xl font-semibold md:text-4xl text-foreground">
             Ready to experience the lightest talent marketplace in Bangladesh?
           </h2>
@@ -306,7 +306,7 @@ export default function Home() {
 
         <section className="grid gap-6 md:grid-cols-3">
           {highlights.map((item) => (
-            <Card key={item.title} className="h-full border border-card-border bg-white/90 p-6 shadow-sm">
+            <Card key={item.title} className="h-full border border-card-border bg-white p-6 shadow-sm">
               <item.icon className="h-8 w-8 text-accent" />
               <h3 className="mt-4 text-lg font-semibold text-foreground">{item.title}</h3>
               <p className="mt-2 text-sm text-muted">{item.description}</p>

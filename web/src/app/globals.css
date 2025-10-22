@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4fbf8;
-  --foreground: #1f2937;
+  --background: #eefbf4;
+  --foreground: #0f172a;
   --card: #ffffff;
-  --card-border: #d1fae5;
-  --muted: #6b7280;
-  --accent: #108a00;
-  --accent-foreground: #f0fdf4;
+  --card-border: #c5efd8;
+  --muted: #3f4c5f;
+  --accent: #0f9d58;
+  --accent-foreground: #f6fef9;
   --font-geist-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-geist-mono: "JetBrains Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
@@ -30,12 +30,12 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #04110a;
-    --foreground: #e5f7ed;
+    --foreground: #e6f6ee;
     --card: #0d1f16;
-    --card-border: rgba(16, 138, 0, 0.35);
-    --muted: #9ca3af;
+    --card-border: rgba(15, 157, 88, 0.4);
+    --muted: #a9b3bd;
     --accent: #34d399;
-    --accent-foreground: #032812;
+    --accent-foreground: #042612;
   }
 }
 

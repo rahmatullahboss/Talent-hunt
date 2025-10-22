@@ -56,11 +56,11 @@ const filters = [
 
 export default function JobsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f0fdf4] via-[#f4fbf8] to-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#eefbf4] via-[#f6fdf8] to-white">
       <SiteHeader />
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-6 pb-24 pt-16">
         <header className="space-y-6 text-center">
-          <Badge className="mx-auto bg-white text-accent">Find work you love</Badge>
+          <Badge className="mx-auto bg-white text-accent shadow-sm">Find work you love</Badge>
           <h1 className="text-4xl font-semibold text-foreground md:text-5xl">Curated opportunities for Bangladeshi talent</h1>
           <p className="mx-auto max-w-2xl text-lg text-muted">
             Browse a light, Upwork-inspired job board featuring vetted clients, transparent rates, and quick response times.
@@ -79,7 +79,7 @@ export default function JobsPage() {
 
         <section className="grid gap-6 lg:grid-cols-[1fr_2fr]">
           <aside className="space-y-6">
-            <Card className="space-y-4 border border-card-border bg-white/90 p-6 shadow-sm">
+            <Card className="space-y-4 border border-card-border bg-white p-6 shadow-sm">
               <h2 className="text-lg font-semibold text-foreground">Popular categories</h2>
               <div className="flex flex-wrap gap-2">
                 {filters.map((filter) => (
@@ -89,7 +89,7 @@ export default function JobsPage() {
                 ))}
               </div>
             </Card>
-            <Card className="space-y-4 border border-card-border bg-gradient-to-br from-emerald-500/10 via-white to-emerald-50 p-6 shadow-sm">
+            <Card className="space-y-4 border border-card-border bg-gradient-to-br from-emerald-500/15 via-white to-emerald-50 p-6 shadow-sm">
               <div className="flex items-center gap-3">
                 <Sparkles className="h-6 w-6 text-accent" />
                 <h3 className="text-base font-semibold text-foreground">Pro Tip</h3>
@@ -97,7 +97,7 @@ export default function JobsPage() {
               <p className="text-sm text-muted">
                 Complete your profile and add verified badges to move to the top of shortlists curated by our success team.
               </p>
-              <Button asChild variant="secondary" className="bg-white text-foreground">
+              <Button asChild variant="secondary" className="bg-white text-foreground shadow-sm">
                 <Link href="/onboarding">Upgrade profile</Link>
               </Button>
             </Card>
@@ -105,7 +105,7 @@ export default function JobsPage() {
 
           <div className="space-y-4">
             {jobs.map((job) => (
-              <Card key={job.title} className="space-y-4 border border-card-border bg-white/95 p-6 shadow-md">
+              <Card key={job.title} className="space-y-4 border border-card-border bg-white p-6 shadow-md">
                 <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                   <div>
                     <h3 className="text-xl font-semibold text-foreground">{job.title}</h3>
