@@ -30,7 +30,7 @@ const jobSchema = z.object({
   jobId: z.string().uuid(),
 });
 
-type AdminActionState = {
+export type AdminActionState = {
   status: "idle" | "success" | "error";
   message?: string;
 };

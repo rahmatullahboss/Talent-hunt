@@ -27,7 +27,7 @@ const schema = z.object({
     .refine((value) => !value || /^https?:\/\//.test(value), "Website must start with http or https."),
 });
 
-type ProfileActionState = {
+export type ProfileActionState = {
   status: "idle" | "success" | "error";
   message?: string;
 };

@@ -22,17 +22,25 @@ const freelancerSchema = z.object({
       (value) => value.split(",").map((skill) => skill.trim()).filter(Boolean).length > 0,
       { message: "Add at least one skill" },
     ),
-  hourlyRate: z.coerce.number().nonnegative("Rate must be positive").optional(),
+  hourlyRate: z.union([z.number(), z.null()]).optional(),
   location: z.string().min(2, "Add your city"),
   website: z
     .string()
     .optional()
-    .transform((value) => (value?.length ? value : undefined))
+    .transform((value) => (value && value.length ? value : undefined))
     .refine((value) => !value || /^https?:\/\//.test(value), { message: "Enter a valid URL starting with http(s)://" }),
   phone: z.string().optional(),
 });
 
-type FreelancerValues = z.infer<typeof freelancerSchema>;
+interface FreelancerValues {
+  title: string;
+  bio: string;
+  skills: string;
+  hourlyRate?: number | null;
+  location: string;
+  website?: string;
+  phone?: string;
+}
 
 const employerSchema = z.object({
   title: z.string().min(3, "Share your hiring focus or team name"),
@@ -42,12 +50,19 @@ const employerSchema = z.object({
   website: z
     .string()
     .optional()
-    .transform((value) => (value?.length ? value : undefined))
+    .transform((value) => (value && value.length ? value : undefined))
     .refine((value) => !value || /^https?:\/\//.test(value), { message: "Enter a valid URL starting with http(s)://" }),
   phone: z.string().optional(),
 });
 
-type EmployerValues = z.infer<typeof employerSchema>;
+interface EmployerValues {
+  title: string;
+  companyName: string;
+  hiringNeeds: string;
+  location: string;
+  website?: string;
+  phone?: string;
+}
 
 interface OnboardingFormProps {
   profile: Tables<"profiles"> | null;

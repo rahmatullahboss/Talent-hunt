@@ -16,7 +16,7 @@ const withdrawalSchema = z.object({
     .transform((value) => (value?.length ? value : undefined)),
 });
 
-type WalletActionState = {
+export type WalletActionState = {
   status: "idle" | "success" | "error";
   message?: string;
 };
