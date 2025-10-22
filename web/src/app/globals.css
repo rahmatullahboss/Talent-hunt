@@ -35,7 +35,7 @@
     --card-border: rgba(20, 168, 0, 0.4);
     --muted: #b3cbb3;
     --accent: #1dbf73;
-    --accent-foreground: #001e00;
+    --accent-foreground: #ffffff;
   }
 }
 
@@ -53,4 +53,18 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+button[class~="bg-accent"],
+a[class~="bg-accent"],
+[class~="bg-accent"][role="button"] {
+  color: var(--accent-foreground) !important;
+}
+
+button[class~="bg-accent"] *,
+a[class~="bg-accent"] *,
+[class~="bg-accent"][role="button"] * {
+  color: inherit !important;
+  fill: currentColor;
+  stroke: currentColor;
 }
