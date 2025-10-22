@@ -1,19 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  BadgeCheck,
-  Briefcase,
-  Building2,
-  CheckCircle2,
-  Globe2,
-  Lightbulb,
-  LineChart,
-  MessageCircle,
-  ShieldCheck,
-  Sparkles,
-  Star,
-  UsersRound,
-} from "lucide-react";
+import { BadgeCheck, CheckCircle2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,276 +8,150 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 
 const categories = [
-  {
-    title: "Development & IT",
-    description: "Full-stack, mobile, QA, data science",
-    icon: Sparkles,
-  },
-  {
-    title: "Design & Creative",
-    description: "Product, brand, illustration, motion",
-    icon: Lightbulb,
-  },
-  {
-    title: "Sales & Marketing",
-    description: "Growth, automation, paid media",
-    icon: LineChart,
-  },
-  {
-    title: "Writing & Translation",
-    description: "Copy, scripts, localization, research",
-    icon: MessageCircle,
-  },
-  {
-    title: "Admin & Support",
-    description: "Virtual assistants, finance, HR",
-    icon: UsersRound,
-  },
-  {
-    title: "Product & Project",
-    description: "Product ops, PMs, scrum masters",
-    icon: Briefcase,
-  },
+  "Development & IT",
+  "Design & Creative",
+  "Sales & Marketing",
+  "Writing & Translation",
+  "Admin & Customer Support",
+  "Finance & Accounting",
+  "HR & Training",
+  "Legal",
 ];
 
 const assurances = [
   {
-    title: "Pay once you hire",
-    description: "Review proposals, meet talent, and only release funds after a contract begins.",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Work confidently",
-    description: "Milestones, timesheets, and dispute support keep every project transparent.",
+    title: "Proof of quality",
+    description: "Check any pro’s work samples, client reviews, and identity verification.",
     icon: BadgeCheck,
   },
   {
-    title: "Scale globally",
-    description: "Tap into verified Bangladeshi experts who collaborate across time zones.",
-    icon: Globe2,
+    title: "No cost until you hire",
+    description: "Interview potential fits for your job, negotiate rates, and only pay for work you approve.",
+    icon: CheckCircle2,
+  },
+  {
+    title: "Safe and secure",
+    description: "Focus on your work knowing we help protect your data and privacy. We’re here with 24/7 support if you need it.",
+    icon: ShieldCheck,
   },
 ];
-
-const testimonials = [
-  {
-    quote:
-      "We built an entire product squad in Dhaka through TalentHunt and released our new app twice as fast.",
-    name: "Anika Rahman",
-    role: "Head of Product, Chaldal",
-  },
-  {
-    quote:
-      "Every milestone feels effortless. Payment protection and local expertise make remote projects simple.",
-    name: "Farhan Chowdhury",
-    role: "Operations Lead, Daraz",
-  },
-  {
-    quote:
-      "I love how curated the briefs are. Clients arrive prepared, and expectations stay clear from day one.",
-    name: "Jubayer Hasan",
-    role: "Freelance Motion Designer",
-  },
-];
-
-const trustedBy = ["Pathao", "ShopUp", "bKash", "iFarmer", "Shikho", "TallyKhata"];
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#f2f7f2] text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-24 px-6 pb-24 pt-12">
-        <section
-          id="marketplace"
-          className="grid gap-12 rounded-[32px] bg-white p-10 shadow-[0_20px_60px_rgba(0,30,0,0.08)] lg:grid-cols-[1.1fr_0.9fr]"
-        >
-          <div className="space-y-8">
-            <Badge className="w-fit bg-[#dff4df] text-accent">A trusted Bangladeshi marketplace</Badge>
-            <h1 className="text-4xl font-semibold leading-tight tracking-tight text-[#001e00] md:text-6xl">
-              Connecting clients in need to freelancers who deliver.
-            </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-[#4d6553] md:text-xl">
-              TalentHunt is your Upwork-inspired home for finding verified professionals across development, design, marketing,
-              and more. Post a job, browse curated profiles, and launch projects with confidence.
+      <main className="mx-auto w-full max-w-7xl flex-col gap-24 px-6 pb-24 pt-12">
+        <section className="grid gap-12 py-12 lg:grid-cols-2">
+          <div className="space-y-6">
+            <h1 className="text-5xl font-bold tracking-tight md:text-6xl">How work should work</h1>
+            <p className="max-w-xl text-lg text-muted-foreground">
+              Forget the old rules. You can have the best people. Right now. Right here.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button asChild size="lg">
-                <Link href="/signup?role=employer">
-                  Post a job for free <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="secondary" asChild size="lg">
-                <Link href="/signup?role=freelancer">Find work</Link>
+                <Link href="/signup">Get started</Link>
               </Button>
             </div>
-            <div className="flex flex-wrap items-center gap-6 text-sm text-[#4d6553]">
-              <span className="font-semibold text-[#001e00]">Trusted by teams at</span>
-              {trustedBy.map((brand) => (
-                <span key={brand} className="rounded-full bg-[#e7f5e7] px-4 py-2 text-xs font-medium text-[#1f3a2a]">
-                  {brand}
-                </span>
-              ))}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+              <span className="font-semibold">Popular:</span>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary">Website Design</Badge>
+                <Badge variant="secondary">WordPress</Badge>
+                <Badge variant="secondary">Logo Design</Badge>
+                <Badge variant="secondary">Video Editing</Badge>
+              </div>
             </div>
           </div>
-          <Card className="relative overflow-hidden border-none bg-gradient-to-br from-[#ecf8ec] via-white to-[#dff4df] p-8 shadow-none">
-            <div className="absolute -right-32 -top-20 h-64 w-64 rounded-full bg-[#e7f7e7] blur-3xl" aria-hidden />
-            <div className="relative space-y-6">
-              <div className="rounded-3xl bg-white p-6 shadow-[0_30px_60px_rgba(0,30,0,0.08)]">
-                <div className="flex items-center justify-between text-xs font-medium text-[#4d6553]">
-                  <span className="inline-flex items-center gap-2">
-                    <Briefcase className="h-4 w-4 text-accent" /> Mobile app redesign
-                  </span>
-                  <span className="rounded-full bg-[#e7f5e7] px-3 py-1 text-accent">৳ 75,000</span>
-                </div>
-                <div className="mt-4 space-y-3 text-sm text-[#4d6553]">
-                  <p>UI/UX · Motion · Design system</p>
-                  <div className="flex items-center gap-2 text-xs text-[#1f3a2a]">
-                    <Star className="h-4 w-4 fill-accent text-accent" /> 4.9 (128 reviews)
-                  </div>
-                </div>
-              </div>
-              <div className="ml-auto w-9/12 rounded-3xl bg-white p-6 shadow-[0_20px_40px_rgba(0,30,0,0.06)]">
-                <p className="text-sm font-medium text-[#001e00]">&ldquo;Delivered ahead of schedule with an exceptional prototype.&rdquo;</p>
-                <p className="mt-4 text-xs text-[#4d6553]">— Ahsan Karim, SaaS Founder</p>
-              </div>
-              <div className="flex items-center gap-4 rounded-3xl bg-white p-4 shadow-[0_12px_24px_rgba(0,30,0,0.05)]">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#e7f5e7] text-sm font-semibold text-accent">
-                  ZH
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-[#001e00]">Zara Haque</p>
-                  <p className="text-xs text-[#4d6553]">Product Designer · Dhaka, Bangladesh</p>
-                </div>
-              </div>
-            </div>
-          </Card>
+          <div className="hidden lg:block">
+            {/* <Image
+              src="/hero-image.webp"
+              alt="A person working on a laptop"
+              width={500}
+              height={500}
+              className="rounded-lg"
+            /> */}
+          </div>
         </section>
 
-        <section className="space-y-10">
-          <div className="flex flex-col gap-3">
-            <h2 className="text-3xl font-semibold text-[#001e00]">Explore millions of pros</h2>
-            <p className="max-w-2xl text-[#4d6553]">
-              Browse the skills you need or invite our team to match you with curated experts ready to join your next project.
-            </p>
+        <section className="space-y-10 py-12">
+          <div className="space-y-3 text-center">
+            <h2 className="text-4xl font-bold">Browse talent by category</h2>
+            <p className="text-muted-foreground">Looking for work? <Link href="/jobs" className="text-accent underline">Browse jobs</Link></p>
           </div>
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             {categories.map((category) => (
-              <Card
-                key={category.title}
-                className="flex flex-col gap-3 border-none bg-white p-6 shadow-[0_12px_24px_rgba(0,30,0,0.05)] transition hover:-translate-y-1 hover:shadow-[0_24px_50px_rgba(0,30,0,0.08)]"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e7f5e7] text-accent">
-                  <category.icon className="h-6 w-6" />
-                </div>
-                <h3 className="text-lg font-semibold text-[#001e00]">{category.title}</h3>
-                <p className="text-sm text-[#4d6553]">{category.description}</p>
-                <Link href="/jobs" className="mt-auto inline-flex items-center text-sm font-semibold text-accent">
-                  Browse talent <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
+              <Card key={category} className="cursor-pointer p-6 text-center transition hover:bg-muted/20">
+                <h3 className="font-semibold">{category}</h3>
               </Card>
             ))}
           </div>
         </section>
 
-        <section id="enterprise" className="grid gap-12 rounded-[32px] bg-white p-10 shadow-[0_20px_60px_rgba(0,30,0,0.08)] lg:grid-cols-2">
+        <section className="grid gap-12 rounded-lg bg-accent/5 p-10 lg:grid-cols-2">
           <div className="space-y-4">
-            <Badge className="w-fit bg-[#dff4df] text-accent">Enterprise Suite</Badge>
-            <h2 className="text-3xl font-semibold text-[#001e00]">
-              Build your dream team with hands-on support from our success managers.
-            </h2>
-            <p className="text-[#4d6553]">
-              From milestone planning to onboarding, our curated workflows help product leaders, startups, and agencies deliver
-              reliably.
-            </p>
-            <div className="flex flex-wrap gap-3 text-sm text-[#1f3a2a]">
-              <span className="inline-flex items-center gap-2 rounded-full bg-[#e7f5e7] px-4 py-2">
-                <CheckCircle2 className="h-4 w-4 text-accent" /> Dedicated hiring partner
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-[#e7f5e7] px-4 py-2">
-                <Building2 className="h-4 w-4 text-accent" /> Compliance-ready contracts
-              </span>
+            <h2 className="text-4xl font-bold">Up your work game, it’s easy</h2>
+            <ul className="space-y-4 text-lg">
+              <li className="flex items-start gap-3">
+                <CheckCircle2 className="mt-1 h-5 w-5 flex-shrink-0 text-accent" />
+                <span><span className="font-semibold">No cost to join.</span> Register and browse professionals, free of charge.</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle2 className="mt-1 h-5 w-5 flex-shrink-0 text-accent" />
+                <span><span className="font-semibold">Post a job and hire top talent.</span> Finding talent doesn’t have to be a chore. Post a job or we can search for you!</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle2 className="mt-1 h-5 w-5 flex-shrink-0 text-accent" />
+                <span><span className="font-semibold">Work with the best—without breaking the bank.</span> Upwork makes it affordable to up your work and take advantage of low transaction rates.</span>
+              </li>
+            </ul>
+            <div className="flex gap-4 pt-4">
+              <Button asChild>
+                <Link href="/signup">Sign up for free</Link>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link href="#">Learn how to hire</Link>
+              </Button>
             </div>
-            <Button variant="secondary" asChild>
-              <Link href="/onboarding">Talk to sales</Link>
-            </Button>
           </div>
-          <div className="space-y-6">
-            <Card className="border-none bg-[#f5fbf5] p-6 shadow-none">
-              <h3 className="text-lg font-semibold text-[#001e00]">Curated project pods</h3>
-              <p className="mt-2 text-sm text-[#4d6553]">
-                Launch quickly with pre-vetted engineers, designers, and strategists who have shipped together before.
-              </p>
-            </Card>
-            <Card className="border-none bg-[#f5fbf5] p-6 shadow-none">
-              <h3 className="text-lg font-semibold text-[#001e00]">Insights & reporting</h3>
-              <p className="mt-2 text-sm text-[#4d6553]">
-                Keep stakeholders aligned with dashboards covering budget, delivery, and satisfaction metrics.
-              </p>
-            </Card>
-            <Card className="border-none bg-[#f5fbf5] p-6 shadow-none">
-              <h3 className="text-lg font-semibold text-[#001e00]">Localized onboarding</h3>
-              <p className="mt-2 text-sm text-[#4d6553]">
-                Ensure every freelancer is set up for success with streamlined compliance and fast payouts.
-              </p>
-            </Card>
+          <div className="hidden items-center justify-center lg:flex">
+            {/* <Image
+              src="/work-game.webp"
+              alt="A person smiling"
+              width={500}
+              height={500}
+              className="h-auto w-full max-w-md rounded-lg"
+            /> */}
           </div>
         </section>
 
-        <section id="solutions" className="space-y-12">
-          <div className="space-y-3">
-            <h2 className="text-3xl font-semibold text-[#001e00]">Clients only pay after hiring</h2>
-            <p className="max-w-3xl text-[#4d6553]">
-              Work confidently with escrow-style protection, verified profiles, and milestone-based payments that mirror the
-              Upwork experience tailored for Bangladesh.
-            </p>
+        <section className="space-y-12 py-24">
+          <div className="space-y-3 text-center">
+            <h2 className="text-4xl font-bold">Why businesses turn to Upwork</h2>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {assurances.map((assurance) => (
-              <Card key={assurance.title} className="flex flex-col gap-3 border-none bg-white p-6 shadow-[0_16px_32px_rgba(0,30,0,0.06)]">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e7f5e7] text-accent">
-                  <assurance.icon className="h-6 w-6" />
+              <Card key={assurance.title} className="flex flex-col gap-3 p-6">
+                <div className="text-accent">
+                  <assurance.icon className="h-8 w-8" />
                 </div>
-                <h3 className="text-lg font-semibold text-[#001e00]">{assurance.title}</h3>
-                <p className="text-sm text-[#4d6553]">{assurance.description}</p>
+                <h3 className="text-xl font-semibold">{assurance.title}</h3>
+                <p className="text-muted-foreground">{assurance.description}</p>
               </Card>
             ))}
           </div>
         </section>
 
-        <section className="space-y-10">
-          <div className="space-y-3">
-            <h2 className="text-3xl font-semibold text-[#001e00]">Real results from clients</h2>
-            <p className="max-w-3xl text-[#4d6553]">
-              Teams across Dhaka, Chattogram, and beyond rely on TalentHunt to co-create products, campaigns, and operations that
-              move their business forward.
-            </p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {testimonials.map((testimonial) => (
-              <Card key={testimonial.name} className="flex h-full flex-col justify-between border-none bg-white p-6 shadow-[0_16px_40px_rgba(0,30,0,0.06)]">
-                <p className="text-sm leading-relaxed text-[#001e00]">“{testimonial.quote}”</p>
-                <div className="mt-6 space-y-1 text-sm">
-                  <p className="font-semibold text-[#001e00]">{testimonial.name}</p>
-                  <p className="text-[#4d6553]">{testimonial.role}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <section className="overflow-hidden rounded-[32px] bg-gradient-to-br from-[#14a800] via-[#108a00] to-[#0f7a00] p-12 text-white">
+        <section className="rounded-lg bg-foreground p-12 text-background">
           <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
             <div className="space-y-4">
-              <h2 className="text-3xl font-semibold">Find your next hire for a short task or long-term growth.</h2>
-              <p className="max-w-xl text-white/80">
-                Join thousands of Bangladeshi teams creating world-class products with local experts.
+              <h2 className="text-3xl font-semibold">Find talent your way</h2>
+              <p className="max-w-xl text-muted">
+                Work with the largest network of independent professionals and get things done—from quick turnarounds to big transformations.
               </p>
             </div>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Button variant="secondary" asChild size="lg" className="bg-white text-accent hover:bg-[#f0fff0]">
-                <Link href="/signup?role=employer">Start hiring</Link>
-              </Button>
-              <Button variant="ghost" asChild size="lg" className="border border-white bg-transparent text-white hover:bg-white/10">
-                <Link href="/signup?role=freelancer">Join as talent</Link>
+              <Button variant="secondary" asChild size="lg">
+                <Link href="/signup">Post a job and hire a pro</Link>
               </Button>
             </div>
           </div>

@@ -1,48 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f2f7f2;
-  --foreground: #001e00;
+  --background: #ffffff;
+  --foreground: #000000;
   --card: #ffffff;
-  --card-border: #cde7cd;
-  --muted: #3f5c3f;
+  --card-border: #e4ebe4;
+  --muted: #5e6d55;
   --accent: #14a800;
   --accent-foreground: #ffffff;
-  --font-geist-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-geist-mono: "JetBrains Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-border: var(--card-border);
-  --color-muted: var(--muted);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --radius-lg: 18px;
   --radius-md: 12px;
   --radius-sm: 8px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #001e00;
-    --foreground: #f2f7f2;
-    --card: #102a12;
-    --card-border: rgba(20, 168, 0, 0.4);
-    --muted: #b3cbb3;
-    --accent: #1dbf73;
-    --accent-foreground: #001e00;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-sans);
   min-height: 100vh;
 }
 
