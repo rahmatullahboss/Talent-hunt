@@ -23,7 +23,7 @@ const deleteSchema = z.object({
   id: z.string().uuid(),
 });
 
-type ActionState = {
+export type ActionState = {
   status: "idle" | "success" | "error";
   message?: string;
 };
