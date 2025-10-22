@@ -22,25 +22,32 @@ const freelancerSchema = z.object({
       (value) => value.split(",").map((skill) => skill.trim()).filter(Boolean).length > 0,
       { message: "Add at least one skill" },
     ),
-  hourlyRate: z.union([z.number(), z.null()]).optional(),
+  hourlyRate: z
+    .number()
+    .min(0, "Hourly rate must be positive.")
+    .optional(),
   location: z.string().min(2, "Add your city"),
   website: z
     .string()
     .optional()
-    .transform((value) => (value && value.length ? value : undefined))
-    .refine((value) => !value || /^https?:\/\//.test(value), { message: "Enter a valid URL starting with http(s)://" }),
+    .transform((value) => {
+      if (!value) {
+        return undefined;
+      }
+
+      const trimmed = value.trim();
+      return trimmed.length === 0 ? undefined : trimmed;
+    })
+    .refine((value) => !value || /^https?:\/\//.test(value), {
+      message: "Enter a valid URL starting with http(s)://",
+    }),
   phone: z.string().optional(),
 });
 
-interface FreelancerValues {
-  title: string;
-  bio: string;
-  skills: string;
-  hourlyRate?: number | null;
-  location: string;
-  website?: string;
-  phone?: string;
-}
+type FreelancerSchemaOutput = z.infer<typeof freelancerSchema>;
+type FreelancerValues = Omit<FreelancerSchemaOutput, "website"> & {
+  website?: FreelancerSchemaOutput["website"];
+};
 
 const employerSchema = z.object({
   title: z.string().min(3, "Share your hiring focus or team name"),
@@ -106,7 +113,7 @@ function FreelancerOnboardingForm({ profile }: { profile: Tables<"profiles"> }) 
       skills: defaultSkills,
       hourlyRate: profile.hourly_rate ?? undefined,
       location: profile.location ?? "",
-      website: profile.website ?? "",
+      website: profile.website ?? undefined,
       phone: profile.phone ?? "",
     },
   });
@@ -178,7 +185,23 @@ function FreelancerOnboardingForm({ profile }: { profile: Tables<"profiles"> }) 
           <label className="text-sm font-medium text-muted" htmlFor="hourlyRate">
             Hourly rate (USD)
           </label>
-          <Input id="hourlyRate" type="number" min={0} step="1" placeholder="25" {...register("hourlyRate")} />
+          <Input
+            id="hourlyRate"
+            type="number"
+            min={0}
+            step="1"
+            placeholder="25"
+            {...register("hourlyRate", {
+              setValueAs: (value) => {
+                if (value === "" || value === null || value === undefined) {
+                  return undefined;
+                }
+
+                const parsed = Number(value);
+                return Number.isNaN(parsed) ? undefined : parsed;
+              },
+            })}
+          />
           {errors.hourlyRate ? <p className="text-sm text-red-500">{errors.hourlyRate.message}</p> : null}
         </div>
         <div className="space-y-2">
