@@ -56,7 +56,7 @@ export function SiteHeader() {
           className="md:hidden"
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-expanded={isMenuOpen}
-          aria-controls="mobile-menu"
+          aria-controls={isMenuOpen ? "mobile-menu" : undefined}
         >
           <span className="sr-only">Toggle menu</span>
           <svg
@@ -81,40 +81,40 @@ export function SiteHeader() {
           </svg>
         </Button>
       </div>
-      <div
-        id="mobile-menu"
-        className={cn(
-          "md:hidden",
-          "fixed inset-x-0 top-16 z-30 mx-auto w-full max-w-6xl rounded-b-2xl border border-card-border/80 bg-white px-6 py-6 shadow-lg transition-all",
-          isMenuOpen
-            ? "pointer-events-auto translate-y-0 opacity-100"
-            : "pointer-events-none -translate-y-2 opacity-0",
-        )}
-      >
-        <nav className="flex flex-col gap-4 text-base font-medium text-foreground/80">
-          {links.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={closeMenu}
-              className={cn(
-                "rounded-md px-2 py-1.5 transition hover:bg-muted/70 hover:text-foreground",
-                pathname === item.href ? "text-foreground" : undefined,
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="mt-6 flex flex-col gap-3">
-          <Button variant="ghost" className="justify-start" asChild onClick={closeMenu}>
-            <Link href="/signin">Log in</Link>
-          </Button>
-          <Button size="md" asChild onClick={closeMenu}>
-            <Link href="/signup">Sign up</Link>
-          </Button>
+      {isMenuOpen ? (
+        <div
+          id="mobile-menu"
+          className={cn(
+            "md:hidden",
+            "fixed inset-x-0 top-16 z-30 mx-auto w-full max-w-6xl rounded-b-2xl border border-card-border/80 bg-white px-6 py-6 shadow-lg transition-all",
+            "pointer-events-auto translate-y-0 opacity-100",
+          )}
+        >
+          <nav className="flex flex-col gap-4 text-base font-medium text-foreground/80">
+            {links.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={closeMenu}
+                className={cn(
+                  "rounded-md px-2 py-1.5 transition hover:bg-muted/70 hover:text-foreground",
+                  pathname === item.href ? "text-foreground" : undefined,
+                )}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="mt-6 flex flex-col gap-3">
+            <Button variant="ghost" className="justify-start" asChild onClick={closeMenu}>
+              <Link href="/signin">Log in</Link>
+            </Button>
+            <Button size="md" asChild onClick={closeMenu}>
+              <Link href="/signup">Sign up</Link>
+            </Button>
+          </div>
         </div>
-      </div>
+      ) : null}
     </header>
   );
 }
