@@ -5,15 +5,16 @@ import { forwardRef } from "react";
 import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-type Variant = "default" | "secondary" | "ghost" | "outline" | "destructive";
+type Variant = "default" | "secondary" | "ghost" | "outline" | "destructive" | "link";
 type Size = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<Variant, string> = {
   default: "bg-accent text-accent-foreground hover:bg-[#108a00]", 
-  secondary: "border border-accent bg-white text-accent hover:bg-[#e9f7e9]", 
-  outline: "border border-card-border bg-card text-foreground hover:border-accent hover:text-accent", 
-  ghost: "text-foreground hover:bg-[#e9f7e9]", 
-  destructive: "bg-red-500 text-white hover:bg-red-600", 
+  secondary: "border border-accent bg-white text-accent hover:bg-[#e9f7e9]",
+  outline: "border border-card-border bg-card text-foreground hover:border-accent hover:text-accent",
+  ghost: "text-foreground hover:bg-[#e9f7e9]",
+  destructive: "bg-red-500 text-white hover:bg-red-600",
+  link: "bg-transparent text-accent underline-offset-4 hover:underline",
 };
 
 const sizes: Record<Size, string> = {
