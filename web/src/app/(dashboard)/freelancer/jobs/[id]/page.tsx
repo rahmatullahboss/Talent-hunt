@@ -25,7 +25,7 @@ interface JobDetailPageProps {
 export default async function JobDetailPage({ params }: JobDetailPageProps) {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();

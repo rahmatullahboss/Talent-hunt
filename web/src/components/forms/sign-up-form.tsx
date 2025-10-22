@@ -74,7 +74,7 @@ export function SignUpForm() {
       email: values.email,
       password: values.password,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/auth/callback`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/callback`,
         data: {
           full_name: values.fullName,
           role: values.role,
@@ -98,7 +98,7 @@ export function SignUpForm() {
       toast.success("Account created! Let’s complete your onboarding.");
     }
 
-    router.push("/auth/signin");
+    router.push("/signin");
     setLoading(false);
   };
 

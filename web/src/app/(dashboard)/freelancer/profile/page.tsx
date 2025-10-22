@@ -7,7 +7,7 @@ import { FreelancerProfileForm } from "@/components/freelancer/profile/profile-f
 export default async function FreelancerProfilePage() {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   return (

@@ -10,7 +10,7 @@ import { JobStatusForm } from "@/components/employer/jobs/job-status-form";
 export default async function EmployerJobsPage() {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();

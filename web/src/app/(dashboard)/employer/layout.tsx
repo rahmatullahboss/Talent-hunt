@@ -17,7 +17,7 @@ export default async function EmployerLayout({ children }: { children: React.Rea
   const auth = await getCurrentUser();
 
   if (!auth?.user) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   if (auth.profile?.role === "freelancer") {

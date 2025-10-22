@@ -17,7 +17,7 @@ type Transaction = {
 export default async function WalletPage() {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();

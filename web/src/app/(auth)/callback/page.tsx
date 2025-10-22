@@ -12,7 +12,7 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const code = searchParams.get("code");
     if (!code) {
-      router.replace("/auth/signin");
+      router.replace("/signin");
       return;
     }
 
@@ -22,19 +22,19 @@ export default function AuthCallbackPage() {
       .then(({ error, data }) => {
         if (error) {
           toast.error(error.message);
-          router.replace("/auth/signin");
+          router.replace("/signin");
           return;
         }
         toast.success("Email confirmed! Let’s finish setting up your profile.");
         if (data.session?.user) {
           router.replace("/onboarding");
         } else {
-          router.replace("/auth/signin");
+          router.replace("/signin");
         }
       })
       .catch((error) => {
         toast.error(error.message);
-        router.replace("/auth/signin");
+        router.replace("/signin");
       });
   }, [searchParams, router]);
 

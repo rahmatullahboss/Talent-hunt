@@ -10,7 +10,7 @@ import { DeletePortfolioButton } from "@/components/freelancer/portfolio/delete-
 export default async function PortfolioPage() {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();

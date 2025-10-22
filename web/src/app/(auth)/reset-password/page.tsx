@@ -17,7 +17,7 @@ export default function ResetPasswordPage() {
       <ResetPasswordForm />
       <p className="text-sm text-muted">
         Remembered your password?{" "}
-        <Link href="/auth/signin" className="text-accent hover:underline">
+        <Link href="/signin" className="text-accent hover:underline">
           Back to login
         </Link>
       </p>

@@ -9,7 +9,7 @@ import { DisputeStatusForm } from "@/components/admin/dispute-status-form";
 export default async function AdminDisputesPage() {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();

@@ -23,7 +23,7 @@ type ProposalWithJob = ProposalRow & {
 export default async function ProposalsPage() {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();

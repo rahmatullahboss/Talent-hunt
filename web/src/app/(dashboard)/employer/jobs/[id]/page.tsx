@@ -37,7 +37,7 @@ interface EmployerJobDetailProps {
 export default async function EmployerJobDetailPage({ params }: EmployerJobDetailProps) {
   const auth = await getCurrentUser();
   if (!auth?.profile) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   const supabase = createSupabaseServerClient();
