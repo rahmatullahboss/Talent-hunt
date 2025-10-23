@@ -109,7 +109,7 @@ export function SignUpForm() {
   };
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+    <form className="space-y-7" onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-1.5">
         <label className="block text-sm font-medium text-muted/90" htmlFor="fullName">
           Full name
@@ -118,7 +118,7 @@ export function SignUpForm() {
         {errors.fullName ? <p className="text-sm text-red-500">{errors.fullName.message}</p> : null}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="space-y-6">
         <div className="space-y-1.5">
           <label className="block text-sm font-medium text-muted/90" htmlFor="email">
             Email address
@@ -129,7 +129,7 @@ export function SignUpForm() {
         <fieldset className="space-y-3 border-0 p-0">
           <legend className="text-sm font-medium text-foreground/90">I am signing up as</legend>
           <input type="hidden" {...register("role")} />
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             {[
               { value: "freelancer" as const, label: "Freelancer", description: "Offer services & build portfolio" },
               { value: "employer" as const, label: "Employer", description: "Post jobs & hire talent" },
@@ -210,7 +210,7 @@ export function SignUpForm() {
         {errors.shortBio ? <p className="text-sm text-red-500">{errors.shortBio.message}</p> : null}
       </div>
 
-      <Button type="submit" className="w-full" loading={loading}>
+      <Button type="submit" className="h-12 w-full text-base font-semibold" loading={loading}>
         Create account
       </Button>
     </form>
