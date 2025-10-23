@@ -30,12 +30,12 @@ export function DashboardTopbar({ profile, actions }: DashboardTopbarProps) {
   };
 
   return (
-    <header className="flex items-center justify-between border-b border-card-border bg-card/70 px-6 py-4 backdrop-blur">
+    <header className="flex items-center justify-between border-b border-card-border/70 bg-white/80 px-6 py-4 shadow-[0_10px_30px_rgba(0,30,0,0.05)] backdrop-blur">
       <div className="flex items-center gap-3">
         <Avatar src={profile.avatar_url} fallback={profile.full_name} size="sm" />
         <div className="text-sm">
           <p className="font-medium text-foreground">{profile.full_name}</p>
-          <p className="text-muted capitalize">{profile.role}</p>
+          <p className="text-muted/90 capitalize">{profile.role}</p>
         </div>
       </div>
       <div className="flex items-center gap-3">

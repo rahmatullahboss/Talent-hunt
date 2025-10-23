@@ -1,8 +1,10 @@
+/* Light-theme refresh: mirror the marketing gradient inside the auth experience. */
 .auth-shell {
   display: grid;
   min-height: 100vh;
   grid-template-columns: minmax(0, 520px) minmax(0, 1fr);
-  background: var(--background);
+  background: linear-gradient(180deg, #eefbf4 0%, #f6fdf8 55%, #ffffff 100%);
+  color: var(--foreground);
 }
 
 @media (max-width: 1024px) {
@@ -18,7 +20,10 @@
 .auth-panel {
   position: relative;
   padding: 4rem 3rem;
-  background: linear-gradient(180deg, rgba(14, 165, 233, 0.12) 0%, rgba(14, 165, 233, 0.05) 100%), var(--background);
+  background: linear-gradient(180deg, rgba(20, 168, 0, 0.12) 0%, rgba(20, 168, 0, 0.04) 100%), rgba(255, 255, 255, 0.92);
+  border-right: 1px solid var(--card-border);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 30px 60px rgba(0, 30, 0, 0.08);
 }
 
 .auth-brand {
@@ -42,8 +47,9 @@
 .auth-showcase {
   position: relative;
   padding: 5rem 4rem;
-  color: #ecfeff;
-  background: radial-gradient(circle at top left, rgba(14, 165, 233, 0.4), rgba(14, 165, 233, 0.05)), #0f172a;
+  color: var(--foreground);
+  background: radial-gradient(circle at top left, rgba(20, 168, 0, 0.2), rgba(20, 168, 0, 0.04)), rgba(255, 255, 255, 0.9);
+  border-left: 1px solid var(--card-border);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -58,7 +64,7 @@
 
 .auth-showcase p {
   font-size: 1.05rem;
-  color: rgba(226, 232, 240, 0.9);
+  color: rgba(0, 30, 0, 0.75);
   line-height: 1.7;
   max-width: 28rem;
 }
@@ -67,11 +73,11 @@
   display: grid;
   gap: 1rem;
   font-size: 0.95rem;
-  color: rgba(226, 232, 240, 0.85);
+  color: rgba(0, 30, 0, 0.7);
 }
 
 .auth-showcase li::before {
   content: "•";
   margin-right: 0.65rem;
-  color: var(--accent);
+  color: rgba(20, 168, 0, 0.75);
 }

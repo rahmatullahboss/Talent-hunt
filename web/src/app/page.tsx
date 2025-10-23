@@ -127,7 +127,7 @@ const trustedBy = ["Pathao", "ShopUp", "bKash", "iFarmer", "Shikho", "TallyKhata
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#f2f7f2] text-[#001e00]">
+    <div className="min-h-screen bg-gradient-to-b from-[#eefbf4] via-[#f6fdf8] to-white text-foreground">
       <SiteHeader />
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-24 px-6 pb-24 pt-12">
         <section

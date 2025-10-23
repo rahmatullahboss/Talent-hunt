@@ -11,7 +11,7 @@ export default function UpdatePasswordPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-semibold leading-tight text-foreground">Choose a new password</h1>
-        <p className="mt-2 text-sm text-muted">Enter a strong, unique password to keep your account secure.</p>
+        <p className="mt-2 text-sm text-muted/90">Enter a strong, unique password to keep your account secure.</p>
       </div>
       <UpdatePasswordForm />
     </div>

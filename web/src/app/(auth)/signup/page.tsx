@@ -12,10 +12,10 @@ export default function SignUpPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-semibold leading-tight text-foreground">Create your TalentHunt BD account</h1>
-        <p className="mt-2 text-sm text-muted">Tell us a little about yourself to tailor the experience to your goals.</p>
+        <p className="mt-2 text-sm text-muted/90">Tell us a little about yourself to tailor the experience to your goals.</p>
       </div>
       <SignUpForm />
-      <p className="text-sm text-muted">
+      <p className="text-sm text-muted/90">
         Already have an account?{" "}
         <Link href="/signin" className="text-accent hover:underline">
           Log in

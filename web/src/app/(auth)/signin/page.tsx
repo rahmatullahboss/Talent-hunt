@@ -12,10 +12,10 @@ export default function SignInPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-semibold leading-tight text-foreground">Welcome back</h1>
-        <p className="mt-2 text-sm text-muted">Log in to manage your projects, proposals, and payouts.</p>
+        <p className="mt-2 text-sm text-muted/90">Log in to manage your projects, proposals, and payouts.</p>
       </div>
       <SignInForm />
-      <div className="flex flex-col gap-2 text-sm text-muted">
+      <div className="flex flex-col gap-2 text-sm text-muted/90">
         <Link href="/reset-password" className="text-accent hover:underline">
           Forgot your password?
         </Link>

@@ -20,22 +20,22 @@ export function SiteHeader() {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-card-border/80 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 text-black">
-        <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight text-black">
+    <header className="sticky top-0 z-40 border-b border-card-border/80 bg-white/90 text-foreground backdrop-blur">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
+        <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground">
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-base font-semibold text-white">
             TH
           </span>
           <span className="text-xl">TalentHunt</span>
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium text-black md:flex">
+        <nav className="hidden items-center gap-6 text-sm font-medium text-foreground/90 md:flex">
           {links.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "transition hover:text-black/80",
-                pathname === item.href ? "text-black" : undefined,
+                "transition hover:text-foreground",
+                pathname === item.href ? "text-foreground" : undefined,
               )}
             >
               {item.label}
@@ -86,19 +86,19 @@ export function SiteHeader() {
           id="mobile-menu"
           className={cn(
             "md:hidden",
-            "fixed inset-x-0 top-16 z-30 mx-auto w-full max-w-6xl rounded-b-2xl border border-card-border/80 bg-white px-6 py-6 shadow-lg transition-all",
+            "fixed inset-x-0 top-16 z-30 mx-auto w-full max-w-6xl rounded-b-2xl border border-card-border/80 bg-white px-6 py-6 text-foreground shadow-lg transition-all",
             "pointer-events-auto translate-y-0 opacity-100",
           )}
         >
-          <nav className="flex flex-col gap-4 text-base font-medium text-black/80">
+          <nav className="flex flex-col gap-4 text-base font-medium text-foreground/90">
             {links.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={closeMenu}
                 className={cn(
-                  "rounded-md px-2 py-1.5 transition hover:bg-muted/70 hover:text-black",
-                  pathname === item.href ? "text-black" : undefined,
+                  "rounded-md px-2 py-1.5 transition hover:bg-accent/10 hover:text-foreground",
+                  pathname === item.href ? "text-foreground" : undefined,
                 )}
               >
                 {item.label}

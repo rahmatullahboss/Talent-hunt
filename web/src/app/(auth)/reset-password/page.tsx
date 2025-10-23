@@ -12,10 +12,10 @@ export default function ResetPasswordPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-semibold leading-tight text-foreground">Reset your password</h1>
-        <p className="mt-2 text-sm text-muted">We&apos;ll email you a secure link to update your password.</p>
+        <p className="mt-2 text-sm text-muted/90">We&apos;ll email you a secure link to update your password.</p>
       </div>
       <ResetPasswordForm />
-      <p className="text-sm text-muted">
+      <p className="text-sm text-muted/90">
         Remembered your password?{" "}
         <Link href="/signin" className="text-accent hover:underline">
           Back to login
