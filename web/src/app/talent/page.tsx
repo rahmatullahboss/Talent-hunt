@@ -118,16 +118,16 @@ const milestones = [
 
 export default function TalentPage() {
   return (
-    <div className="min-h-screen bg-[#f2f7f2] text-[#001e00]">
+    <div className="min-h-screen text-foreground">
       <SiteHeader />
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-6 pb-24 pt-16">
         <header className="grid gap-12 rounded-[32px] bg-white/90 p-10 shadow-[0_24px_64px_rgba(0,30,0,0.08)] md:grid-cols-[1.1fr_0.9fr] md:items-center">
           <div className="space-y-6">
-            <Badge className="w-fit bg-[#dff4df] text-accent">Find Bangladeshi freelancers like you do on Upwork</Badge>
+            <Badge className="w-fit bg-accent/15 text-accent">Find Bangladeshi freelancers like you do on Upwork</Badge>
             <h1 className="text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
               Discover elite independents ready for your next sprint.
             </h1>
-            <p className="text-lg text-[#335c3b]">
+            <p className="text-lg text-muted">
               Search curated profiles, invite Top Rated experts, and collaborate with confidence thanks to escrow protection,
               transparent reviews, and local success managers.
             </p>
@@ -135,41 +135,41 @@ export default function TalentPage() {
               <Button asChild size="lg">
                 <Link href="/signup?role=freelancer">Create your freelancer profile</Link>
               </Button>
-              <Button asChild variant="secondary" size="lg" className="bg-white text-[#001e00] shadow-sm">
+              <Button asChild variant="secondary" size="lg" className="bg-card text-foreground shadow-sm">
                 <Link href="/signup?role=employer">Post a job for free</Link>
               </Button>
             </div>
           </div>
           <Card className="space-y-5 border border-card-border bg-white/95 p-6 shadow-sm">
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-[#001e00]" htmlFor="talent-search">
+              <label className="text-sm font-semibold text-foreground" htmlFor="talent-search">
                 Search for a skill or role
               </label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5a7a5f]" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted/80" />
                 <Input
                   id="talent-search"
                   placeholder="Try “UI/UX designer” or “Full-stack developer”"
-                  className="h-12 rounded-2xl border-[#d8e8d8] bg-[#f7fdf7] pl-10 text-sm text-[#001e00]"
+                  className="h-12 rounded-2xl border-card-border bg-foreground/5 pl-10 text-sm text-foreground"
                   readOnly
                 />
               </div>
             </div>
             <div className="space-y-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-[#5a7a5f]">Spotlight freelancers</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted/80">Spotlight freelancers</p>
               <div className="space-y-4">
                 {spotlightTalent.map((talent) => (
-                  <div key={talent.name} className="rounded-2xl border border-[#d8e8d8] bg-white p-4">
+                  <div key={talent.name} className="rounded-2xl border border-card-border bg-white p-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-semibold text-[#001e00]">{talent.name}</p>
-                        <p className="text-xs text-[#5a7a5f]">{talent.title}</p>
+                        <p className="text-sm font-semibold text-foreground">{talent.name}</p>
+                        <p className="text-xs text-muted/80">{talent.title}</p>
                       </div>
-                      <Badge className="bg-[#ecf8ec] text-accent">{talent.rating}</Badge>
+                      <Badge className="bg-accent/10 text-accent">{talent.rating}</Badge>
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {talent.skills.map((skill) => (
-                        <span key={skill} className="rounded-full bg-[#f7fdf7] px-3 py-1 text-xs text-[#335c3b]">
+                        <span key={skill} className="rounded-full bg-foreground/5 px-3 py-1 text-xs text-muted">
                           {skill}
                         </span>
                       ))}
@@ -186,9 +186,9 @@ export default function TalentPage() {
 
         <section className="space-y-10">
           <header className="space-y-4 text-center">
-            <Badge className="mx-auto bg-[#dff4df] text-accent">Top categories</Badge>
+            <Badge className="mx-auto bg-accent/15 text-accent">Top categories</Badge>
             <h2 className="text-3xl font-semibold md:text-4xl">Start with battle-tested experts</h2>
-            <p className="mx-auto max-w-2xl text-lg text-[#335c3b]">
+            <p className="mx-auto max-w-2xl text-lg text-muted">
               Explore high-performing categories crafted to reflect Upwork’s marketplace, with a focus on Bangladeshi excellence.
             </p>
           </header>
@@ -197,7 +197,7 @@ export default function TalentPage() {
               <Card key={category.title} className="h-full space-y-3 border border-card-border bg-white/90 p-6 shadow-sm">
                 <category.icon className="h-8 w-8 text-accent" />
                 <h3 className="text-lg font-semibold">{category.title}</h3>
-                <p className="text-sm text-[#335c3b]">{category.description}</p>
+                <p className="text-sm text-muted">{category.description}</p>
                 <Button asChild variant="link" className="h-auto px-0 text-accent">
                   <Link href="/signup?role=employer">View available talent</Link>
                 </Button>
@@ -208,9 +208,9 @@ export default function TalentPage() {
 
         <section className="grid gap-10 rounded-[32px] bg-white/90 p-10 shadow-[0_20px_48px_rgba(0,30,0,0.06)] md:grid-cols-[1fr_1fr]">
           <div className="space-y-6">
-            <Badge className="bg-[#dff4df] text-accent">Why teams hire here</Badge>
+            <Badge className="bg-accent/15 text-accent">Why teams hire here</Badge>
             <h2 className="text-3xl font-semibold md:text-4xl">Enterprise-grade confidence, freelancer-first experience</h2>
-            <p className="text-lg text-[#335c3b]">
+            <p className="text-lg text-muted">
               Built to mirror the Upwork flow you already know, but with deeper vetting, local billing options, and a community-first ethos.
             </p>
             <Button asChild size="lg" className="w-fit">
@@ -223,7 +223,7 @@ export default function TalentPage() {
                 <item.icon className="mt-1 h-6 w-6 text-accent" />
                 <div className="space-y-2">
                   <h3 className="text-lg font-semibold">{item.title}</h3>
-                  <p className="text-sm text-[#335c3b]">{item.description}</p>
+                  <p className="text-sm text-muted">{item.description}</p>
                 </div>
               </Card>
             ))}
@@ -232,9 +232,9 @@ export default function TalentPage() {
 
         <section className="space-y-10">
           <header className="space-y-4 text-center">
-            <Badge className="mx-auto bg-[#dff4df] text-accent">Work your way</Badge>
+            <Badge className="mx-auto bg-accent/15 text-accent">Work your way</Badge>
             <h2 className="text-3xl font-semibold md:text-4xl">Designed to help freelancers shine</h2>
-            <p className="mx-auto max-w-2xl text-lg text-[#335c3b]">
+            <p className="mx-auto max-w-2xl text-lg text-muted">
               From polished profiles to milestone tracking, we provide everything you need to deliver confidently and grow sustainably.
             </p>
           </header>
@@ -243,7 +243,7 @@ export default function TalentPage() {
               <Card key={milestone.title} className="h-full space-y-3 border border-card-border bg-white/90 p-6 shadow-sm">
                 <milestone.icon className="h-8 w-8 text-accent" />
                 <h3 className="text-lg font-semibold">{milestone.title}</h3>
-                <p className="text-sm text-[#335c3b]">{milestone.description}</p>
+                <p className="text-sm text-muted">{milestone.description}</p>
               </Card>
             ))}
           </div>
@@ -252,14 +252,14 @@ export default function TalentPage() {
         <section className="rounded-[32px] border border-transparent bg-gradient-to-r from-[#dff4df] via-[#b9ebc0] to-[#f0fff0] p-10 text-center shadow-[0_20px_48px_rgba(0,30,0,0.06)]">
           <div className="mx-auto max-w-3xl space-y-4">
             <h2 className="text-3xl font-semibold md:text-4xl">Build your dream roster today</h2>
-            <p className="text-lg text-[#335c3b]">
+            <p className="text-lg text-muted">
               Browse the very best of Bangladesh, invite the perfect fit, and start collaborating under the safety of escrow-backed contracts.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-center">
               <Button asChild size="lg">
                 <Link href="/signup?role=employer">Find freelancers</Link>
               </Button>
-              <Button asChild variant="secondary" size="lg" className="bg-white text-[#001e00] shadow-sm">
+              <Button asChild variant="secondary" size="lg" className="bg-card text-foreground shadow-sm">
                 <Link href="/signup?role=freelancer">Become a freelancer</Link>
               </Button>
             </div>
