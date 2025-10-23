@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react";
 import { SupabaseProvider } from "@/components/providers/supabase-provider";
@@ -19,6 +19,9 @@ export const metadata: Metadata = {
     "Freelance marketplace",
     "Talent Hunt BD",
   ],
+};
+
+export const viewport: Viewport = {
   colorScheme: "light",
   themeColor: "#f2f7f2",
 };

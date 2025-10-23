@@ -15,6 +15,7 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     let isMounted = true;
     const roleParam = searchParams.get("role");
+    const redirectToParam = searchParams.get("redirectTo");
     const normalizedRole: RoleOption | null =
       roleParam === "freelancer" || roleParam === "employer" ? (roleParam as RoleOption) : null;
 
@@ -74,7 +75,7 @@ export default function AuthCallbackPage() {
       }
     };
 
-    const getSuccessRedirect = async () => {
+    const getSuccessRedirect = async (redirectPath: string | null) => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -85,7 +86,42 @@ export default function AuthCallbackPage() {
       }
 
       await persistRoleIfNeeded(session.user.id, normalizedRole);
-      router.replace("/onboarding");
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role,onboarding_complete")
+        .eq("id", session.user.id)
+        .maybeSingle();
+
+      if (profileError) {
+        console.error(profileError);
+        router.replace("/onboarding");
+        return;
+      }
+
+      if (!profile || profile.onboarding_complete === false) {
+        router.replace("/onboarding");
+        return;
+      }
+
+      if (redirectPath && redirectPath.startsWith("/") && !redirectPath.startsWith("//")) {
+        router.replace(redirectPath);
+        return;
+      }
+
+      switch (profile.role) {
+        case "employer":
+          router.replace("/employer/dashboard");
+          break;
+        case "freelancer":
+          router.replace("/freelancer/dashboard");
+          break;
+        case "admin":
+          router.replace("/admin/dashboard");
+          break;
+        default:
+          router.replace("/onboarding");
+      }
     };
 
     const handleAuth = async () => {
@@ -120,7 +156,7 @@ export default function AuthCallbackPage() {
             router.replace("/update-password");
           } else {
             toast.success("Signed in successfully.");
-            await getSuccessRedirect();
+            await getSuccessRedirect(redirectToParam);
           }
           return;
         }
@@ -142,7 +178,7 @@ export default function AuthCallbackPage() {
       if (existingSession) {
         cleanCallbackUrl();
         toast.success(successMessage);
-        await getSuccessRedirect();
+        await getSuccessRedirect(redirectToParam);
         return;
       }
 
@@ -161,7 +197,7 @@ export default function AuthCallbackPage() {
 
       cleanCallbackUrl();
       toast.success(successMessage);
-      await getSuccessRedirect();
+      await getSuccessRedirect(redirectToParam);
     };
 
     if (isMounted) {
