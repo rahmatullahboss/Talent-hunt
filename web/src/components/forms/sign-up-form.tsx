@@ -118,7 +118,7 @@ export function SignUpForm() {
         {errors.fullName ? <p className="text-sm text-red-500">{errors.fullName.message}</p> : null}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="space-y-6">
         <div className="space-y-1.5">
           <label className="block text-sm font-medium text-muted/90" htmlFor="email">
             Email address
