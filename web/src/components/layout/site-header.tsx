@@ -26,7 +26,9 @@ export function SiteHeader() {
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-base font-semibold text-white">
             TH
           </span>
-          <span className="text-xl">TalentHunt</span>
+          <span className="text-xl font-semibold text-black">
+            TalentHunt <span className="text-accent">BD</span>
+          </span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium text-black md:flex">
           {links.map((item) => (
