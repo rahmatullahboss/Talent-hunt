@@ -1,7 +1,7 @@
 .auth-shell {
   display: grid;
   min-height: 100vh;
-  grid-template-columns: minmax(0, clamp(360px, 36vw, 480px)) minmax(0, 1fr);
+  grid-template-columns: minmax(0, clamp(420px, 44vw, 620px)) minmax(0, 1fr);
   gap: clamp(2rem, 5vw, 3.5rem);
   padding: clamp(1.5rem, 3vw, 4rem);
   /* The auth experience now mirrors the homepage gradient. */
@@ -54,7 +54,7 @@
 .auth-card {
   position: relative;
   z-index: 1;
-  width: min(460px, 100%);
+  width: min(520px, 100%);
   border-radius: 30px;
   padding: clamp(2.75rem, 5vw, 3rem);
   background: color-mix(in srgb, #fff 88%, var(--card) 12%);
@@ -124,7 +124,7 @@
 .auth-showcase-panel {
   position: relative;
   z-index: 1;
-  width: min(640px, 100%);
+  width: min(720px, 100%);
   border-radius: 30px;
   padding: clamp(3rem, 5.5vw, 3.75rem);
   background: color-mix(in srgb, #ffffff 88%, var(--card) 12%);
