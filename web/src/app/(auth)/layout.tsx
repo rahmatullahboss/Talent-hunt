@@ -13,10 +13,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="auth-shell">
       <div className="auth-panel">
-        <Link href="/" className="auth-brand">
-          TalentHunt <span>BD</span>
-        </Link>
-        <div className="auth-content">{children}</div>
+        <div className="auth-card">
+          <Link href="/" className="auth-brand">
+            TalentHunt <span>BD</span>
+          </Link>
+          <div className="auth-card-copy">One login for hiring and growing your freelance career.</div>
+          <div className="auth-content">{children}</div>
+        </div>
       </div>
       <div className="auth-showcase">
         <h2>Built for the next generation of Bangladeshi professionals</h2>

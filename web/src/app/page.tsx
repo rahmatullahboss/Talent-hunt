@@ -129,7 +129,7 @@ export default function Home() {
   return (
     <div className="min-h-screen text-foreground">
       <SiteHeader />
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-24 px-6 pb-24 pt-12">
+      <main className="mx-auto flex w-full max-w-7xl flex-col gap-24 px-6 pb-24 pt-12">
         <section
           id="marketplace"
           className="grid gap-12 rounded-[32px] bg-white/90 p-10 shadow-[0_24px_64px_rgba(0,30,0,0.08)] lg:grid-cols-[1.1fr_0.9fr]"
