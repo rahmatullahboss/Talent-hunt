@@ -1,3 +1,7 @@
+:root {
+  --auth-card-padding-top: clamp(2.75rem, 5vw, 3rem);
+}
+
 .auth-shell {
   display: grid;
   min-height: 100vh;
@@ -59,6 +63,7 @@
   width: min(520px, 100%);
   border-radius: 30px;
   padding: clamp(2.75rem, 5vw, 3rem);
+  padding-top: var(--auth-card-padding-top);
   background: rgba(255, 255, 255, 0.92);
   background: color-mix(in srgb, #fff 88%, var(--card) 12%);
   border: 1px solid rgba(205, 231, 205, 0.85);
@@ -279,7 +284,7 @@
     margin: clamp(1.5rem, 6vw, 2.75rem) auto 0;
     border-radius: 28px;
     padding: clamp(1.75rem, 6vw, 2.25rem);
-    padding-top: clamp(2.25rem, 8vw, 3rem);
+    padding-top: var(--auth-card-padding-top);
     box-shadow: 0 20px 40px rgba(0, 30, 0, 0.08);
   }
 }
@@ -294,6 +299,6 @@
   }
 
   .auth-card {
-    padding-top: clamp(2rem, 3vw, 2.5rem);
+    padding-top: var(--auth-card-padding-top);
   }
 }

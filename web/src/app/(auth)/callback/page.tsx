@@ -126,6 +126,26 @@ export default function AuthCallbackPage() {
         }
       }
 
+      const {
+        data: { session: existingSession },
+        error: sessionError,
+      } = await supabase.auth.getSession();
+
+      if (sessionError) {
+        console.error(sessionError);
+      }
+
+      const successMessage = normalizedRole
+        ? "Signed in successfully."
+        : "Email confirmed! Let's finish setting up your profile.";
+
+      if (existingSession) {
+        cleanCallbackUrl();
+        toast.success(successMessage);
+        await getSuccessRedirect();
+        return;
+      }
+
       const code = searchParams.get("code");
       if (!code) {
         router.replace("/signin");
@@ -140,7 +160,7 @@ export default function AuthCallbackPage() {
       }
 
       cleanCallbackUrl();
-      toast.success("Email confirmed! Let's finish setting up your profile.");
+      toast.success(successMessage);
       await getSuccessRedirect();
     };
 
