@@ -53,12 +53,18 @@ export function SiteFooter() {
           </p>
           <p className="text-xs text-muted/70">
             Tech partner{" "}
-            <a className="text-accent hover:underline" href="https://digitalcare.site" rel="noopener noreferrer" target="_blank">
+            <a
+              className="font-semibold text-accent hover:underline"
+              href="https://digitalcare.site"
+              rel="noopener noreferrer"
+              target="_blank"
+              style={{ color: "var(--accent)" }}
+            >
               DigitalCare
             </a>
             .
           </p>
-          <p className="text-xs text-muted/70">© 2025 TalentHunt BD. All rights reserved.</p>
+          <p className="text-xs text-muted/70">&copy; 2025 TalentHunt BD. All rights reserved.</p>
         </div>
       </div>
     </footer>

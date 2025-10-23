@@ -31,11 +31,10 @@ export function ResetPasswordForm() {
     const supabase = createSupabaseBrowserClient();
     const siteUrl =
       process.env.NEXT_PUBLIC_SITE_URL ??
-      (process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : "https://talenthuntbd.vercel.app");
+      (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://talenthuntbd.vercel.app");
+    const normalizedSiteUrl = siteUrl.endsWith("/") ? siteUrl.slice(0, -1) : siteUrl;
     const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
-      redirectTo: `${siteUrl}/update-password`,
+      redirectTo: `${normalizedSiteUrl}/update-password`,
     });
 
     if (error) {

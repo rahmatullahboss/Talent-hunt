@@ -72,15 +72,14 @@ export function SignUpForm() {
     setLoading(true);
     const siteUrl =
       process.env.NEXT_PUBLIC_SITE_URL ??
-      (process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : "https://talenthuntbd.vercel.app");
+      (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://talenthuntbd.vercel.app");
+    const normalizedSiteUrl = siteUrl.endsWith("/") ? siteUrl.slice(0, -1) : siteUrl;
 
     const { data, error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
       options: {
-        emailRedirectTo: `${siteUrl}/callback`,
+        emailRedirectTo: `${normalizedSiteUrl}/callback`,
         data: {
           full_name: values.fullName,
           role: values.role,
@@ -101,7 +100,7 @@ export function SignUpForm() {
     if (requiresEmailConfirmation) {
       toast.success("Account created! Please check your inbox to verify your email before logging in.");
     } else {
-      toast.success("Account created! Let’s complete your onboarding.");
+      toast.success("Account created! Let's complete your onboarding.");
     }
 
     router.push("/signin");
