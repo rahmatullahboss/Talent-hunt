@@ -57,22 +57,28 @@
 
 @media (max-width: 640px) {
   .auth-shell {
-    padding: clamp(1.25rem, 5vw, 1.75rem);
+    padding: clamp(0.85rem, 4vw, 1.4rem);
+  }
+
+  .auth-panel {
+    padding: clamp(1.1rem, 4.5vw, 1.65rem);
   }
 
   .auth-card {
     border-radius: 26px;
-    padding: clamp(1.85rem, 7vw, 2.3rem);
+    padding: clamp(1.75rem, 6.5vw, 2.2rem);
+    width: 100%;
   }
 
   .auth-showcase {
-    padding: clamp(1.5rem, 8vw, 2.2rem);
+    padding: clamp(1.25rem, 6.5vw, 1.9rem);
   }
 
   .auth-showcase-panel {
     border-radius: 24px;
-    padding: clamp(1.75rem, 7vw, 2.25rem);
-    gap: clamp(1.35rem, 6vw, 1.9rem);
+    padding: clamp(1.55rem, 6vw, 2.1rem);
+    gap: clamp(1.3rem, 6vw, 1.85rem);
+    width: 100%;
   }
 
   .auth-showcase h2 {
