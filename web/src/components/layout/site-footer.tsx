@@ -3,8 +3,8 @@ export function SiteFooter() {
     {
       title: "For Clients",
       links: [
-        { label: "How to hire", href: "/#marketplace" },
-        { label: "Talent Marketplace", href: "/#marketplace" },
+        { label: "How to hire", href: "/hire" },
+        { label: "Talent Marketplace", href: "/marketplace" },
         { label: "Project catalog", href: "/#solutions" },
         { label: "Talent scout", href: "/#enterprise" },
       ],

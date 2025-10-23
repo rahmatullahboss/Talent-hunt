@@ -11,10 +11,11 @@ import { useSupabase } from "@/components/providers/supabase-provider";
 import type { Tables } from "@/types/database";
 
 const links = [
-  { href: "/talent", label: "Find Freelancers" },
+  { href: "/marketplace", label: "Talent Marketplace" },
+  { href: "/hire", label: "How to Hire" },
   { href: "/jobs", label: "Find Work" },
+  { href: "/talent", label: "For Freelancers" },
   { href: "/#why-talenthunt", label: "Why TalentHunt" },
-  { href: "/#enterprise", label: "Enterprise" },
 ];
 
 type ProfileSummary = Pick<Tables<"profiles">, "role" | "onboarding_complete" | "full_name">;
