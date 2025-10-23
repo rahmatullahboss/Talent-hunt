@@ -14,6 +14,7 @@
   --gradient-to: #ffffff;
   --font-geist-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-geist-mono: "JetBrains Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -32,6 +33,7 @@
 }
 
 body {
+  background-color: var(--gradient-to);
   background: linear-gradient(180deg, var(--gradient-from), var(--gradient-via), var(--gradient-to));
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
