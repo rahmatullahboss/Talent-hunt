@@ -70,9 +70,8 @@ export function SignUpForm() {
 
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
-    const siteUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ??
-      (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://talenthuntbd.vercel.app");
+    const envSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+    const siteUrl = envSiteUrl && envSiteUrl.length > 0 ? envSiteUrl : "https://talenthuntbd.vercel.app";
     const normalizedSiteUrl = siteUrl.endsWith("/") ? siteUrl.slice(0, -1) : siteUrl;
 
     const { data, error } = await supabase.auth.signUp({
