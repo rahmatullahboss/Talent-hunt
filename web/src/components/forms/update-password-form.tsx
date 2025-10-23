@@ -27,9 +27,11 @@ export function UpdatePasswordForm() {
   const supabase = createSupabaseBrowserClient();
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
+  const error = searchParams.get("error");
+  const errorDescription = searchParams.get("error_description");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [isSessionReady, setIsSessionReady] = useState(() => !code);
+  const [isSessionReady, setIsSessionReady] = useState(false);
 
   const {
     register,
@@ -40,25 +42,50 @@ export function UpdatePasswordForm() {
   });
 
   useEffect(() => {
-    if (!code) {
-      return;
-    }
+    let isMounted = true;
 
-    supabase.auth
-      .exchangeCodeForSession(code)
-      .then(({ error }) => {
-        if (error) {
-          toast.error(error.message);
+    async function prepareSession() {
+      if (error) {
+        toast.error(errorDescription ?? "The reset link is invalid or has expired. Please request a new one.");
+        router.replace("/reset-password");
+        return;
+      }
+
+      if (code) {
+        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+        if (exchangeError) {
+          toast.error(exchangeError.message);
           router.replace("/signin");
           return;
         }
+        if (isMounted) {
+          setIsSessionReady(true);
+        }
+        return;
+      }
+
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
+
+      if (sessionError || !session) {
+        toast.error("Your password reset session has expired. Request a new reset email to continue.");
+        router.replace("/reset-password");
+        return;
+      }
+
+      if (isMounted) {
         setIsSessionReady(true);
-      })
-      .catch((error) => {
-        toast.error(error.message);
-        router.replace("/signin");
-      });
-  }, [code, supabase, router]);
+      }
+    }
+
+    void prepareSession();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [code, error, errorDescription, supabase, router]);
 
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
