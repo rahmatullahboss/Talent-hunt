@@ -22,11 +22,25 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
       </div>
       <div className="auth-showcase">
-        <h2>Built for the next generation of Bangladeshi professionals</h2>
-        <p>
-          Join a curated community of experts, explore hand-picked projects, and grow your career with trusted local support.
-        </p>
-        <ul>
+        <div className="auth-showcase-intro">
+          <h2>Built for the next generation of Bangladeshi professionals</h2>
+          <p>
+            Join a curated community of experts, explore hand-picked projects, and grow your career with trusted local support.
+          </p>
+        </div>
+        <div className="auth-showcase-cards">
+          <div className="auth-showcase-card">
+            <span>🌱</span>
+            <h3>Faster client matches</h3>
+            <p>Smart briefs pair you with the right opportunity in under 48 hours.</p>
+          </div>
+          <div className="auth-showcase-card">
+            <span>🤝</span>
+            <h3>Local expert support</h3>
+            <p>Work with a Dhaka-based success partner who knows your goals.</p>
+          </div>
+        </div>
+        <ul className="auth-showcase-list">
           <li>Instant project recommendations based on your skills</li>
           <li>Escrow-style milestone tracking & transparent reviews</li>
           <li>Direct support from a dedicated Bangladesh-based team</li>
