@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className="bg-background text-foreground antialiased">
+      <body className="min-h-screen bg-transparent text-foreground antialiased">
         <SupabaseProvider>
           {children}
           <Toaster position="top-right" richColors closeButton />

@@ -20,21 +20,26 @@ export function SiteHeader() {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
+    // Resolved Conflict 1 & 2: Chose main branch styles (border/bg opacity, text-black)
     <header className="sticky top-0 z-40 border-b border-card-border/80 bg-white/90 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 text-black">
-        <Link href="/" className="text-lg font-semibold tracking-tight text-black">
-          <span className="text-xl font-semibold text-black">
-            TalentHunt <span className="text-accent">BD</span>
+        {/* Resolved Conflict 3: Chose main branch brand display */}
+        <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight text-black">
+          {/* Using flex/gap from codex version with main's content structure */}
+          {/* <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-base font-semibold text-white">TH</span> */}
+          <span className="text-xl font-semibold"> {/* Adjusted span nesting based on main */}
+             TalentHunt <span className="text-accent">BD</span>
           </span>
         </Link>
+        {/* Resolved Conflict 4: Chose main branch nav link colors */}
         <nav className="hidden items-center gap-6 text-sm font-medium text-black md:flex">
           {links.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "transition hover:text-black/80",
-                pathname === item.href ? "text-black" : undefined,
+                "transition hover:text-black/80", // from main
+                pathname === item.href ? "text-black" : undefined, // from main
               )}
             >
               {item.label}
@@ -81,23 +86,24 @@ export function SiteHeader() {
         </Button>
       </div>
       {isMenuOpen ? (
+        // Resolved Conflict 5: Chose main branch mobile menu styles/colors
         <div
           id="mobile-menu"
           className={cn(
             "md:hidden",
-            "fixed inset-x-0 top-16 z-30 mx-auto w-full max-w-6xl rounded-b-2xl border border-card-border/80 bg-white px-6 py-6 shadow-lg transition-all",
+            "fixed inset-x-0 top-16 z-30 mx-auto w-full max-w-6xl rounded-b-2xl border border-card-border/80 bg-white px-6 py-6 shadow-lg", // Adjusted classes based on main
             "pointer-events-auto translate-y-0 opacity-100",
           )}
         >
-          <nav className="flex flex-col gap-4 text-base font-medium text-black/80">
+          <nav className="flex flex-col gap-4 text-base font-medium text-black/80"> {/* text color from main */}
             {links.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={closeMenu}
                 className={cn(
-                  "rounded-md px-2 py-1.5 transition hover:bg-muted/70 hover:text-black",
-                  pathname === item.href ? "text-black" : undefined,
+                  "rounded-md px-2 py-1.5 transition hover:bg-muted/70 hover:text-black", // hover styles from main
+                  pathname === item.href ? "text-black" : undefined, // active text color from main
                 )}
               >
                 {item.label}

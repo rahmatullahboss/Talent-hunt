@@ -13,21 +13,47 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="auth-shell">
       <div className="auth-panel">
-        <Link href="/" className="auth-brand">
-          TalentHunt <span>BD</span>
-        </Link>
-        <div className="auth-content">{children}</div>
+        <div className="auth-card">
+          <Link href="/" className="auth-brand">
+            TalentHunt <span>BD</span>
+          </Link>
+          <div className="auth-card-copy">One login for hiring and growing your freelance career.</div>
+          <div className="auth-content">{children}</div>
+        </div>
       </div>
       <div className="auth-showcase">
-        <h2>Built for the next generation of Bangladeshi professionals</h2>
-        <p>
-          Join a curated community of experts, explore hand-picked projects, and grow your career with trusted local support.
-        </p>
-        <ul>
-          <li>Instant project recommendations based on your skills</li>
-          <li>Escrow-style milestone tracking & transparent reviews</li>
-          <li>Direct support from a dedicated Bangladesh-based team</li>
-        </ul>
+        <div className="auth-showcase-panel">
+          <div className="auth-showcase-header">
+            <span className="auth-showcase-badge">Why TalentHunt BD</span>
+            <h2>Built for the next generation of Bangladeshi professionals</h2>
+            <p>
+              Join a curated community of experts, explore hand-picked projects, and grow your career with trusted local support.
+            </p>
+          </div>
+          {/* The highlight stack mirrors the form card, so both columns feel like polished hero modules. */}
+          <div className="auth-showcase-highlights">
+            <div className="auth-showcase-highlight">
+              <span aria-hidden>🌱</span>
+              <div>
+                <h3>Faster client matches</h3>
+                <p>Smart briefs pair you with the right opportunity in under 48 hours.</p>
+              </div>
+            </div>
+            <div className="auth-showcase-highlight">
+              <span aria-hidden>🤝</span>
+              <div>
+                <h3>Local expert support</h3>
+                <p>Work with a Dhaka-based success partner who knows your goals.</p>
+              </div>
+            </div>
+          </div>
+          <div className="auth-showcase-divider" aria-hidden />
+          <ul className="auth-showcase-list">
+            <li>Instant project recommendations based on your skills</li>
+            <li>Escrow-style milestone tracking & transparent reviews</li>
+            <li>Direct support from a dedicated Bangladesh-based team</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

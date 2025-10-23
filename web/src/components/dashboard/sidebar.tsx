@@ -59,16 +59,16 @@ export function DashboardSidebar({ profile, links, footer }: DashboardSidebarPro
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-72 flex-col border-r border-card-border bg-card/70 px-4 py-6 backdrop-blur lg:flex">
+    <aside className="hidden w-72 flex-col border-r border-card-border/70 bg-white/70 px-4 py-6 shadow-sm shadow-foreground/5 backdrop-blur lg:flex">
       <Link href="/" className="mb-8 inline-flex items-center gap-2 text-lg font-semibold text-foreground">
         TalentHunt <span className="font-light text-accent">BD</span>
       </Link>
 
-      <div className="mb-8 flex items-center gap-3 rounded-[var(--radius-md)] border border-card-border/80 bg-foreground/5 p-4">
+      <div className="mb-8 flex items-center gap-3 rounded-[var(--radius-md)] border border-card-border/80 bg-white/80 p-4 shadow-sm">
         <Avatar src={profile.avatar_url} fallback={profile.full_name} />
         <div className="text-sm">
           <p className="font-semibold text-foreground">{profile.full_name}</p>
-          <p className="text-muted">{profile.title ?? profile.role.toUpperCase()}</p>
+          <p className="text-muted/80">{profile.title ?? profile.role.toUpperCase()}</p>
         </div>
       </div>
 
@@ -86,7 +86,7 @@ export function DashboardSidebar({ profile, links, footer }: DashboardSidebarPro
               )}
             >
               <span className="inline-flex items-center gap-3">
-                <Icon className={cn("h-4 w-4", isActive ? "text-accent" : "text-muted group-hover:text-foreground")} />
+                <Icon className={cn("h-4 w-4", isActive ? "text-accent" : "text-muted/80 group-hover:text-foreground")} />
                 {link.label}
               </span>
               {link.badge ? <Badge variant="muted">{link.badge}</Badge> : null}

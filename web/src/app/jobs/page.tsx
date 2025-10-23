@@ -156,42 +156,42 @@ const testimonials = [
 
 export default function JobsPage() {
   return (
-    <div className="min-h-screen bg-[#f2f7f2] text-[#001e00]">
+    <div className="min-h-screen text-foreground">
       <SiteHeader />
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-24 px-6 pb-24 pt-12">
         <section className="grid gap-12 rounded-[32px] bg-white/90 p-10 shadow-[0_24px_64px_rgba(0,30,0,0.08)] lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-8">
-            <Badge className="w-fit bg-[#dff4df] text-accent">Bangladesh’s Upwork-style marketplace</Badge>
+            <Badge className="w-fit bg-accent/15 text-accent">Bangladesh’s Upwork-style marketplace</Badge>
             <h1 className="text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
               Find work that fits your craft.
             </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-[#335c3b] md:text-xl">
+            <p className="max-w-xl text-lg leading-relaxed text-muted md:text-xl">
               Access vetted jobs from trusted Bangladeshi and global teams. Showcase your expertise, get matched fast, and get paid securely in BDT.
             </p>
             <div className="space-y-4">
               <div className="relative flex items-center rounded-[24px] border border-card-border bg-white/90 p-4 shadow-sm">
-                <Search className="mr-3 h-5 w-5 text-[#335c3b]" />
+                <Search className="mr-3 h-5 w-5 text-muted" />
                 <input
-                  className="w-full border-0 bg-transparent text-sm text-[#001e00] placeholder:text-[#6f8f74] focus-visible:outline-none"
+                  className="w-full border-0 bg-transparent text-sm text-foreground placeholder:text-muted/70 focus-visible:outline-none"
                   placeholder="Search by skill, title, or company"
                 />
                 <Button size="lg" className="ml-3 shrink-0">
                   Search jobs
                 </Button>
               </div>
-              <div className="flex flex-wrap gap-2 text-xs text-[#335c3b]">
-                <span className="font-semibold uppercase tracking-wide text-[#001e00]">Quick filters</span>
+              <div className="flex flex-wrap gap-2 text-xs text-muted">
+                <span className="font-semibold uppercase tracking-wide text-foreground">Quick filters</span>
                 {quickFilters.map((filter) => (
-                  <Badge key={filter} className="bg-[#ecf8ec] px-3 py-1 text-xs font-medium text-[#001e00]">
+                  <Badge key={filter} className="bg-accent/10 px-3 py-1 text-xs font-medium text-foreground">
                     {filter}
                   </Badge>
                 ))}
               </div>
             </div>
-            <div className="grid gap-6 text-sm text-[#335c3b] sm:grid-cols-3">
+            <div className="grid gap-6 text-sm text-muted sm:grid-cols-3">
               {heroStats.map((stat) => (
-                <div key={stat.label} className="space-y-1 rounded-2xl bg-[#f5faf5] p-4 shadow-sm">
-                  <p className="text-2xl font-semibold text-[#001e00]">{stat.value}</p>
+                <div key={stat.label} className="space-y-1 rounded-2xl bg-foreground/5 p-4 shadow-sm">
+                  <p className="text-2xl font-semibold text-foreground">{stat.value}</p>
                   <p>{stat.label}</p>
                 </div>
               ))}
@@ -201,31 +201,31 @@ export default function JobsPage() {
             <div className="absolute -right-32 -top-32 h-72 w-72 rounded-full bg-[#c1f2c1]/40 blur-3xl" aria-hidden />
             <div className="relative space-y-6">
               <div className="rounded-3xl bg-white/90 p-6 shadow-[0_20px_40px_rgba(0,30,0,0.08)]">
-                <div className="flex items-center justify-between text-xs font-medium text-[#335c3b]">
+                <div className="flex items-center justify-between text-xs font-medium text-muted">
                   <span className="inline-flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-accent" /> Featured contract
                   </span>
-                  <span className="rounded-full bg-[#ecf8ec] px-3 py-1 text-accent">৳ 2,40,000 project</span>
+                  <span className="rounded-full bg-accent/10 px-3 py-1 text-accent">৳ 2,40,000 project</span>
                 </div>
-                <div className="mt-4 space-y-3 text-sm text-[#335c3b]">
-                  <p className="text-[#001e00]">Product Designer for fintech superapp</p>
-                  <div className="flex items-center gap-2 text-xs text-[#1f3a2a]">
+                <div className="mt-4 space-y-3 text-sm text-muted">
+                  <p className="text-foreground">Product Designer for fintech superapp</p>
+                  <div className="flex items-center gap-2 text-xs text-muted/90">
                     <Star className="h-4 w-4 fill-accent text-accent" /> 5.0 client rating
                   </div>
                   <p>Dhaka • Hybrid • Motion & Design systems</p>
                 </div>
               </div>
               <div className="rounded-3xl bg-white/90 p-6 shadow-[0_20px_40px_rgba(0,30,0,0.06)]">
-                <p className="text-sm font-medium text-[#001e00]">“TalentHunt sent me a shortlist of dream projects that matched my portfolio perfectly.”</p>
-                <p className="mt-4 text-xs text-[#335c3b]">— Rafi Khan, UX Lead</p>
+                <p className="text-sm font-medium text-foreground">“TalentHunt sent me a shortlist of dream projects that matched my portfolio perfectly.”</p>
+                <p className="mt-4 text-xs text-muted">— Rafi Khan, UX Lead</p>
               </div>
               <div className="flex items-center gap-4 rounded-3xl bg-white/90 p-4 shadow-[0_12px_24px_rgba(0,30,0,0.05)]">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ecf8ec] text-sm font-semibold text-accent">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-sm font-semibold text-accent">
                   SR
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-[#001e00]">Samiha Rahman</p>
-                  <p className="text-xs text-[#335c3b]">Top Rated • Brand Strategist</p>
+                  <p className="text-sm font-semibold text-foreground">Samiha Rahman</p>
+                  <p className="text-xs text-muted">Top Rated • Brand Strategist</p>
                 </div>
               </div>
             </div>
@@ -234,9 +234,9 @@ export default function JobsPage() {
 
         <section className="space-y-12">
           <header className="space-y-4 text-center">
-            <Badge className="mx-auto bg-[#dff4df] text-accent">Why talent choose TalentHunt</Badge>
+            <Badge className="mx-auto bg-accent/15 text-accent">Why talent choose TalentHunt</Badge>
             <h2 className="text-3xl font-semibold md:text-4xl">A job marketplace that feels like Upwork, tuned for Bangladesh</h2>
-            <p className="mx-auto max-w-3xl text-lg text-[#335c3b]">
+            <p className="mx-auto max-w-3xl text-lg text-muted">
               We combine curated clients, local payouts, and hands-on support so you can focus on delivering great work—not chasing it.
             </p>
           </header>
@@ -245,7 +245,7 @@ export default function JobsPage() {
               <Card key={item.title} className="h-full space-y-4 border border-card-border bg-white/90 p-6 shadow-sm">
                 <item.icon className="h-10 w-10 text-accent" />
                 <h3 className="text-lg font-semibold">{item.title}</h3>
-                <p className="text-sm text-[#335c3b]">{item.description}</p>
+                <p className="text-sm text-muted">{item.description}</p>
               </Card>
             ))}
           </div>
@@ -253,9 +253,9 @@ export default function JobsPage() {
 
         <section className="grid gap-10 rounded-[32px] bg-white/90 p-10 shadow-[0_20px_48px_rgba(0,30,0,0.06)] lg:grid-cols-[0.85fr_1.15fr]">
           <div className="space-y-6">
-            <Badge className="bg-[#dff4df] text-accent">Opportunities curated for you</Badge>
+            <Badge className="bg-accent/15 text-accent">Opportunities curated for you</Badge>
             <h2 className="text-3xl font-semibold md:text-4xl">Spotlight contracts live right now</h2>
-            <p className="text-lg text-[#335c3b]">
+            <p className="text-lg text-muted">
               Browse ready-to-apply roles with transparent budgets, clear scopes, and clients who respond quickly.
             </p>
             <Button asChild size="lg" className="mt-2 w-fit">
@@ -268,27 +268,27 @@ export default function JobsPage() {
                 <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                   <div className="space-y-1">
                     <h3 className="text-xl font-semibold">{job.title}</h3>
-                    <p className="text-sm text-[#335c3b]">{job.company}</p>
+                    <p className="text-sm text-muted">{job.company}</p>
                   </div>
-                  <div className="flex flex-wrap items-center gap-3 text-sm text-[#335c3b]">
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-muted">
                     <span className="inline-flex items-center gap-1">
                       <Clock className="h-4 w-4 text-accent" /> {job.type}
                     </span>
                     <span className="inline-flex items-center gap-1">
                       <MapPin className="h-4 w-4 text-accent" /> {job.location}
                     </span>
-                    <span className="font-semibold text-[#001e00]">{job.rate}</span>
+                    <span className="font-semibold text-foreground">{job.rate}</span>
                   </div>
                 </div>
-                <p className="text-sm text-[#335c3b]">{job.description}</p>
+                <p className="text-sm text-muted">{job.description}</p>
                 <div className="flex flex-wrap gap-2">
                   {job.tags.map((tag) => (
-                    <Badge key={tag} className="bg-[#ecf8ec] text-[#001e00]">
+                    <Badge key={tag} className="bg-accent/10 text-foreground">
                       {tag}
                     </Badge>
                   ))}
                 </div>
-                <div className="flex flex-col gap-2 text-xs text-[#335c3b] md:flex-row md:items-center md:justify-between">
+                <div className="flex flex-col gap-2 text-xs text-muted md:flex-row md:items-center md:justify-between">
                   <div className="flex flex-wrap gap-x-4 gap-y-1">
                     <span>{job.posted}</span>
                     <span>{job.proposals}</span>
@@ -305,19 +305,19 @@ export default function JobsPage() {
 
         <section className="grid gap-12 rounded-[32px] bg-white/90 p-10 shadow-[0_20px_48px_rgba(0,30,0,0.06)] md:grid-cols-[1fr_1fr]">
           <div className="space-y-6">
-            <Badge className="bg-[#dff4df] text-accent">How it works</Badge>
+            <Badge className="bg-accent/15 text-accent">How it works</Badge>
             <h2 className="text-3xl font-semibold md:text-4xl">Land your next project in three steps</h2>
-            <p className="text-lg text-[#335c3b]">
+            <p className="text-lg text-muted">
               Mirror the Upwork experience with local advantages—guided onboarding, verified payouts, and client introductions when you shine.
             </p>
-            <Button asChild variant="secondary" size="lg" className="bg-white text-[#001e00] shadow-sm">
+            <Button asChild variant="secondary" size="lg" className="bg-card text-foreground shadow-sm">
               <Link href="/onboarding">Complete your profile</Link>
             </Button>
           </div>
           <div className="space-y-4">
             {applicationSteps.map((step) => (
               <Card key={step.title} className="flex items-start gap-4 border border-card-border bg-white/95 p-5 shadow-sm">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ecf8ec] text-lg font-semibold text-accent">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-lg font-semibold text-accent">
                   {step.step}
                 </div>
                 <div className="space-y-2">
@@ -325,7 +325,7 @@ export default function JobsPage() {
                     <step.icon className="h-5 w-5 text-accent" />
                     <h3 className="text-lg font-semibold">{step.title}</h3>
                   </div>
-                  <p className="text-sm text-[#335c3b]">{step.description}</p>
+                  <p className="text-sm text-muted">{step.description}</p>
                 </div>
               </Card>
             ))}
@@ -334,21 +334,21 @@ export default function JobsPage() {
 
         <section className="grid gap-10 rounded-[32px] bg-white/90 p-10 shadow-[0_20px_48px_rgba(0,30,0,0.06)] lg:grid-cols-[0.9fr_1.1fr]">
           <div className="space-y-6">
-            <Badge className="bg-[#dff4df] text-accent">Proof from top freelancers</Badge>
+            <Badge className="bg-accent/15 text-accent">Proof from top freelancers</Badge>
             <h2 className="text-3xl font-semibold md:text-4xl">Hear from talent thriving on TalentHunt</h2>
-            <p className="text-lg text-[#335c3b]">
+            <p className="text-lg text-muted">
               Freelancers across design, development, marketing, and operations trust TalentHunt to deliver consistent, high-quality work.
             </p>
-            <Button asChild size="lg" variant="secondary" className="bg-white text-[#001e00] shadow-sm">
+            <Button asChild size="lg" variant="secondary" className="bg-card text-foreground shadow-sm">
               <Link href="/talent">View success stories</Link>
             </Button>
           </div>
           <div className="space-y-4">
             {testimonials.map((testimonial) => (
               <Card key={testimonial.name} className="space-y-3 border border-card-border bg-white/95 p-6 shadow-sm">
-                <p className="text-sm text-[#001e00]">“{testimonial.quote}”</p>
-                <div className="text-xs font-semibold uppercase tracking-wide text-[#335c3b]">{testimonial.name}</div>
-                <p className="text-xs text-[#335c3b]">{testimonial.role}</p>
+                <p className="text-sm text-foreground">“{testimonial.quote}”</p>
+                <div className="text-xs font-semibold uppercase tracking-wide text-muted">{testimonial.name}</div>
+                <p className="text-xs text-muted">{testimonial.role}</p>
               </Card>
             ))}
           </div>
@@ -357,7 +357,7 @@ export default function JobsPage() {
         <section className="rounded-[32px] border border-transparent bg-gradient-to-r from-[#dff4df] via-[#b9ebc0] to-[#f0fff0] p-10 text-center shadow-[0_20px_48px_rgba(0,30,0,0.06)]">
           <div className="mx-auto max-w-3xl space-y-4">
             <h2 className="text-3xl font-semibold md:text-4xl">Ready to land your next contract?</h2>
-            <p className="text-lg text-[#335c3b]">
+            <p className="text-lg text-muted">
               Build your TalentHunt profile, verify your skills, and start receiving curated opportunities within days.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-center">
@@ -366,7 +366,7 @@ export default function JobsPage() {
                   Join as a freelancer <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="secondary" size="lg" className="bg-white text-[#001e00] shadow-sm">
+              <Button asChild variant="secondary" size="lg" className="bg-card text-foreground shadow-sm">
                 <Link href="/talent">Browse talent community</Link>
               </Button>
             </div>
