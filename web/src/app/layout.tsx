@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/next";
 import { SupabaseProvider } from "@/components/providers/supabase-provider";
 import "./globals.css";
 
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SupabaseProvider>
           {children}
           <Toaster position="top-right" richColors closeButton />
+          <Analytics />
         </SupabaseProvider>
       </body>
     </html>
