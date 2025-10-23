@@ -317,7 +317,7 @@ export default function JobsPage() {
           <div className="space-y-4">
             {applicationSteps.map((step) => (
               <Card key={step.title} className="flex items-start gap-4 border border-card-border bg-white/95 p-5 shadow-sm">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-lg font-semibold text-accent">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full text-lg font-semibold text-accent">
                   {step.step}
                 </div>
                 <div className="space-y-2">
