@@ -11,22 +11,87 @@
 
 @media (max-width: 1024px) {
   .auth-shell {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
+    gap: clamp(1.75rem, 6vw, 2.75rem);
     padding: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .auth-panel {
+    border-right: none;
+    padding: clamp(1.5rem, 4vw, 2.4rem);
+  }
+
+  .auth-panel::before {
+    inset: auto 12% -4%;
+    height: 200px;
+  }
+
+  .auth-showcase {
+    border-left: none;
+    border-top: 1px solid color-mix(in srgb, var(--card-border) 60%, transparent);
+    padding: clamp(2rem, 6vw, 2.75rem);
+    margin-top: 0.75rem;
+  }
+
+  .auth-showcase::before,
+  .auth-showcase::after {
+    display: none;
+  }
+
+  .auth-showcase-panel {
+    width: 100%;
+    padding: clamp(2.2rem, 6vw, 2.75rem);
+    border-radius: 26px;
+    gap: clamp(1.6rem, 5vw, 2.4rem);
+  }
+
+  .auth-showcase-header {
+    max-width: none;
+  }
+
+  .auth-showcase p {
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-shell {
+    padding: clamp(1.5rem, 5.75vw, 2.25rem);
+    gap: clamp(1.4rem, 6vw, 2.1rem);
+  }
+
+  .auth-panel {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .auth-panel::before {
+    display: none;
+  }
+
+  .auth-card {
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 32px;
+    padding: clamp(2.25rem, 6.5vw, 2.75rem);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid color-mix(in srgb, var(--card-border) 70%, transparent);
+    box-shadow: 0 24px 64px rgba(0, 30, 0, 0.08);
   }
 
   .auth-showcase {
     display: none;
   }
+}
 
-  .auth-panel {
-    border-right: none;
-    padding: clamp(1.5rem, 4vw, 2.5rem);
+@media (max-width: 480px) {
+  .auth-shell {
+    padding: clamp(1.25rem, 7vw, 1.65rem);
   }
 
-  .auth-panel::before {
-    inset: auto;
-    height: 220px;
+  .auth-card {
+    padding: clamp(2rem, 7.5vw, 2.4rem);
   }
 }
 
