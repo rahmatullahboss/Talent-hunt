@@ -23,6 +23,8 @@ export function SiteFooter() {
         { label: "About", href: "/about" },
         { label: "Careers", href: "/careers" },
         { label: "Press", href: "/press" },
+        { label: "Privacy Policy", href: "/privacy" },
+        { label: "Terms of Service", href: "/terms" },
       ],
     },
   ];
