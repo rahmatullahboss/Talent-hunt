@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import { getNormalizedSiteUrl } from "@/lib/site-url";
+import { GoogleIcon } from "@/components/icons/google";
 
 const signUpSchema = z
   .object({
@@ -47,9 +49,11 @@ export function SignUpForm() {
   const searchParams = useSearchParams();
   const presetRole = searchParams.get("role") === "employer" ? "employer" : searchParams.get("role") === "freelancer" ? "freelancer" : undefined;
   const [loading, setLoading] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState(false);
   const supabase = createSupabaseBrowserClient();
   const initialRole: FormValues["role"] = presetRole ?? "freelancer";
   const [role, setRole] = useState<FormValues["role"]>(initialRole);
+  const normalizedSiteUrl = getNormalizedSiteUrl();
   const {
     register,
     handleSubmit,
@@ -68,12 +72,32 @@ export function SignUpForm() {
     },
   });
 
+  const handleGoogleSignUp = async () => {
+    setOauthLoading(true);
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${normalizedSiteUrl}/callback?role=${encodeURIComponent(role)}`,
+        skipBrowserRedirect: true,
+      },
+    });
+
+    if (error) {
+      toast.error(error.message);
+      setOauthLoading(false);
+      return;
+    }
+
+    if (data?.url) {
+      window.location.href = data.url;
+      return;
+    }
+
+    setOauthLoading(false);
+  };
+
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
-    const envSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-    const siteUrl = envSiteUrl && envSiteUrl.length > 0 ? envSiteUrl : "https://talenthuntbd.vercel.app";
-    const normalizedSiteUrl = siteUrl.endsWith("/") ? siteUrl.slice(0, -1) : siteUrl;
-
     const { data, error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
@@ -108,6 +132,61 @@ export function SignUpForm() {
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+      <input type="hidden" {...register("role")} />
+      <fieldset className="space-y-3 border-0 p-0">
+        <legend className="text-sm font-medium text-foreground/90">I am signing up as</legend>
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            { value: "freelancer" as const, label: "Freelancer", description: "Offer services & build portfolio" },
+            { value: "employer" as const, label: "Employer", description: "Post jobs & hire talent" },
+          ].map((option) => (
+            <button
+              type="button"
+              key={option.value}
+              className={cn(
+                "group relative overflow-hidden rounded-2xl border px-4 py-4 text-left transition",
+                role === option.value
+                  ? "border-accent bg-white text-foreground shadow-[0_18px_35px_rgba(0,30,0,0.08)]"
+                  : "border-card-border text-muted hover:border-accent/40 hover:text-foreground",
+              )}
+              onClick={() => {
+                setRole(option.value);
+                setValue("role", option.value, { shouldDirty: true, shouldValidate: true });
+              }}
+              aria-pressed={role === option.value}
+            >
+              <span className="flex items-center justify-between gap-2 text-sm font-semibold">
+                {option.label}
+              </span>
+              <span className="mt-2 block text-xs leading-relaxed text-muted/80">{option.description}</span>
+              <span
+                className={cn(
+                  "pointer-events-none absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-transparent via-accent/30 to-transparent opacity-0 transition",
+                  role === option.value ? "opacity-100" : "",
+                )}
+              />
+            </button>
+          ))}
+        </div>
+      </fieldset>
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full justify-center gap-3"
+        loading={oauthLoading}
+        onClick={handleGoogleSignUp}
+      >
+        <span className="flex items-center justify-center gap-3 text-sm font-medium">
+          <GoogleIcon className="h-4 w-4 shrink-0" />
+          Continue with Google
+        </span>
+      </Button>
+      <div className="flex items-center gap-3 text-xs font-medium uppercase text-muted/70">
+        <span className="h-px flex-1 bg-card-border" />
+        <span>or</span>
+        <span className="h-px flex-1 bg-card-border" />
+      </div>
+
       <div className="space-y-1.5">
         <label className="block text-sm font-medium text-muted/90" htmlFor="fullName">
           Full name
@@ -116,51 +195,12 @@ export function SignUpForm() {
         {errors.fullName ? <p className="text-sm text-red-500">{errors.fullName.message}</p> : null}
       </div>
 
-      <div className="space-y-6">
-        <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-muted/90" htmlFor="email">
-            Email address
-          </label>
-          <Input id="email" type="email" placeholder="you@example.com" autoComplete="email" {...register("email")} />
-          {errors.email ? <p className="text-sm text-red-500">{errors.email.message}</p> : null}
-        </div>
-        <fieldset className="space-y-3 border-0 p-0">
-          <legend className="text-sm font-medium text-foreground/90">I am signing up as</legend>
-          <input type="hidden" {...register("role")} />
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { value: "freelancer" as const, label: "Freelancer", description: "Offer services & build portfolio" },
-              { value: "employer" as const, label: "Employer", description: "Post jobs & hire talent" },
-            ].map((option) => (
-              <button
-                type="button"
-                key={option.value}
-                className={cn(
-                  "group relative overflow-hidden rounded-2xl border px-4 py-4 text-left transition",
-                  role === option.value
-                    ? "border-accent bg-white text-foreground shadow-[0_18px_35px_rgba(0,30,0,0.08)]"
-                    : "border-card-border text-muted hover:border-accent/40 hover:text-foreground",
-                )}
-                onClick={() => {
-                  setRole(option.value);
-                  setValue("role", option.value, { shouldDirty: true, shouldValidate: true });
-                }}
-                aria-pressed={role === option.value}
-              >
-                <span className="flex items-center justify-between gap-2 text-sm font-semibold">
-                  {option.label}
-                </span>
-                <span className="mt-2 block text-xs leading-relaxed text-muted/80">{option.description}</span>
-                <span
-                  className={cn(
-                    "pointer-events-none absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-transparent via-accent/30 to-transparent opacity-0 transition",
-                    role === option.value ? "opacity-100" : "",
-                  )}
-                />
-              </button>
-            ))}
-          </div>
-        </fieldset>
+      <div className="space-y-1.5">
+        <label className="block text-sm font-medium text-muted/90" htmlFor="email">
+          Email address
+        </label>
+        <Input id="email" type="email" placeholder="you@example.com" autoComplete="email" {...register("email")} />
+        {errors.email ? <p className="text-sm text-red-500">{errors.email.message}</p> : null}
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">

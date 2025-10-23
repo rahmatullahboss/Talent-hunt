@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,7 +24,7 @@ const schema = z
 type FormValues = z.infer<typeof schema>;
 
 export function UpdatePasswordForm() {
-  const supabase = createSupabaseBrowserClient();
+  const supabase = useMemo(() => createSupabaseBrowserClient({ flowType: "implicit" }), []);
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
   const error = searchParams.get("error");

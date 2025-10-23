@@ -47,7 +47,9 @@ export function SiteFooter() {
           ))}
         </div>
         <div className="max-w-md space-y-4 order-2 md:order-1 md:text-left">
-          <p className="text-2xl font-semibold text-foreground">TalentHunt BD</p>
+          <p className="text-2xl font-semibold text-foreground">
+            TalentHunt <span className="text-accent">BD</span>
+          </p>
           <p className="text-sm leading-relaxed text-muted/90">
             Connecting forward-thinking teams with trusted Bangladeshi freelancers and agencies to build what&apos;s next.
           </p>
@@ -64,7 +66,9 @@ export function SiteFooter() {
             </a>
             .
           </p>
-          <p className="text-xs text-muted/70">&copy; 2025 TalentHunt BD. All rights reserved.</p>
+          <p className="text-xs text-muted/70">
+            &copy; 2025 TalentHunt <span className="text-accent">BD</span>. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

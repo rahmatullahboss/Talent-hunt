@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { getNormalizedSiteUrl } from "@/lib/site-url";
 
 const schema = z.object({
   email: z.string().email("Enter the email you used to sign up"),
@@ -28,10 +29,8 @@ export function ResetPasswordForm() {
 
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
-    const supabase = createSupabaseBrowserClient();
-    const envSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-    const siteUrl = envSiteUrl && envSiteUrl.length > 0 ? envSiteUrl : "https://talenthuntbd.vercel.app";
-    const normalizedSiteUrl = siteUrl.endsWith("/") ? siteUrl.slice(0, -1) : siteUrl;
+    const supabase = createSupabaseBrowserClient({ flowType: "implicit" });
+    const normalizedSiteUrl = getNormalizedSiteUrl();
     const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
       redirectTo: `${normalizedSiteUrl}/update-password`,
     });
