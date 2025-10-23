@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { createSupabaseBrowserClient, inferSupportedOAuthFlow } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { getNormalizedSiteUrl } from "@/lib/site-url";
 import { GoogleIcon } from "@/components/icons/google";
@@ -74,7 +74,8 @@ export function SignUpForm() {
 
   const handleGoogleSignUp = async () => {
     setOauthLoading(true);
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const oauthSupabase = createSupabaseBrowserClient({ flowType: inferSupportedOAuthFlow() });
+    const { data, error } = await oauthSupabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${normalizedSiteUrl}/callback?role=${encodeURIComponent(role)}`,

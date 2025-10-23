@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { createSupabaseBrowserClient, inferSupportedOAuthFlow } from "@/lib/supabase/client";
 import { getNormalizedSiteUrl } from "@/lib/site-url";
 import { GoogleIcon } from "@/components/icons/google";
 
@@ -36,7 +36,7 @@ export function SignInForm() {
 
   const handleGoogleSignIn = async () => {
     setOauthLoading(true);
-    const supabase = createSupabaseBrowserClient();
+    const supabase = createSupabaseBrowserClient({ flowType: inferSupportedOAuthFlow() });
     const normalizedSiteUrl = getNormalizedSiteUrl();
 
     const { data, error } = await supabase.auth.signInWithOAuth({
