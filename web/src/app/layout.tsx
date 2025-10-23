@@ -18,12 +18,14 @@ export const metadata: Metadata = {
     "Freelance marketplace",
     "Talent Hunt BD",
   ],
+  colorScheme: "light",
+  themeColor: "#f2f7f2",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-transparent text-foreground antialiased">
+    <html lang="en" data-theme="light">
+      <body className="min-h-screen text-foreground antialiased">
         <SupabaseProvider>
           {children}
           <Toaster position="top-right" richColors closeButton />

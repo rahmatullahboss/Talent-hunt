@@ -17,6 +17,11 @@
   color-scheme: light;
 }
 
+html {
+  color-scheme: light;
+  background-color: var(--gradient-to);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
