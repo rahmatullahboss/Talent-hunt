@@ -219,7 +219,7 @@ export function createMessagesPage({ role, basePath, emptyState }: PageFactoryOp
                   const isActive = thread.id === selectedContractId;
                   const preview =
                     latest?.content && latest.content.length > 90
-                      ? `${latest.content.slice(0, 90)}…`
+                      ? `${latest.content.slice(0, 90)}...`
                       : latest?.content ?? null;
 
                   return (
