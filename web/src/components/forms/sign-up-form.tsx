@@ -151,16 +151,6 @@ export function SignUpForm() {
               >
                 <span className="flex items-center justify-between gap-2 text-sm font-semibold">
                   {option.label}
-                  <span
-                    className={cn(
-                      "rounded-full border px-2 py-0.5 text-[0.65rem] font-medium uppercase tracking-wide",
-                      role === option.value
-                        ? "border-transparent bg-accent/15 text-accent"
-                        : "border-card-border bg-transparent text-muted/80",
-                    )}
-                  >
-                    {role === option.value ? "Selected" : "Choose"}
-                  </span>
                 </span>
                 <span className="mt-2 block text-xs leading-relaxed text-muted/80">{option.description}</span>
                 <span
