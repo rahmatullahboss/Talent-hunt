@@ -25,7 +25,7 @@ export default function AuthCallbackPage() {
       }
 
       const url = new URL(window.location.href);
-      ["code", "state", "error", "error_description", "role"].forEach((param) => url.searchParams.delete(param));
+      ["code", "state", "error", "error_description", "role", "redirectTo"].forEach((param) => url.searchParams.delete(param));
       url.hash = "";
       const cleanedSearch = url.searchParams.toString();
       const nextUrl = cleanedSearch ? `${url.pathname}?${cleanedSearch}` : url.pathname;
@@ -76,52 +76,52 @@ export default function AuthCallbackPage() {
     };
 
     const getSuccessRedirect = async (redirectPath: string | null) => {
+      let targetPath = "/onboarding";
+
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
       if (!session?.user) {
-        router.replace("/signin");
-        return;
+        targetPath = "/signin";
+      } else {
+        await persistRoleIfNeeded(session.user.id, normalizedRole);
+
+        try {
+          const { data: profile, error: profileError } = await supabase
+            .from("profiles")
+            .select("role,onboarding_complete")
+            .eq("id", session.user.id)
+            .maybeSingle();
+
+          if (profileError) {
+            console.error(profileError);
+          } else if (profile?.onboarding_complete === true) {
+            if (redirectPath && redirectPath.startsWith("/") && !redirectPath.startsWith("//") && redirectPath !== "/callback") {
+              targetPath = redirectPath;
+            } else {
+              switch (profile.role) {
+                case "employer":
+                  targetPath = "/employer/dashboard";
+                  break;
+                case "freelancer":
+                  targetPath = "/freelancer/dashboard";
+                  break;
+                case "admin":
+                  targetPath = "/admin/dashboard";
+                  break;
+                default:
+                  targetPath = "/onboarding";
+              }
+            }
+          }
+        } catch (error) {
+          console.error(error);
+        }
       }
 
-      await persistRoleIfNeeded(session.user.id, normalizedRole);
-
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("role,onboarding_complete")
-        .eq("id", session.user.id)
-        .maybeSingle();
-
-      if (profileError) {
-        console.error(profileError);
-        router.replace("/onboarding");
-        return;
-      }
-
-      if (!profile || profile.onboarding_complete === false) {
-        router.replace("/onboarding");
-        return;
-      }
-
-      if (redirectPath && redirectPath.startsWith("/") && !redirectPath.startsWith("//")) {
-        router.replace(redirectPath);
-        return;
-      }
-
-      switch (profile.role) {
-        case "employer":
-          router.replace("/employer/dashboard");
-          break;
-        case "freelancer":
-          router.replace("/freelancer/dashboard");
-          break;
-        case "admin":
-          router.replace("/admin/dashboard");
-          break;
-        default:
-          router.replace("/onboarding");
-      }
+      router.replace(targetPath);
+      router.refresh();
     };
 
     const handleAuth = async () => {
