@@ -22,10 +22,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-card-border/80 bg-white/90 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 text-black">
-        <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight text-black">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-base font-semibold text-white">
-            TH
-          </span>
+        <Link href="/" className="text-lg font-semibold tracking-tight text-black">
           <span className="text-xl font-semibold text-black">
             TalentHunt <span className="text-accent">BD</span>
           </span>
