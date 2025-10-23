@@ -8,7 +8,8 @@ const links: SidebarLink[] = [
   { href: "/employer/jobs/new", label: "Post a job", icon: "clipboardList" },
   { href: "/employer/jobs", label: "Manage jobs", icon: "clipboardCheck" },
   { href: "/employer/freelancers", label: "Find talent", icon: "search" },
-  { href: "/employer/contracts", label: "Contracts", icon: "messageSquare" },
+  { href: "/employer/contracts", label: "Contracts", icon: "users" },
+  { href: "/employer/messages", label: "Messages", icon: "messageSquare" },
   { href: "/employer/payments", label: "Payments", icon: "wallet" },
 ];
 
