@@ -111,7 +111,7 @@ export function SignUpForm() {
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-muted" htmlFor="fullName">
+        <label className="block text-sm font-medium text-muted/90" htmlFor="fullName">
           Full name
         </label>
         <Input id="fullName" placeholder="Your full name" autoComplete="name" {...register("fullName")} />
@@ -120,16 +120,14 @@ export function SignUpForm() {
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-muted" htmlFor="email">
+          <label className="block text-sm font-medium text-muted/90" htmlFor="email">
             Email address
           </label>
           <Input id="email" type="email" placeholder="you@example.com" autoComplete="email" {...register("email")} />
           {errors.email ? <p className="text-sm text-red-500">{errors.email.message}</p> : null}
         </div>
-        <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-muted" htmlFor="role">
-            I am signing up as
-          </label>
+        <fieldset className="space-y-3 border-0 p-0">
+          <legend className="text-sm font-medium text-foreground/90">I am signing up as</legend>
           <input type="hidden" {...register("role")} />
           <div className="grid grid-cols-2 gap-3">
             {[
@@ -140,8 +138,10 @@ export function SignUpForm() {
                 type="button"
                 key={option.value}
                 className={cn(
-                  "rounded-[var(--radius-md)] border px-4 py-3 text-left text-sm transition",
-                  role === option.value ? "border-accent bg-accent/10 text-accent" : "border-card-border text-muted",
+                  "group relative overflow-hidden rounded-2xl border px-4 py-4 text-left transition",
+                  role === option.value
+                    ? "border-accent bg-white text-foreground shadow-[0_18px_35px_rgba(0,30,0,0.08)]"
+                    : "border-card-border text-muted hover:border-accent/40 hover:text-foreground",
                 )}
                 onClick={() => {
                   setRole(option.value);
@@ -149,24 +149,42 @@ export function SignUpForm() {
                 }}
                 aria-pressed={role === option.value}
               >
-                <span className="block font-semibold">{option.label}</span>
-                <span className="mt-1 block text-xs text-muted">{option.description}</span>
+                <span className="flex items-center justify-between gap-2 text-sm font-semibold">
+                  {option.label}
+                  <span
+                    className={cn(
+                      "rounded-full border px-2 py-0.5 text-[0.65rem] font-medium uppercase tracking-wide",
+                      role === option.value
+                        ? "border-transparent bg-accent/15 text-accent"
+                        : "border-card-border bg-transparent text-muted/80",
+                    )}
+                  >
+                    {role === option.value ? "Selected" : "Choose"}
+                  </span>
+                </span>
+                <span className="mt-2 block text-xs leading-relaxed text-muted/80">{option.description}</span>
+                <span
+                  className={cn(
+                    "pointer-events-none absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-transparent via-accent/30 to-transparent opacity-0 transition",
+                    role === option.value ? "opacity-100" : "",
+                  )}
+                />
               </button>
             ))}
           </div>
-        </div>
+        </fieldset>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-muted" htmlFor="password">
+          <label className="block text-sm font-medium text-muted/90" htmlFor="password">
             Password
           </label>
           <Input id="password" type="password" placeholder="Create a password" autoComplete="new-password" {...register("password")} />
           {errors.password ? <p className="text-sm text-red-500">{errors.password.message}</p> : null}
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-muted" htmlFor="confirmPassword">
+          <label className="block text-sm font-medium text-muted/90" htmlFor="confirmPassword">
             Confirm password
           </label>
           <Input id="confirmPassword" type="password" placeholder="Confirm password" autoComplete="new-password" {...register("confirmPassword")} />
@@ -176,7 +194,7 @@ export function SignUpForm() {
 
       {role === "employer" ? (
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-muted" htmlFor="companyName">
+          <label className="block text-sm font-medium text-muted/90" htmlFor="companyName">
             Company name
           </label>
           <Input id="companyName" placeholder="Registered company name" {...register("companyName")} />
@@ -185,7 +203,7 @@ export function SignUpForm() {
       ) : null}
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-muted" htmlFor="shortBio">
+        <label className="block text-sm font-medium text-muted/90" htmlFor="shortBio">
           Short introduction (optional)
         </label>
         <Textarea id="shortBio" rows={3} placeholder="Tell us a bit about your expertise or the type of projects you're hiring for." {...register("shortBio")} />
