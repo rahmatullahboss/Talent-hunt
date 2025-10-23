@@ -98,7 +98,7 @@ export default function CareersPage() {
           <Badge className="mx-auto bg-accent/15 text-accent md:mx-0">Careers at TalentHunt BD</Badge>
           <div className="space-y-5">
             <h1 className="text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
-              Build the platform powering Bangladesh's next generation of talent.
+              Build the platform powering Bangladesh’s next generation of talent.
             </h1>
             <p className="mx-auto max-w-3xl text-lg text-muted md:mx-0">
               We are a fast growing team of product builders, community leaders, and talent advocates on a mission to unlock
@@ -160,7 +160,7 @@ export default function CareersPage() {
           <div className="grid gap-6 md:grid-cols-2">
             {teamCulture.map((story) => (
               <Card key={story.name} className="flex h-full flex-col gap-3 border border-card-border bg-white/95 p-6 shadow-sm">
-                <p className="text-sm text-foreground">"{story.quote}"</p>
+                <p className="text-sm text-foreground">“{story.quote}”</p>
                 <div>
                   <p className="text-sm font-semibold text-foreground">{story.name}</p>
                   <p className="text-xs uppercase tracking-wide text-muted">{story.role}</p>

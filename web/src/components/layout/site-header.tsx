@@ -133,8 +133,8 @@ export function SiteHeader() {
   const isAuthenticated = hasSession;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-card-border/80 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 text-black">
+    <header className="sticky inset-x-0 top-0 z-50 border-b border-card-border/80 bg-white shadow-sm md:bg-white/90 md:shadow-none md:backdrop-blur">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 text-black sm:px-6">
         <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight text-black">
           <span className="text-xl font-semibold">
             TalentHunt <span className="text-accent">BD</span>
@@ -205,7 +205,11 @@ export function SiteHeader() {
       </div>
       {isMenuOpen ? (
         <div className="md:hidden">
-          <div className="fixed inset-0 z-30 bg-black/10 backdrop-blur-sm" onClick={closeMenu} aria-hidden="true" />
+          <div
+            className="fixed inset-x-0 bottom-0 top-[4.5rem] z-30 bg-black/10 backdrop-blur-sm"
+            onClick={closeMenu}
+            aria-hidden="true"
+          />
           <div
             id="mobile-menu"
             className={cn(

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react";
 import { SupabaseProvider } from "@/components/providers/supabase-provider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {children}
           <Toaster position="top-right" richColors closeButton />
           <Analytics />
+          <SpeedInsights />
         </SupabaseProvider>
       </body>
     </html>
