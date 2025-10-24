@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -20,6 +21,12 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+
+export const metadata: Metadata = {
+  verification: {
+    google: "google8e80767e6782e05e.html",
+  },
+};
 
 const heroStats = [
   { value: "12K+", label: "Bangladeshi freelancers" },
