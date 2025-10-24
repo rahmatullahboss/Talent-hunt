@@ -1,13 +1,16 @@
 :root {
-  --auth-card-padding-top: clamp(2.75rem, 5vw, 3rem);
+  /* Keep the auth card body spacing comfortable */
+  --auth-card-padding-top: clamp(2rem, 4vw, 2.75rem);
 }
+
 
 .auth-shell {
   display: grid;
   min-height: 100vh;
   grid-template-columns: minmax(0, clamp(420px, 44vw, 620px)) minmax(0, 1fr);
   gap: clamp(2rem, 5vw, 3.5rem);
-  padding: clamp(1.5rem, 3vw, 4rem);
+  padding: clamp(1rem, 2.5vw, 2.25rem);
+  padding-top: clamp(0.75rem, 1.5vw, 1.4rem);
   /* The auth experience now mirrors the homepage gradient. */
   background-color: var(--gradient-to);
   background: linear-gradient(180deg, var(--gradient-from), var(--gradient-via), var(--gradient-to));
@@ -37,9 +40,10 @@
 
 .auth-panel {
   position: relative;
-  padding: clamp(2rem, 4vw, 3.25rem);
+  padding: clamp(1rem, 2.5vw, 2rem);
+  padding-top: clamp(1.1rem, 1.6vw, 1.9rem);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   border-right: 1px solid rgba(205, 231, 205, 0.7);
   border-right: 1px solid color-mix(in srgb, var(--card-border) 70%, transparent);
@@ -49,7 +53,7 @@
 .auth-panel::before {
   content: "";
   position: absolute;
-  inset: 15% 20% auto;
+  inset: 14% 20% auto;
   height: 320px;
   border-radius: 999px;
   background: radial-gradient(circle at top, rgba(52, 199, 89, 0.25), transparent 65%);
@@ -291,14 +295,24 @@
 
 @media (min-width: 1025px) {
   .auth-shell {
-    padding-top: clamp(1rem, 2.25vw, 2.5rem);
+    padding-top: clamp(0.6rem, 1.2vw, 1.2rem);
   }
 
   .auth-panel {
-    padding-top: clamp(1.5rem, 3vw, 2.75rem);
+    padding-top: clamp(0.9rem, 1.4vw, 1.5rem);
   }
 
   .auth-card {
     padding-top: var(--auth-card-padding-top);
+  }
+}
+
+@media (min-width: 1280px) {
+  .auth-shell {
+    padding-top: clamp(0.45rem, 1vw, 1rem);
+  }
+
+  .auth-panel {
+    padding-top: clamp(0.75rem, 1.2vw, 1.3rem);
   }
 }
