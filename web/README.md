@@ -69,9 +69,9 @@ TalentHunt BD is a full-stack marketplace for Bangladeshi freelancers and employ
    supabase db seed
    ```
 
-5. **Storage bucket**
-   - In the Supabase dashboard create a storage bucket named `avatars`.
-   - Set it to `public` and grant authenticated users `INSERT`, `UPDATE`, `SELECT` to upload profile images.
+5. **Storage buckets**
+   - Running the database migrations creates two storage buckets: `avatars` (public) and `certificates` (private).
+   - If you already have an existing project, verify these buckets exist in Supabase Storage and re-run the migration or create them manually if needed.
 
 6. **Realtime**
    - Ensure the `messages` table has Realtime enabled (toggle in Supabase dashboard > Database > Realtime).
