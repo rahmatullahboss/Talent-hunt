@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Production
+/build
+/.next/
+/out/
+
+# Misc
+.DS_Store
+*.pem
+.env*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Supabase
+supabase/.temp/
+
