@@ -15,11 +15,13 @@
   },
 
   "vars": {
-    "NEXTJS_ENV": "production"
+    "NEXTJS_ENV": "production",
+    "NEXT_PUBLIC_SITE_URL": "https://thbd.digitalcare.site",
+    "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME": "dpnccgsja"
   },
 
   "routes": [
-    { "pattern": "talenthuntbd.digitalcare.site", "custom_domain": true }
+    { "pattern": "thbd.digitalcare.site", "custom_domain": true }
   ],
 
   "d1_databases": [
