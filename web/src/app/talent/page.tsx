@@ -19,27 +19,62 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { getDBAsync } from "@/lib/auth/session";
+import { fromJsonArray } from "@/lib/db";
 
-const spotlightTalent = [
+interface SpotlightFreelancer {
+  id: string;
+  full_name: string;
+  title: string | null;
+  skills: string | null;
+}
+
+async function getSpotlightFreelancers(): Promise<Array<{
+  name: string;
+  title: string;
+  rating: string;
+  skills: string[];
+}>> {
+  try {
+    const d1 = await getDBAsync();
+    if (!d1) return [];
+    
+    const { results } = await d1
+      .prepare(`
+        SELECT id, full_name, title, skills
+        FROM profiles
+        WHERE role = 'freelancer'
+          AND onboarding_complete = 1
+          AND title IS NOT NULL
+        ORDER BY updated_at DESC
+        LIMIT 3
+      `)
+      .all<SpotlightFreelancer>();
+    
+    const ratings = ["Top Rated Plus", "Rising Talent", "Expert-Vetted"];
+    
+    return (results ?? []).map((freelancer, index) => ({
+      name: freelancer.full_name,
+      title: freelancer.title ?? "Professional",
+      rating: ratings[index % ratings.length],
+      skills: fromJsonArray(freelancer.skills).slice(0, 4),
+    }));
+  } catch (error) {
+    console.error("Failed to fetch spotlight freelancers:", error);
+    return [];
+  }
+}
+
+// Fallback spotlight data
+const fallbackSpotlight = [
   {
-    name: "Sanika Roy",
-    title: "Brand & Product Strategist",
-    rating: "Top Rated Plus",
-    skills: ["Brand systems", "Campaign leadership", "Go-to-market"],
-  },
-  {
-    name: "Ayaan Haque",
-    title: "Senior Full-stack Engineer",
-    rating: "Rising Talent",
-    skills: ["Next.js", "NestJS", "Supabase", "Microservices"],
-  },
-  {
-    name: "Mehnaz Islam",
-    title: "Growth Marketing Lead",
-    rating: "Expert-Vetted",
-    skills: ["Lifecycle", "Paid social", "Automation"],
+    name: "Freelancer",
+    title: "Professional",
+    rating: "Top Rated",
+    skills: ["Available for hire"],
   },
 ];
+
 
 const categories = [
   {
@@ -116,7 +151,10 @@ const milestones = [
   },
 ];
 
-export default function TalentPage() {
+export default async function TalentPage() {
+  const spotlightTalent = await getSpotlightFreelancers();
+  const displayTalent = spotlightTalent.length > 0 ? spotlightTalent : fallbackSpotlight;
+  
   return (
     <div className="min-h-screen text-foreground">
       <SiteHeader />
@@ -158,7 +196,7 @@ export default function TalentPage() {
             <div className="space-y-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted/80">Spotlight freelancers</p>
               <div className="space-y-4">
-                {spotlightTalent.map((talent) => (
+                {displayTalent.map((talent) => (
                   <div key={talent.name} className="rounded-2xl border border-card-border bg-white p-4">
                     <div className="flex items-center justify-between">
                       <div>

@@ -1,24 +1,25 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDBAsync } from "@/lib/auth/session";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { WithdrawProposalButton } from "@/components/freelancer/proposals/withdraw-button";
-import type { Tables } from "@/types/database";
 
-type ProposalRow = Tables<"proposals">;
-
-type JobSummary = Pick<Tables<"jobs">, "id" | "title" | "category" | "budget_mode" | "budget_min" | "budget_max">;
-
-type SupabaseProposalRecord = ProposalRow & {
-  jobs: JobSummary | JobSummary[] | null;
-};
-
-type ProposalWithJob = ProposalRow & {
-  job: JobSummary | null;
-};
+interface ProposalWithJob {
+  id: string;
+  job_id: string;
+  status: string;
+  bid_amount: number;
+  bid_type: string;
+  estimated_hours: number | null;
+  created_at: string;
+  job_title: string | null;
+  job_category: string | null;
+  job_budget_mode: string | null;
+  job_budget_min: number | null;
+  job_budget_max: number | null;
+}
 
 export default async function ProposalsPage() {
   const auth = await getCurrentUser();
@@ -26,35 +27,39 @@ export default async function ProposalsPage() {
     redirect("/signin");
   }
 
-  const supabase = createSupabaseServerClient();
-  const { data } = await supabase
-    .from("proposals")
-    .select(
-      `
-      id,
-      job_id,
-      status,
-      bid_amount,
-      bid_type,
-      estimated_hours,
-      created_at,
-      jobs (
-        id,
-        title,
-        category,
-        budget_mode,
-        budget_min,
-        budget_max
-      )
-    `,
-    )
-    .eq("freelancer_id", auth.profile.id)
-    .order("created_at", { ascending: false });
+  const d1 = await getDBAsync();
+  let proposals: ProposalWithJob[] = [];
 
-  const proposals: ProposalWithJob[] = ((data ?? []) as SupabaseProposalRecord[]).map(({ jobs, ...proposal }) => ({
-    ...proposal,
-    job: Array.isArray(jobs) ? jobs[0] ?? null : jobs ?? null,
-  }));
+  if (d1) {
+    try {
+      const { results } = await d1
+        .prepare(`
+          SELECT 
+            p.id,
+            p.job_id,
+            p.status,
+            p.bid_amount,
+            p.bid_type,
+            p.estimated_hours,
+            p.created_at,
+            j.title as job_title,
+            j.category as job_category,
+            j.budget_mode as job_budget_mode,
+            j.budget_min as job_budget_min,
+            j.budget_max as job_budget_max
+          FROM proposals p
+          LEFT JOIN jobs j ON p.job_id = j.id
+          WHERE p.freelancer_id = ?
+          ORDER BY p.created_at DESC
+        `)
+        .bind(auth.profile.id)
+        .all<ProposalWithJob>();
+      
+      proposals = results ?? [];
+    } catch (error) {
+      console.error("Failed to fetch proposals:", error);
+    }
+  }
 
   return (
     <div className="space-y-8">
@@ -73,7 +78,7 @@ export default async function ProposalsPage() {
             <Card key={proposal.id} className="flex flex-col gap-4 border border-card-border/70 p-6 md:flex-row md:items-center md:justify-between">
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-lg font-semibold text-foreground">{proposal.job?.title ?? "Job unavailable"}</h2>
+                  <h2 className="text-lg font-semibold text-foreground">{proposal.job_title ?? "Job unavailable"}</h2>
                   <Badge variant="muted">{proposal.status}</Badge>
                 </div>
                 <p className="text-sm text-muted">

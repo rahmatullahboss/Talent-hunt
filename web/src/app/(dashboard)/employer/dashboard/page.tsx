@@ -1,11 +1,35 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowRight, Briefcase, MessageSquare, UsersRound } from "lucide-react";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDBAsync } from "@/lib/auth/session";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+
+interface Job {
+  id: string;
+  title: string;
+  status: string;
+  created_at: string;
+}
+
+interface ProposalWithJob {
+  id: string;
+  status: string;
+  created_at: string;
+  freelancer_id: string;
+  job_title: string | null;
+  job_id: string | null;
+}
+
+interface ContractWithJob {
+  id: string;
+  status: string;
+  created_at: string;
+  freelancer_id: string;
+  job_title: string | null;
+  job_id: string | null;
+}
 
 export default async function EmployerDashboardPage() {
   const auth = await getCurrentUser();
@@ -13,26 +37,49 @@ export default async function EmployerDashboardPage() {
     redirect("/signin");
   }
 
-  const supabase = createSupabaseServerClient();
-  const [jobsResult, proposalsResult, contractsResult] = await Promise.all([
-    supabase.from("jobs").select("id, title, status, created_at").eq("employer_id", auth.profile.id).order("created_at", { ascending: false }),
-    supabase
-      .from("proposals")
-      .select("id, status, created_at, freelancer_id, jobs ( title, id )")
-      .eq("jobs.employer_id", auth.profile.id)
-      .order("created_at", { ascending: false })
-      .limit(5),
-    supabase
-      .from("contracts")
-      .select("id, status, created_at, freelancer_id, jobs ( title, id )")
-      .eq("employer_id", auth.profile.id)
-      .order("created_at", { ascending: false })
-      .limit(5),
-  ]);
+  const d1 = await getDBAsync();
+  let jobs: Job[] = [];
+  let proposals: ProposalWithJob[] = [];
+  let contracts: ContractWithJob[] = [];
 
-  const jobs = jobsResult.data ?? [];
-  const proposals = proposalsResult.data ?? [];
-  const contracts = contractsResult.data ?? [];
+  if (d1) {
+    try {
+      const [jobsResult, proposalsResult, contractsResult] = await Promise.all([
+        d1.prepare(`
+          SELECT id, title, status, created_at
+          FROM jobs
+          WHERE employer_id = ?
+          ORDER BY created_at DESC
+        `).bind(auth.profile.id).all<Job>(),
+        d1.prepare(`
+          SELECT 
+            p.id, p.status, p.created_at, p.freelancer_id,
+            j.title as job_title, j.id as job_id
+          FROM proposals p
+          JOIN jobs j ON p.job_id = j.id
+          WHERE j.employer_id = ?
+          ORDER BY p.created_at DESC
+          LIMIT 5
+        `).bind(auth.profile.id).all<ProposalWithJob>(),
+        d1.prepare(`
+          SELECT 
+            c.id, c.status, c.created_at, c.freelancer_id,
+            j.title as job_title, j.id as job_id
+          FROM contracts c
+          JOIN jobs j ON c.job_id = j.id
+          WHERE c.employer_id = ?
+          ORDER BY c.created_at DESC
+          LIMIT 5
+        `).bind(auth.profile.id).all<ContractWithJob>(),
+      ]);
+
+      jobs = jobsResult.results ?? [];
+      proposals = proposalsResult.results ?? [];
+      contracts = contractsResult.results ?? [];
+    } catch (error) {
+      console.error("Failed to fetch dashboard data:", error);
+    }
+  }
 
   const openJobs = jobs.filter((job) => job.status === "open").length;
   const inProgress = jobs.filter((job) => job.status === "in_progress").length;
@@ -74,19 +121,15 @@ export default async function EmployerDashboardPage() {
             {proposals.length === 0 ? (
               <EmptyState message="No proposals yet. Share more project details or invite freelancers directly." />
             ) : (
-              proposals.map((proposal) => {
-                const job = Array.isArray(proposal.jobs) ? proposal.jobs[0] : proposal.jobs;
-
-                return (
-                  <Card key={proposal.id} className="flex items-center justify-between border border-card-border/60 bg-card/70 p-4 text-sm">
-                    <div>
-                      <p className="font-semibold text-foreground">{job?.title ?? "Contract"}</p>
-                      <p className="text-xs text-muted">Received {new Date(proposal.created_at).toLocaleString()}</p>
-                    </div>
-                    <Badge variant="muted">{proposal.status}</Badge>
-                  </Card>
-                );
-              })
+              proposals.map((proposal) => (
+                <Card key={proposal.id} className="flex items-center justify-between border border-card-border/60 bg-card/70 p-4 text-sm">
+                  <div>
+                    <p className="font-semibold text-foreground">{proposal.job_title ?? "Contract"}</p>
+                    <p className="text-xs text-muted">Received {new Date(proposal.created_at).toLocaleString()}</p>
+                  </div>
+                  <Badge variant="muted">{proposal.status}</Badge>
+                </Card>
+              ))
             )}
           </div>
         </Card>
@@ -102,19 +145,15 @@ export default async function EmployerDashboardPage() {
             {contracts.length === 0 ? (
               <EmptyState message="No active contracts. Hire a freelancer to kickstart your next project." />
             ) : (
-              contracts.map((contract) => {
-                const job = Array.isArray(contract.jobs) ? contract.jobs[0] : contract.jobs;
-
-                return (
-                  <Card key={contract.id} className="flex items-center justify-between border border-card-border/60 bg-card/70 p-4 text-sm">
-                    <div>
-                      <p className="font-semibold text-foreground">{job?.title ?? "Contract"}</p>
-                      <p className="text-xs text-muted">{new Date(contract.created_at).toLocaleString()}</p>
-                    </div>
-                    <Badge variant="muted">{contract.status}</Badge>
-                  </Card>
-                );
-              })
+              contracts.map((contract) => (
+                <Card key={contract.id} className="flex items-center justify-between border border-card-border/60 bg-card/70 p-4 text-sm">
+                  <div>
+                    <p className="font-semibold text-foreground">{contract.job_title ?? "Contract"}</p>
+                    <p className="text-xs text-muted">{new Date(contract.created_at).toLocaleString()}</p>
+                  </div>
+                  <Badge variant="muted">{contract.status}</Badge>
+                </Card>
+              ))
             )}
           </div>
         </Card>

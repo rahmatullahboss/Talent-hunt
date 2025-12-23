@@ -1,11 +1,18 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDBAsync } from "@/lib/auth/session";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { JobStatusForm } from "@/components/employer/jobs/job-status-form";
+
+interface JobWithCount {
+  id: string;
+  title: string;
+  status: string;
+  created_at: string;
+  proposal_count: number;
+}
 
 export default async function EmployerJobsPage() {
   const auth = await getCurrentUser();
@@ -13,14 +20,31 @@ export default async function EmployerJobsPage() {
     redirect("/signin");
   }
 
-  const supabase = createSupabaseServerClient();
-  const { data } = await supabase
-    .from("jobs")
-    .select("id, title, status, created_at, proposals(count)")
-    .eq("employer_id", auth.profile.id)
-    .order("created_at", { ascending: false });
-
-  const jobs = data ?? [];
+  const d1 = await getDBAsync();
+  let jobs: JobWithCount[] = [];
+  
+  if (d1) {
+    try {
+      const { results } = await d1
+        .prepare(`
+          SELECT 
+            j.id, 
+            j.title, 
+            j.status, 
+            j.created_at,
+            (SELECT COUNT(*) FROM proposals WHERE job_id = j.id) as proposal_count
+          FROM jobs j
+          WHERE j.employer_id = ?
+          ORDER BY j.created_at DESC
+        `)
+        .bind(auth.profile.id)
+        .all<JobWithCount>();
+      
+      jobs = results ?? [];
+    } catch (error) {
+      console.error("Failed to fetch jobs:", error);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -48,7 +72,7 @@ export default async function EmployerJobsPage() {
                   <Badge variant="muted">{job.status}</Badge>
                 </div>
                 <p className="text-xs text-muted">Posted {new Date(job.created_at).toLocaleString()}</p>
-                <p className="text-sm text-muted">{job.proposals?.[0]?.count ?? 0} proposals received</p>
+                <p className="text-sm text-muted">{job.proposal_count ?? 0} proposals received</p>
               </div>
               <div className="flex items-center gap-3">
                 <Button variant="ghost" asChild size="sm">

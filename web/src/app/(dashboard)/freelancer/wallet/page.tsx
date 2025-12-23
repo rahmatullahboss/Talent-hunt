@@ -1,18 +1,32 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDBAsync } from "@/lib/auth/session";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { WithdrawalForm } from "@/components/freelancer/wallet/withdrawal-form";
 
-type Transaction = {
+interface Transaction {
   id: string;
-  type: "deposit" | "escrow_fund" | "release" | "withdrawal" | "adjustment";
+  type: string;
   amount: number;
-  status: "pending" | "cleared" | "failed";
+  status: string;
   created_at: string;
   reference: string | null;
-};
+}
+
+interface WithdrawalRequest {
+  id: string;
+  amount: number;
+  status: string;
+  created_at: string;
+}
+
+interface AdminSettings {
+  bank_account_name: string | null;
+  bank_account_number: string | null;
+  bank_name: string | null;
+  mobile_wallet_provider: string | null;
+  mobile_wallet_number: string | null;
+}
 
 export default async function WalletPage() {
   const auth = await getCurrentUser();
@@ -20,30 +34,44 @@ export default async function WalletPage() {
     redirect("/signin");
   }
 
-  const supabase = createSupabaseServerClient();
+  const d1 = await getDBAsync();
+  let transactions: Transaction[] = [];
+  let withdrawalRequests: WithdrawalRequest[] = [];
+  let settings: AdminSettings | null = null;
 
-  const [{ data: transactionsData }, { data: withdrawalRequests }, { data: settings }] = await Promise.all([
-    supabase
-      .from("wallet_transactions")
-      .select("id, type, amount, status, reference, created_at")
-      .eq("user_id", auth.profile.id)
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("withdrawal_requests")
-      .select("id, amount, status, created_at")
-      .eq("freelancer_id", auth.profile.id)
-      .order("created_at", { ascending: false }),
-    supabase.from("admin_settings").select("*").limit(1).maybeSingle(),
-  ]);
+  if (d1) {
+    try {
+      const [txnResult, withdrawalResult, settingsResult] = await Promise.all([
+        d1.prepare(`
+          SELECT id, type, amount, status, reference, created_at
+          FROM wallet_transactions
+          WHERE user_id = ?
+          ORDER BY created_at DESC
+        `).bind(auth.profile.id).all<Transaction>(),
+        d1.prepare(`
+          SELECT id, amount, status, created_at
+          FROM withdrawal_requests
+          WHERE freelancer_id = ?
+          ORDER BY created_at DESC
+        `).bind(auth.profile.id).all<WithdrawalRequest>(),
+        d1.prepare(`SELECT * FROM admin_settings LIMIT 1`).first<AdminSettings>(),
+      ]);
 
-  const transactions = (transactionsData as Transaction[]) ?? [];
+      transactions = txnResult.results ?? [];
+      withdrawalRequests = withdrawalResult.results ?? [];
+      settings = settingsResult;
+    } catch (error) {
+      console.error("Failed to fetch wallet data:", error);
+    }
+  }
+
   const earnings = transactions
     .filter((txn) => ["deposit", "release"].includes(txn.type) && txn.status !== "failed")
     .reduce((acc, txn) => acc + Number(txn.amount ?? 0), 0);
-  const withdrawals = transactions
+  const withdrawalsTotal = transactions
     .filter((txn) => txn.type === "withdrawal" && txn.status !== "failed")
     .reduce((acc, txn) => acc + Number(txn.amount ?? 0), 0);
-  const balance = earnings - withdrawals;
+  const balance = earnings - withdrawalsTotal;
 
   return (
     <div className="space-y-8">
@@ -55,8 +83,8 @@ export default async function WalletPage() {
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Available balance" value={`৳${balance.toLocaleString()}`} />
         <StatCard label="Total earnings" value={`৳${earnings.toLocaleString()}`} />
-        <StatCard label="Pending withdrawals" value={`৳${sumPending(withdrawalRequests ?? [])}`} />
-        <StatCard label="Requests count" value={withdrawalRequests?.length ?? 0} />
+        <StatCard label="Pending withdrawals" value={`৳${sumPending(withdrawalRequests)}`} />
+        <StatCard label="Requests count" value={withdrawalRequests.length} />
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
@@ -116,7 +144,7 @@ export default async function WalletPage() {
 
       <section className="space-y-4">
         <h2 className="text-xl font-semibold text-foreground">Withdrawal requests</h2>
-        {withdrawalRequests?.length ? (
+        {withdrawalRequests.length > 0 ? (
           <div className="grid gap-3">
             {withdrawalRequests.map((request) => (
               <Card key={request.id} className="flex items-center justify-between border border-card-border/60 bg-card/80 p-4 text-sm">
