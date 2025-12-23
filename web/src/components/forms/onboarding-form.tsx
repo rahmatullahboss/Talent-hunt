@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { AIGenerateButton } from "@/components/ai/ai-generate-button";
 import type { Profile } from "@/lib/auth/session";
 import { fromJsonArray } from "@/lib/db";
 
@@ -103,6 +104,8 @@ function FreelancerOnboardingForm({ profile }: { profile: Profile }) {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<FreelancerValues>({
     resolver: zodResolver(freelancerSchema),
@@ -116,6 +119,23 @@ function FreelancerOnboardingForm({ profile }: { profile: Profile }) {
       phone: profile.phone ?? "",
     },
   });
+
+  // Watch title and skills for AI context
+  const watchedTitle = watch("title");
+  const watchedSkills = watch("skills");
+
+  // AI context for bio generation
+  const aiContext = useMemo(() => {
+    const parts = [];
+    if (watchedTitle) parts.push(`Professional headline: ${watchedTitle}`);
+    if (watchedSkills) parts.push(`Skills: ${watchedSkills}`);
+    return parts.join("\n") || "Freelancer profile";
+  }, [watchedTitle, watchedSkills]);
+
+  // Handle AI generated bio
+  const handleAIBio = useCallback((text: string) => {
+    setValue("bio", text, { shouldValidate: true });
+  }, [setValue]);
 
   const onSubmit = async (values: FreelancerValues) => {
     setLoading(true);
@@ -156,9 +176,17 @@ function FreelancerOnboardingForm({ profile }: { profile: Profile }) {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-muted" htmlFor="bio">
-          Short bio
-        </label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium text-muted" htmlFor="bio">
+            Short bio
+          </label>
+          <AIGenerateButton
+            contentType="bio"
+            context={aiContext}
+            onGenerate={handleAIBio}
+            disabled={!watchedTitle}
+          />
+        </div>
         <Textarea id="bio" rows={5} placeholder="Highlight your strongest accomplishments and the outcomes you deliver." {...register("bio")} />
         {errors.bio ? <p className="text-sm text-red-500">{errors.bio.message}</p> : null}
       </div>

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
+import { Chatbot } from "@/components/ai/chatbot";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" data-theme="light">
       <body className="min-h-screen text-foreground antialiased">
         {children}
+        <Chatbot />
         <Toaster position="top-right" richColors closeButton />
       </body>
     </html>
