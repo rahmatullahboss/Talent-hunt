@@ -41,5 +41,9 @@
       "database_id": "43c55fea-2f11-4f0f-9c1d-67072bfd56b7",
       "migrations_dir": "migrations"
     }
+  ],
+
+  "analytics_engine_datasets": [
+    { "binding": "talenthunt", "dataset": "talenthunt" }
   ]
 }
