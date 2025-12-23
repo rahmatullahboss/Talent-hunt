@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "talent-hunt",
+  "name": "talenthuntbd",
   "main": ".open-next/worker.js",
   "compatibility_date": "2024-12-23",
   "compatibility_flags": ["nodejs_compat"],

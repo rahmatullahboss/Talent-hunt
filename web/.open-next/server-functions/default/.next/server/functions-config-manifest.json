@@ -2,11 +2,11 @@
   "version": 1,
   "functions": {
     "/api/auth/google/callback": {},
-    "/api/auth/google": {},
     "/api/auth/session": {},
     "/api/auth/signin": {},
     "/api/auth/signout": {},
     "/api/auth/signup": {},
-    "/api/profile/onboarding": {}
+    "/api/profile/onboarding": {},
+    "/api/auth/google": {}
   }
 }
