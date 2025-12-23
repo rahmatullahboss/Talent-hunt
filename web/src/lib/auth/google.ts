@@ -1,6 +1,9 @@
 // Google OAuth configuration for Cloudflare Workers
 // Using manual OAuth flow - process.env works with OpenNext.js
 
+// PRODUCTION URL - hardcoded for Cloudflare deployment
+const PRODUCTION_URL = 'https://thbd.digitalcare.site';
+
 // Generate random state for CSRF protection
 export function generateState(): string {
   const array = new Uint8Array(32);
@@ -31,7 +34,8 @@ function base64URLEncode(buffer: Uint8Array): string {
 // Create Google authorization URL
 export async function createGoogleAuthUrl(state: string, codeVerifier: string): Promise<string> {
   const clientId = process.env.GOOGLE_CLIENT_ID;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  // Use hardcoded production URL for Cloudflare, fallback to env for local dev
+  const siteUrl = process.env.NODE_ENV === 'production' ? PRODUCTION_URL : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000');
   const redirectUri = `${siteUrl}/api/auth/google/callback`;
   
   console.log('Creating Google Auth URL with:', { clientId: clientId ? 'set' : 'not set', siteUrl, redirectUri });
@@ -65,7 +69,8 @@ export async function exchangeCodeForTokens(code: string, codeVerifier: string):
 }> {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  // Use hardcoded production URL for Cloudflare, fallback to env for local dev
+  const siteUrl = process.env.NODE_ENV === 'production' ? PRODUCTION_URL : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000');
   const redirectUri = `${siteUrl}/api/auth/google/callback`;
   
   if (!clientId || !clientSecret) {
@@ -99,25 +104,25 @@ export async function exchangeCodeForTokens(code: string, codeVerifier: string):
 // Google user info type
 export interface GoogleUser {
   sub: string;
-  name: string;
-  given_name: string;
-  family_name: string;
-  picture: string;
   email: string;
   email_verified: boolean;
+  name: string;
+  picture?: string;
+  given_name?: string;
+  family_name?: string;
 }
 
-// Fetch Google user info from access token
+// Get Google user info
 export async function getGoogleUser(accessToken: string): Promise<GoogleUser> {
-  const response = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+  const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   });
-
+  
   if (!response.ok) {
-    throw new Error("Failed to fetch Google user info");
+    throw new Error('Failed to fetch Google user info');
   }
-
+  
   return response.json();
 }
