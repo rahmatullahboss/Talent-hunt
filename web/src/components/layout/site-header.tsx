@@ -103,7 +103,7 @@ export function SiteHeader() {
     <header className="sticky inset-x-0 top-0 z-50 border-b border-card-border/80 bg-white shadow-sm md:bg-white/90 md:shadow-none md:backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 text-black sm:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="TalentHunt BD" className="h-8" />
+          <img src="/logo.png" alt="TalentHunt BD" className="h-10" />
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium text-black md:flex">
           {links.map((item) => (
