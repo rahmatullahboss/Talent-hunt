@@ -13,7 +13,14 @@ export default async function OnboardingPage() {
     redirect("/signin");
   }
 
-  if (auth.profile?.onboarding_complete) {
+  // If no profile yet, create placeholder data
+  if (!auth.profile) {
+    // This shouldn't happen normally - user should have profile created in OAuth callback
+    // But handle gracefully by redirecting to signin
+    redirect("/signin?error=no_profile");
+  }
+
+  if (auth.profile.onboarding_complete) {
     switch (auth.profile.role) {
       case "freelancer":
         redirect("/freelancer/dashboard");

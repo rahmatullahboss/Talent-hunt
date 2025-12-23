@@ -67,9 +67,9 @@ export async function getDBAsync(): Promise<D1Database | null> {
   }
 }
 
-// Validate session from cookies
+// Validate session from cookies (uses async for server components)
 export const validateSession = cache(async () => {
-  const lucia = getLucia();
+  const lucia = await getLuciaAsync();
   if (!lucia) {
     return { user: null, session: null };
   }
@@ -99,7 +99,7 @@ export const validateSession = cache(async () => {
   return result;
 });
 
-// Get current user with profile
+// Get current user with profile (uses async for server components)
 export const getCurrentUser = cache(async () => {
   const { user, session } = await validateSession();
 
@@ -107,7 +107,7 @@ export const getCurrentUser = cache(async () => {
     return null;
   }
 
-  const d1 = getDB();
+  const d1 = await getDBAsync();
   if (!d1) {
     return { user, session, profile: null };
   }
