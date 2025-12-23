@@ -19,9 +19,9 @@ type ContractRecord = Tables<"contracts"> & {
 };
 
 interface ContractPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function ContractWorkspacePage({ params }: ContractPageProps) {
@@ -30,6 +30,7 @@ export default async function ContractWorkspacePage({ params }: ContractPageProp
     redirect("/signin");
   }
 
+  const { id } = await params;
   const supabase = createSupabaseServerClient();
   const { data: contract } = await supabase
     .from("contracts")
@@ -44,7 +45,7 @@ export default async function ContractWorkspacePage({ params }: ContractPageProp
       milestones:contract_milestones ( id, title, amount, status, due_date, deliverable_url, notes )
     `,
     )
-    .eq("id", params.id)
+    .eq("id", id)
     .maybeSingle();
 
   if (!contract) {

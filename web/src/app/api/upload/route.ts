@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { CLOUDINARY_FOLDERS } from "@/lib/cloudinary";
 
-export const runtime = "edge";
 
 // Generate SHA-1 hash using Web Crypto API (works in Cloudflare Workers)
 async function sha1(message: string): Promise<string> {

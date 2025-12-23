@@ -2,7 +2,6 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getLucia, validateSession } from "@/lib/auth/session";
 
-export const runtime = "edge";
 
 export async function POST() {
   try {

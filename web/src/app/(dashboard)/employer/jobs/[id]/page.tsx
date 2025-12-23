@@ -29,9 +29,9 @@ type EmployerJobRecord = Tables<"jobs"> & {
 };
 
 interface EmployerJobDetailProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EmployerJobDetailPage({ params }: EmployerJobDetailProps) {
@@ -40,6 +40,7 @@ export default async function EmployerJobDetailPage({ params }: EmployerJobDetai
     redirect("/signin");
   }
 
+  const { id } = await params;
   const supabase = createSupabaseServerClient();
   const { data: job } = await supabase
     .from("jobs")
@@ -73,7 +74,7 @@ export default async function EmployerJobDetailPage({ params }: EmployerJobDetai
         )
       )
     `)
-    .eq("id", params.id)
+    .eq("id", id)
     .eq("employer_id", auth.profile.id)
     .maybeSingle();
 

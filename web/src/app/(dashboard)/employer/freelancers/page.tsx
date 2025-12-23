@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { FreelancerFilters } from "@/components/employer/freelancers/filters";
 
 interface FreelancersPageProps {
-  searchParams: {
+  searchParams: Promise<{
     q?: string;
-  };
+  }>;
 }
 
 export default async function FreelancersPage({ searchParams }: FreelancersPageProps) {
@@ -18,7 +18,8 @@ export default async function FreelancersPage({ searchParams }: FreelancersPageP
     redirect("/signin");
   }
 
-  const query = searchParams.q?.trim() ?? "";
+  const params = await searchParams;
+  const query = params.q?.trim() ?? "";
   const supabase = createSupabaseServerClient();
 
   let request = supabase

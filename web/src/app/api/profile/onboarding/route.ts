@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { getCurrentUser, getDB } from "@/lib/auth/session";
 import { toJsonArray } from "@/lib/db";
 
-export const runtime = "edge";
 
 export async function POST(request: Request) {
   try {

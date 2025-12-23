@@ -1,13 +1,4 @@
 {
   "version": 1,
-  "functions": {
-    "/api/auth/google/callback": {},
-    "/api/auth/session": {},
-    "/api/auth/google": {},
-    "/api/auth/signout": {},
-    "/api/auth/signup": {},
-    "/api/auth/signin": {},
-    "/api/profile/onboarding": {},
-    "/api/upload": {}
-  }
+  "functions": {}
 }

@@ -4,7 +4,6 @@ import { exchangeCodeForTokens, getGoogleUser } from "@/lib/auth/google";
 import { getLucia, getDB } from "@/lib/auth/session";
 import { db, generateId } from "@/lib/db";
 
-export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
   const cookieStore = await cookies();

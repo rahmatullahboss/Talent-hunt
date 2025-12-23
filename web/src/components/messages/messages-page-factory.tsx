@@ -63,7 +63,7 @@ interface PageFactoryOptions {
 }
 
 type PageProps = {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
 const redirectByRole = {
@@ -76,7 +76,7 @@ const redirectByRole = {
  * Generates a role-aware messages page that reuses the contract chat experience.
  */
 export function createMessagesPage({ role, basePath, emptyState }: PageFactoryOptions) {
-  return async function MessagesPage({ searchParams }: PageProps) {
+  return async function MessagesPage({ searchParams: searchParamsPromise }: PageProps) {
     const auth = await getCurrentUser();
 
     if (!auth?.profile) {
@@ -152,6 +152,7 @@ export function createMessagesPage({ role, basePath, emptyState }: PageFactoryOp
       }
     }
 
+    const searchParams = await searchParamsPromise;
     const requested = searchParams?.contract;
     const requestedContractId = Array.isArray(requested) ? requested[0] : requested;
     let selectedContract = requestedContractId

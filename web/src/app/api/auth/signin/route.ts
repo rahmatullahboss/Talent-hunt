@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { getLucia, getDB } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 
-export const runtime = "edge";
 
 export async function POST(request: Request) {
   try {

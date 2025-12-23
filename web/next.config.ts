@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    turbopackUseSystemTlsCerts: true,
-  },
+  // Next.js 15 config
 };
 
 export default nextConfig;

@@ -17,9 +17,9 @@ type SupabaseJobRecord = Tables<"jobs"> & {
 };
 
 interface JobDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function JobDetailPage({ params }: JobDetailPageProps) {
@@ -28,6 +28,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     redirect("/signin");
   }
 
+  const { id } = await params;
   const supabase = createSupabaseServerClient();
   const { data: job, error } = await supabase
     .from("jobs")
@@ -54,7 +55,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
       proposals(count)
     `,
     )
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (error || !job) {
