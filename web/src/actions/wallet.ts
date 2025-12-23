@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getCurrentUser } from "@/lib/auth/session";
+import { getCurrentUser, getDB } from "@/lib/auth/session";
+import { generateId } from "@/lib/db";
 
 const withdrawalSchema = z.object({
   amount: z.coerce.number().positive("Amount must be greater than zero."),
@@ -36,26 +36,37 @@ export async function requestWithdrawalAction(_: WalletActionState, formData: Fo
   }
 
   const auth = await getCurrentUser();
-  if (!auth?.profile || auth.profile.role !== "freelancer") {
+  if (!auth?.profile || (auth.profile as { role: string }).role !== "freelancer") {
     return { status: "error", message: "Only freelancers can request withdrawals." };
   }
 
-  const supabase = createSupabaseServerClient();
-
-  const { error } = await supabase.from("withdrawal_requests").insert({
-    freelancer_id: auth.profile.id,
-    amount: parsed.data.amount,
-    bank_account_name: parsed.data.accountName,
-    bank_account_number: parsed.data.accountNumber,
-    bank_name: parsed.data.bankName,
-    mobile_wallet_number: parsed.data.mobileWalletNumber ?? null,
-  });
-
-  if (error) {
-    return { status: "error", message: error.message };
+  const db = getDB();
+  if (!db) {
+    return { status: "error", message: "Database not available." };
   }
 
-  revalidatePath("/freelancer/wallet");
+  try {
+    const requestId = generateId();
+    await db
+      .prepare(
+        `INSERT INTO withdrawal_requests (id, freelancer_id, amount, bank_account_name, bank_account_number, bank_name, mobile_wallet_number, status)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')`
+      )
+      .bind(
+        requestId,
+        auth.profile.id,
+        parsed.data.amount,
+        parsed.data.accountName,
+        parsed.data.accountNumber,
+        parsed.data.bankName,
+        parsed.data.mobileWalletNumber ?? null
+      )
+      .run();
 
-  return { status: "success", message: "Withdrawal request submitted. We will review and process it shortly." };
+    revalidatePath("/freelancer/wallet");
+
+    return { status: "success", message: "Withdrawal request submitted. We will review and process it shortly." };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "Failed to submit withdrawal request." };
+  }
 }

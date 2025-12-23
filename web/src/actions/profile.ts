@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getCurrentUser } from "@/lib/auth/session";
+import { getCurrentUser, getDB } from "@/lib/auth/session";
+import { toJsonArray } from "@/lib/db";
 
 const schema = z.object({
   fullName: z.string().min(3, "Please provide your full name."),
@@ -49,31 +49,39 @@ export async function updateFreelancerProfileAction(_: ProfileActionState, formD
   }
 
   const auth = await getCurrentUser();
-  if (!auth?.profile || auth.profile.role !== "freelancer") {
+  if (!auth?.profile || (auth.profile as { role: string }).role !== "freelancer") {
     return { status: "error", message: "Only freelancers can update this profile." };
   }
 
-  const supabase = createSupabaseServerClient();
-
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      full_name: parsed.data.fullName,
-      title: parsed.data.title,
-      location: parsed.data.location,
-      hourly_rate: parsed.data.hourlyRate ?? null,
-      bio: parsed.data.bio,
-      skills: parsed.data.skills,
-      website: parsed.data.website ?? null,
-    })
-    .eq("id", auth.profile.id);
-
-  if (error) {
-    return { status: "error", message: error.message };
+  const db = getDB();
+  if (!db) {
+    return { status: "error", message: "Database not available." };
   }
 
-  revalidatePath("/freelancer/profile");
-  revalidatePath("/freelancer/dashboard");
+  try {
+    await db
+      .prepare(
+        `UPDATE profiles SET 
+         full_name = ?, title = ?, location = ?, hourly_rate = ?, bio = ?, skills = ?, website = ?, updated_at = datetime('now')
+         WHERE id = ?`
+      )
+      .bind(
+        parsed.data.fullName,
+        parsed.data.title,
+        parsed.data.location,
+        parsed.data.hourlyRate ?? null,
+        parsed.data.bio,
+        toJsonArray(parsed.data.skills),
+        parsed.data.website ?? null,
+        auth.profile.id
+      )
+      .run();
 
-  return { status: "success", message: "Profile updated successfully." };
+    revalidatePath("/freelancer/profile");
+    revalidatePath("/freelancer/dashboard");
+
+    return { status: "success", message: "Profile updated successfully." };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "Failed to update profile." };
+  }
 }

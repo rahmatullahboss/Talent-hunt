@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getCurrentUser } from "@/lib/auth/session";
+import { getCurrentUser, getDB } from "@/lib/auth/session";
+import { generateId } from "@/lib/db";
 
 const upsertSchema = z.object({
   title: z.string().min(3, "Give your project a descriptive title."),
@@ -20,7 +20,7 @@ const upsertSchema = z.object({
 });
 
 const deleteSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string(),
 });
 
 export type ActionState = {
@@ -42,27 +42,32 @@ export async function createPortfolioItemAction(_: ActionState, formData: FormDa
   }
 
   const auth = await getCurrentUser();
-  if (!auth?.profile || auth.profile.role !== "freelancer") {
+  if (!auth?.profile || (auth.profile as { role: string }).role !== "freelancer") {
     return { status: "error", message: "Only freelancers can manage portfolio items." };
   }
 
-  const supabase = createSupabaseServerClient();
-  const { error } = await supabase.from("portfolio_items").insert({
-    profile_id: auth.profile.id,
-    title: parsed.data.title,
-    description: parsed.data.description,
-    external_link: parsed.data.externalLink ?? null,
-    image_url: parsed.data.imageUrl ?? null,
-  });
-
-  if (error) {
-    return { status: "error", message: error.message };
+  const db = getDB();
+  if (!db) {
+    return { status: "error", message: "Database not available." };
   }
 
-  revalidatePath("/freelancer/portfolio");
-  revalidatePath("/freelancer/dashboard");
+  try {
+    const itemId = generateId();
+    await db
+      .prepare(
+        `INSERT INTO portfolio_items (id, profile_id, title, description, external_link, image_url)
+         VALUES (?, ?, ?, ?, ?, ?)`
+      )
+      .bind(itemId, auth.profile.id, parsed.data.title, parsed.data.description, parsed.data.externalLink ?? null, parsed.data.imageUrl ?? null)
+      .run();
 
-  return { status: "success", message: "Portfolio item added." };
+    revalidatePath("/freelancer/portfolio");
+    revalidatePath("/freelancer/dashboard");
+
+    return { status: "success", message: "Portfolio item added." };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "Failed to add portfolio item." };
+  }
 }
 
 export async function deletePortfolioItemAction(_: ActionState, formData: FormData): Promise<ActionState> {
@@ -75,18 +80,25 @@ export async function deletePortfolioItemAction(_: ActionState, formData: FormDa
   }
 
   const auth = await getCurrentUser();
-  if (!auth?.profile || auth.profile.role !== "freelancer") {
+  if (!auth?.profile || (auth.profile as { role: string }).role !== "freelancer") {
     return { status: "error", message: "Only freelancers can manage portfolio items." };
   }
 
-  const supabase = createSupabaseServerClient();
-  const { error } = await supabase.from("portfolio_items").delete().eq("id", parsed.data.id).eq("profile_id", auth.profile.id);
-
-  if (error) {
-    return { status: "error", message: error.message };
+  const db = getDB();
+  if (!db) {
+    return { status: "error", message: "Database not available." };
   }
 
-  revalidatePath("/freelancer/portfolio");
+  try {
+    await db
+      .prepare("DELETE FROM portfolio_items WHERE id = ? AND profile_id = ?")
+      .bind(parsed.data.id, auth.profile.id)
+      .run();
 
-  return { status: "success", message: "Portfolio item removed." };
+    revalidatePath("/freelancer/portfolio");
+
+    return { status: "success", message: "Portfolio item removed." };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "Failed to delete portfolio item." };
+  }
 }

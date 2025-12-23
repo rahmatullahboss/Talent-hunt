@@ -2,12 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getCurrentUser } from "@/lib/auth/session";
-import type { Tables } from "@/types/database";
+import { getCurrentUser, getDB, type Profile } from "@/lib/auth/session";
+import { generateId } from "@/lib/db";
 
 const toggleSchema = z.object({
-  userId: z.string().uuid(),
+  userId: z.string(),
   suspend: z.coerce.boolean(),
 });
 
@@ -21,13 +20,13 @@ const settingsSchema = z.object({
 });
 
 const disputeSchema = z.object({
-  disputeId: z.string().uuid(),
+  disputeId: z.string(),
   status: z.enum(["open", "under_review", "resolved", "closed"]),
   resolution: z.string().optional(),
 });
 
 const jobSchema = z.object({
-  jobId: z.string().uuid(),
+  jobId: z.string(),
 });
 
 export type AdminActionState = {
@@ -35,43 +34,36 @@ export type AdminActionState = {
   message?: string;
 };
 
-type AuthContext = Awaited<ReturnType<typeof getCurrentUser>>;
-type AdminContext = {
-  user: NonNullable<AuthContext>["user"];
-  profile: Tables<"profiles">;
-};
-
-async function ensureAdmin(): Promise<{ auth: AdminContext; supabase: ReturnType<typeof createSupabaseServerClient> }> {
+async function ensureAdmin() {
   const auth = await getCurrentUser();
-  if (!auth?.profile || auth.profile.role !== "admin") {
+  if (!auth?.profile || (auth.profile as Profile).role !== "admin") {
     throw new Error("Admin access required");
   }
 
-  return {
-    auth: {
-      user: auth.user,
-      profile: auth.profile,
-    },
-    supabase: createSupabaseServerClient(),
-  };
+  const db = getDB();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  return { auth, db };
 }
 
 export async function toggleUserSuspensionAction(_: AdminActionState, formData: FormData): Promise<AdminActionState> {
   try {
-    const { auth, supabase } = await ensureAdmin();
+    const { auth, db } = await ensureAdmin();
     const parsed = toggleSchema.parse({
       userId: formData.get("userId"),
       suspend: formData.get("suspend") === "true",
     });
 
-    if (parsed.userId === auth.profile.id) {
+    if (parsed.userId === auth.profile?.id) {
       return { status: "error", message: "You cannot suspend your own admin account." };
     }
 
-    const { error } = await supabase.from("profiles").update({ is_suspended: parsed.suspend }).eq("id", parsed.userId);
-    if (error) {
-      return { status: "error", message: error.message };
-    }
+    await db
+      .prepare("UPDATE profiles SET is_suspended = ?, updated_at = datetime('now') WHERE id = ?")
+      .bind(parsed.suspend ? 1 : 0, parsed.userId)
+      .run();
 
     revalidatePath("/admin/users");
     return { status: "success", message: parsed.suspend ? "User suspended." : "User reinstated." };
@@ -83,7 +75,7 @@ export async function toggleUserSuspensionAction(_: AdminActionState, formData: 
 
 export async function updateAdminSettingsAction(_: AdminActionState, formData: FormData): Promise<AdminActionState> {
   try {
-    const { supabase } = await ensureAdmin();
+    const { db } = await ensureAdmin();
     const parsed = settingsSchema.parse({
       commission: formData.get("commission"),
       bankAccountName: formData.get("bankAccountName"),
@@ -93,19 +85,42 @@ export async function updateAdminSettingsAction(_: AdminActionState, formData: F
       walletNumber: formData.get("walletNumber"),
     });
 
-    const { error } = await supabase
-      .from("admin_settings")
-      .upsert({
-        commission_percentage: parsed.commission,
-        bank_account_name: parsed.bankAccountName ?? null,
-        bank_account_number: parsed.bankAccountNumber ?? null,
-        bank_name: parsed.bankName ?? null,
-        mobile_wallet_provider: parsed.walletProvider ?? null,
-        mobile_wallet_number: parsed.walletNumber ?? null,
-      });
+    // Check if settings exist
+    const existing = await db.prepare("SELECT id FROM admin_settings LIMIT 1").first();
 
-    if (error) {
-      return { status: "error", message: error.message };
+    if (existing) {
+      await db
+        .prepare(
+          `UPDATE admin_settings SET 
+           commission_percentage = ?, bank_account_name = ?, bank_account_number = ?, bank_name = ?, 
+           mobile_wallet_provider = ?, mobile_wallet_number = ?, updated_at = datetime('now')`
+        )
+        .bind(
+          parsed.commission,
+          parsed.bankAccountName ?? null,
+          parsed.bankAccountNumber ?? null,
+          parsed.bankName ?? null,
+          parsed.walletProvider ?? null,
+          parsed.walletNumber ?? null
+        )
+        .run();
+    } else {
+      const settingsId = generateId();
+      await db
+        .prepare(
+          `INSERT INTO admin_settings (id, commission_percentage, bank_account_name, bank_account_number, bank_name, mobile_wallet_provider, mobile_wallet_number)
+           VALUES (?, ?, ?, ?, ?, ?, ?)`
+        )
+        .bind(
+          settingsId,
+          parsed.commission,
+          parsed.bankAccountName ?? null,
+          parsed.bankAccountNumber ?? null,
+          parsed.bankName ?? null,
+          parsed.walletProvider ?? null,
+          parsed.walletNumber ?? null
+        )
+        .run();
     }
 
     revalidatePath("/admin/settings");
@@ -121,21 +136,17 @@ export async function updateAdminSettingsAction(_: AdminActionState, formData: F
 
 export async function updateDisputeAction(_: AdminActionState, formData: FormData): Promise<AdminActionState> {
   try {
-    const { supabase } = await ensureAdmin();
+    const { db } = await ensureAdmin();
     const parsed = disputeSchema.parse({
       disputeId: formData.get("disputeId"),
       status: formData.get("status"),
       resolution: formData.get("resolution"),
     });
 
-    const { error } = await supabase
-      .from("disputes")
-      .update({ status: parsed.status, resolution: parsed.resolution ?? null })
-      .eq("id", parsed.disputeId);
-
-    if (error) {
-      return { status: "error", message: error.message };
-    }
+    await db
+      .prepare("UPDATE disputes SET status = ?, resolution = ?, updated_at = datetime('now') WHERE id = ?")
+      .bind(parsed.status, parsed.resolution ?? null, parsed.disputeId)
+      .run();
 
     revalidatePath("/admin/disputes");
     revalidatePath(`/contracts/${parsed.disputeId}`);
@@ -149,13 +160,13 @@ export async function updateDisputeAction(_: AdminActionState, formData: FormDat
 
 export async function cancelJobAction(_: AdminActionState, formData: FormData): Promise<AdminActionState> {
   try {
-    const { supabase } = await ensureAdmin();
+    const { db } = await ensureAdmin();
     const parsed = jobSchema.parse({ jobId: formData.get("jobId") });
 
-    const { error } = await supabase.from("jobs").update({ status: "cancelled" }).eq("id", parsed.jobId);
-    if (error) {
-      return { status: "error", message: error.message };
-    }
+    await db
+      .prepare("UPDATE jobs SET status = 'cancelled', updated_at = datetime('now') WHERE id = ?")
+      .bind(parsed.jobId)
+      .run();
 
     revalidatePath("/admin/jobs");
     revalidatePath(`/employer/jobs/${parsed.jobId}`);
