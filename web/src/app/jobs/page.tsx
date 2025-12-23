@@ -17,6 +17,63 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { getDBAsync } from "@/lib/auth/session";
+import { fromJsonArray } from "@/lib/db";
+
+interface JobRow {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  budget_mode: string;
+  budget_min: number | null;
+  budget_max: number | null;
+  skills: string | null;
+  created_at: string;
+  employer_name: string | null;
+  employer_company: string | null;
+  proposal_count: number;
+}
+
+async function getSpotlightJobs() {
+  try {
+    const d1 = await getDBAsync();
+    if (!d1) return [];
+
+    const { results } = await d1
+      .prepare(`
+        SELECT 
+          j.id, j.title, j.description, j.category, j.budget_mode, j.budget_min, j.budget_max, j.skills, j.created_at,
+          p.full_name as employer_name, p.company_name as employer_company,
+          (SELECT COUNT(*) FROM proposals WHERE job_id = j.id) as proposal_count
+        FROM jobs j
+        LEFT JOIN profiles p ON j.employer_id = p.id
+        WHERE j.status = 'open'
+        ORDER BY j.created_at DESC
+        LIMIT 6
+      `)
+      .all<JobRow>();
+
+    return results ?? [];
+  } catch (error) {
+    console.error("Failed to fetch spotlight jobs:", error);
+    return [];
+  }
+}
+
+function formatTimeAgo(dateString: string) {
+  const date = new Date(dateString);
+  const now = Date.now();
+  const diffMs = now - date.getTime();
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  
+  if (diffHours < 1) return "Just now";
+  if (diffHours < 24) return `Posted ${diffHours}h ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays === 1) return "Posted yesterday";
+  if (diffDays < 7) return `Posted ${diffDays}d ago`;
+  return `Posted ${Math.floor(diffDays / 7)}w ago`;
+}
 
 const heroStats = [
   { value: "6K+", label: "Verified clients hiring now" },
@@ -31,61 +88,6 @@ const quickFilters = [
   "Design",
   "Development",
   "Marketing",
-];
-
-const spotlightJobs = [
-  {
-    title: "Senior React Developer",
-    company: "Finix Labs",
-    location: "Dhaka • Remote friendly",
-    rate: "৳2,000/hr",
-    type: "Hourly",
-    tags: ["React", "TypeScript", "Tailwind"],
-    description:
-      "Build financial dashboards for SME clients with a cross-functional product squad.",
-    posted: "Posted 2h ago",
-    proposals: "8 active proposals",
-    clientScore: "4.9/5 client rating",
-  },
-  {
-    title: "Product Designer",
-    company: "Aurora Health",
-    location: "Chittagong • Remote",
-    rate: "৳120k/mo",
-    type: "Fixed",
-    tags: ["Figma", "Design systems", "UX"],
-    description:
-      "Redesign telemedicine flows with a focus on accessibility and multilingual support.",
-    posted: "Posted yesterday",
-    proposals: "Shortlisting now",
-    clientScore: "Top client • 60 hires",
-  },
-  {
-    title: "Growth Marketing Strategist",
-    company: "iFarmer",
-    location: "Dhaka",
-    rate: "৳1,500/hr",
-    type: "Hourly",
-    tags: ["Performance", "Automation", "Analytics"],
-    description:
-      "Plan and optimize omni-channel campaigns for agri-tech expansion across Bangladesh.",
-    posted: "Posted 4h ago",
-    proposals: "Reviewing 5 matches",
-    clientScore: "Verified payments",
-  },
-  {
-    title: "Customer Success Associate",
-    company: "SaaSly",
-    location: "Remote",
-    rate: "৳85k/mo",
-    type: "Fixed",
-    tags: ["Support", "CRM", "English"],
-    description:
-      "Provide white-glove onboarding and support for enterprise SaaS customers in APAC.",
-    posted: "Posted 1d ago",
-    proposals: "Interviewing",
-    clientScore: "Protected payout",
-  },
 ];
 
 const successHighlights = [
@@ -154,14 +156,16 @@ const testimonials = [
   },
 ];
 
-export default function JobsPage() {
+export default async function JobsPage() {
+  const spotlightJobs = await getSpotlightJobs();
+
   return (
     <div className="min-h-screen text-foreground">
       <SiteHeader />
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-24 px-6 pb-24 pt-12">
         <section className="grid gap-12 rounded-[32px] bg-white/90 p-10 shadow-[0_24px_64px_rgba(0,30,0,0.08)] lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-8">
-            <Badge className="w-fit bg-accent/15 text-accent">Bangladesh’s Upwork-style marketplace</Badge>
+            <Badge className="w-fit bg-accent/15 text-accent">Bangladesh&apos;s Upwork-style marketplace</Badge>
             <h1 className="text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
               Find work that fits your craft.
             </h1>
@@ -216,7 +220,7 @@ export default function JobsPage() {
                 </div>
               </div>
               <div className="rounded-3xl bg-white/90 p-6 shadow-[0_20px_40px_rgba(0,30,0,0.06)]">
-                <p className="text-sm font-medium text-foreground">“TalentHunt sent me a shortlist of dream projects that matched my portfolio perfectly.”</p>
+                <p className="text-sm font-medium text-foreground">&quot;TalentHunt sent me a shortlist of dream projects that matched my portfolio perfectly.&quot;</p>
                 <p className="mt-4 text-xs text-muted">— Rafi Khan, UX Lead</p>
               </div>
               <div className="flex items-center gap-4 rounded-3xl bg-white/90 p-4 shadow-[0_12px_24px_rgba(0,30,0,0.05)]">
@@ -254,7 +258,9 @@ export default function JobsPage() {
         <section className="grid gap-10 rounded-[32px] bg-white/90 p-10 shadow-[0_20px_48px_rgba(0,30,0,0.06)] lg:grid-cols-[0.85fr_1.15fr]">
           <div className="space-y-6">
             <Badge className="bg-accent/15 text-accent">Opportunities curated for you</Badge>
-            <h2 className="text-3xl font-semibold md:text-4xl">Spotlight contracts live right now</h2>
+            <h2 className="text-3xl font-semibold md:text-4xl">
+              {spotlightJobs.length > 0 ? "Live jobs right now" : "Spotlight contracts live right now"}
+            </h2>
             <p className="text-lg text-muted">
               Browse ready-to-apply roles with transparent budgets, clear scopes, and clients who respond quickly.
             </p>
@@ -263,43 +269,58 @@ export default function JobsPage() {
             </Button>
           </div>
           <div className="space-y-4">
-            {spotlightJobs.map((job) => (
-              <Card key={job.title} className="space-y-4 border border-card-border bg-white/95 p-6 shadow-sm">
-                <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-semibold">{job.title}</h3>
-                    <p className="text-sm text-muted">{job.company}</p>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-3 text-sm text-muted">
-                    <span className="inline-flex items-center gap-1">
-                      <Clock className="h-4 w-4 text-accent" /> {job.type}
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <MapPin className="h-4 w-4 text-accent" /> {job.location}
-                    </span>
-                    <span className="font-semibold text-foreground">{job.rate}</span>
-                  </div>
-                </div>
-                <p className="text-sm text-muted">{job.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {job.tags.map((tag) => (
-                    <Badge key={tag} className="bg-accent/10 text-foreground">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-                <div className="flex flex-col gap-2 text-xs text-muted md:flex-row md:items-center md:justify-between">
-                  <div className="flex flex-wrap gap-x-4 gap-y-1">
-                    <span>{job.posted}</span>
-                    <span>{job.proposals}</span>
-                    <span>{job.clientScore}</span>
-                  </div>
-                  <Button size="sm" asChild>
-                    <Link href="/signup?role=freelancer">Submit proposal</Link>
-                  </Button>
-                </div>
+            {spotlightJobs.length > 0 ? (
+              spotlightJobs.map((job) => {
+                const skills = fromJsonArray(job.skills);
+                const budgetDisplay = job.budget_mode === "hourly" 
+                  ? `$${job.budget_min ?? 0}/hr` 
+                  : `৳${job.budget_min?.toLocaleString() ?? 0}${job.budget_max ? ` - ৳${job.budget_max.toLocaleString()}` : ""}`;
+                
+                return (
+                  <Card key={job.id} className="space-y-4 border border-card-border bg-white/95 p-6 shadow-sm">
+                    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                      <div className="space-y-1">
+                        <h3 className="text-xl font-semibold">{job.title}</h3>
+                        <p className="text-sm text-muted">{job.employer_company ?? job.employer_name ?? "Client"}</p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3 text-sm text-muted">
+                        <span className="inline-flex items-center gap-1">
+                          <Clock className="h-4 w-4 text-accent" /> {job.budget_mode === "hourly" ? "Hourly" : "Fixed"}
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <MapPin className="h-4 w-4 text-accent" /> {job.category}
+                        </span>
+                        <span className="font-semibold text-foreground">{budgetDisplay}</span>
+                      </div>
+                    </div>
+                    <p className="line-clamp-2 text-sm text-muted">{job.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {skills.slice(0, 4).map((tag) => (
+                        <Badge key={tag} className="bg-accent/10 text-foreground">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                    <div className="flex flex-col gap-2 text-xs text-muted md:flex-row md:items-center md:justify-between">
+                      <div className="flex flex-wrap gap-x-4 gap-y-1">
+                        <span>{formatTimeAgo(job.created_at)}</span>
+                        <span>{job.proposal_count} proposals</span>
+                      </div>
+                      <Button size="sm" asChild>
+                        <Link href="/signup?role=freelancer">Apply now</Link>
+                      </Button>
+                    </div>
+                  </Card>
+                );
+              })
+            ) : (
+              <Card className="border-dashed p-8 text-center text-muted">
+                <p>No jobs available at the moment. Check back soon!</p>
+                <Button asChild className="mt-4">
+                  <Link href="/signup?role=employer">Post the first job</Link>
+                </Button>
               </Card>
-            ))}
+            )}
           </div>
         </section>
 
@@ -346,7 +367,7 @@ export default function JobsPage() {
           <div className="space-y-4">
             {testimonials.map((testimonial) => (
               <Card key={testimonial.name} className="space-y-3 border border-card-border bg-white/95 p-6 shadow-sm">
-                <p className="text-sm text-foreground">“{testimonial.quote}”</p>
+                <p className="text-sm text-foreground">&quot;{testimonial.quote}&quot;</p>
                 <div className="text-xs font-semibold uppercase tracking-wide text-muted">{testimonial.name}</div>
                 <p className="text-xs text-muted">{testimonial.role}</p>
               </Card>
