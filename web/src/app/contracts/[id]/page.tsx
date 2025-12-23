@@ -1,22 +1,39 @@
 import { notFound, redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDBAsync } from "@/lib/auth/session";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MilestonesSection } from "@/components/contracts/milestones";
 import { ContractChat } from "@/components/contracts/chat";
-import type { Tables } from "@/types/database";
 
-type ParticipantProfile = Pick<Tables<"profiles">, "id" | "full_name">;
+interface ContractRow {
+  id: string;
+  status: string;
+  notes: string | null;
+  employer_id: string;
+  freelancer_id: string;
+  employer_name: string | null;
+  freelancer_name: string | null;
+  job_id: string | null;
+  job_title: string | null;
+  job_description: string | null;
+}
 
-type ContractJobSummary = Pick<Tables<"jobs">, "id" | "title" | "description">;
+interface MilestoneRow {
+  id: string;
+  title: string;
+  amount: number;
+  status: string;
+  due_date: string | null;
+  deliverable_url: string | null;
+  notes: string | null;
+}
 
-type ContractRecord = Tables<"contracts"> & {
-  employer: ParticipantProfile | ParticipantProfile[] | null;
-  freelancer: ParticipantProfile | ParticipantProfile[] | null;
-  jobs: ContractJobSummary | ContractJobSummary[] | null;
-  milestones: Tables<"contract_milestones">[] | null;
-};
+interface MessageRow {
+  id: string;
+  sender_id: string;
+  content: string;
+  created_at: string;
+}
 
 interface ContractPageProps {
   params: Promise<{
@@ -31,57 +48,87 @@ export default async function ContractWorkspacePage({ params }: ContractPageProp
   }
 
   const { id } = await params;
-  const supabase = createSupabaseServerClient();
-  const { data: contract } = await supabase
-    .from("contracts")
-    .select(
-      `
-      id,
-      status,
-      notes,
-      employer:profiles!contracts_employer_id_fkey ( id, full_name ),
-      freelancer:profiles!contracts_freelancer_id_fkey ( id, full_name ),
-      jobs ( id, title, description ),
-      milestones:contract_milestones ( id, title, amount, status, due_date, deliverable_url, notes )
-    `,
-    )
-    .eq("id", id)
-    .maybeSingle();
+  const d1 = await getDBAsync();
+  
+  if (!d1) {
+    notFound();
+  }
+
+  let contract: ContractRow | null = null;
+  let milestones: MilestoneRow[] = [];
+  let messages: MessageRow[] = [];
+
+  try {
+    contract = await d1
+      .prepare(`
+        SELECT 
+          c.id,
+          c.status,
+          c.notes,
+          c.employer_id,
+          c.freelancer_id,
+          e.full_name as employer_name,
+          f.full_name as freelancer_name,
+          j.id as job_id,
+          j.title as job_title,
+          j.description as job_description
+        FROM contracts c
+        LEFT JOIN profiles e ON c.employer_id = e.id
+        LEFT JOIN profiles f ON c.freelancer_id = f.id
+        LEFT JOIN jobs j ON c.job_id = j.id
+        WHERE c.id = ?
+      `)
+      .bind(id)
+      .first<ContractRow>();
+
+    if (contract) {
+      const milestonesResult = await d1
+        .prepare(`
+          SELECT id, title, amount, status, due_date, deliverable_url, notes
+          FROM contract_milestones
+          WHERE contract_id = ?
+          ORDER BY due_date ASC
+        `)
+        .bind(id)
+        .all<MilestoneRow>();
+      milestones = milestonesResult.results ?? [];
+
+      const messagesResult = await d1
+        .prepare(`
+          SELECT id, sender_id, content, created_at
+          FROM messages
+          WHERE contract_id = ?
+          ORDER BY created_at ASC
+          LIMIT 200
+        `)
+        .bind(id)
+        .all<MessageRow>();
+      messages = messagesResult.results ?? [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch contract:", error);
+  }
 
   if (!contract) {
     notFound();
   }
 
-  const typedContract = contract as ContractRecord;
-  const employer = Array.isArray(typedContract.employer) ? typedContract.employer[0] ?? null : typedContract.employer ?? null;
-  const freelancer = Array.isArray(typedContract.freelancer)
-    ? typedContract.freelancer[0] ?? null
-    : typedContract.freelancer ?? null;
-  const job = Array.isArray(typedContract.jobs) ? typedContract.jobs[0] ?? null : typedContract.jobs ?? null;
-  const milestones = typedContract.milestones ?? [];
   const jobSummary =
-    job?.description && job.description.length > 160
-      ? `${job.description.slice(0, 160)}...`
-      : job?.description ?? "No job description provided.";
+    contract.job_description && contract.job_description.length > 160
+      ? `${contract.job_description.slice(0, 160)}...`
+      : contract.job_description ?? "No job description provided.";
 
-  const isEmployer = employer?.id === auth.profile.id;
-  const isFreelancer = freelancer?.id === auth.profile.id;
+  const isEmployer = contract.employer_id === auth.profile.id;
+  const isFreelancer = contract.freelancer_id === auth.profile.id;
   const role = isEmployer ? "employer" : isFreelancer ? "freelancer" : auth.profile.role === "admin" ? "admin" : null;
 
   if (!role) {
     notFound();
   }
 
-  const { data: messages } = await supabase
-    .from("messages")
-    .select("id, sender_id, content, created_at")
-    .eq("contract_id", typedContract.id)
-    .order("created_at", { ascending: true })
-    .limit(200);
-
   const participants = [
-    { id: employer?.id ?? "", name: employer?.full_name ?? "Employer" },
-    { id: freelancer?.id ?? "", name: freelancer?.full_name ?? "Freelancer" },
+    { id: contract.employer_id ?? "", name: contract.employer_name ?? "Employer" },
+    { id: contract.freelancer_id ?? "", name: contract.freelancer_name ?? "Freelancer" },
   ];
 
   return (
@@ -89,22 +136,22 @@ export default async function ContractWorkspacePage({ params }: ContractPageProp
       <Card className="space-y-3 border border-card-border/70 bg-card/80 p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">{job?.title ?? "Contract"}</h1>
+            <h1 className="text-2xl font-semibold text-foreground">{contract.job_title ?? "Contract"}</h1>
             <p className="text-sm text-muted">{jobSummary}</p>
           </div>
-          <Badge variant="muted">{typedContract.status}</Badge>
+          <Badge variant="muted">{contract.status}</Badge>
         </div>
-        {typedContract.notes ? <p className="text-sm text-muted">Notes: {typedContract.notes}</p> : null}
+        {contract.notes ? <p className="text-sm text-muted">Notes: {contract.notes}</p> : null}
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <MilestonesSection contractId={typedContract.id} milestones={milestones} role={role!} />
+        <MilestonesSection contractId={contract.id} milestones={milestones} role={role!} />
         <Card className="border border-card-border/70 bg-card/80 p-4">
           <ContractChat
-            contractId={typedContract.id}
+            contractId={contract.id}
             currentUserId={auth.profile.id}
             participants={participants}
-            initialMessages={messages ?? []}
+            initialMessages={messages}
           />
         </Card>
       </div>

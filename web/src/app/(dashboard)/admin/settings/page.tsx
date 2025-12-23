@@ -1,8 +1,17 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDBAsync } from "@/lib/auth/session";
 import { Card } from "@/components/ui/card";
 import { AdminSettingsForm } from "@/components/admin/settings-form";
+
+interface AdminSettings {
+  id?: string;
+  commission_percentage: number;
+  bank_account_name: string | null;
+  bank_account_number: string | null;
+  bank_name: string | null;
+  mobile_wallet_provider: string | null;
+  mobile_wallet_number: string | null;
+}
 
 export default async function AdminSettingsPage() {
   const auth = await getCurrentUser();
@@ -10,8 +19,16 @@ export default async function AdminSettingsPage() {
     redirect("/signin");
   }
 
-  const supabase = createSupabaseServerClient();
-  const { data: settings } = await supabase.from("admin_settings").select("*").limit(1).maybeSingle();
+  const d1 = await getDBAsync();
+  let settings: AdminSettings | null = null;
+
+  if (d1) {
+    try {
+      settings = await d1.prepare(`SELECT * FROM admin_settings LIMIT 1`).first<AdminSettings>();
+    } catch (error) {
+      console.error("Failed to fetch admin settings:", error);
+    }
+  }
 
   return (
     <div className="space-y-6">

@@ -1,9 +1,17 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDBAsync } from "@/lib/auth/session";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ToggleSuspensionButton } from "@/components/admin/toggle-suspension-button";
+
+interface UserRow {
+  id: string;
+  full_name: string;
+  role: string;
+  is_suspended: number;
+  created_at: string;
+  updated_at: string;
+}
 
 export default async function AdminUsersPage() {
   const auth = await getCurrentUser();
@@ -11,13 +19,24 @@ export default async function AdminUsersPage() {
     redirect("/signin");
   }
 
-  const supabase = createSupabaseServerClient();
-  const { data } = await supabase
-    .from("profiles")
-    .select("id, full_name, role, is_suspended, created_at, updated_at")
-    .order("created_at", { ascending: false });
+  const d1 = await getDBAsync();
+  let users: UserRow[] = [];
 
-  const users = data ?? [];
+  if (d1) {
+    try {
+      const { results } = await d1
+        .prepare(`
+          SELECT id, full_name, role, is_suspended, created_at, updated_at
+          FROM profiles
+          ORDER BY created_at DESC
+        `)
+        .all<UserRow>();
+
+      users = results ?? [];
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -52,7 +71,7 @@ export default async function AdminUsersPage() {
                 </td>
                 <td className="px-4 py-3 text-sm text-muted">{new Date(user.created_at).toLocaleDateString()}</td>
                 <td className="px-4 py-3">
-                  <ToggleSuspensionButton userId={user.id} suspended={user.is_suspended} />
+                  <ToggleSuspensionButton userId={user.id} suspended={!!user.is_suspended} />
                 </td>
               </tr>
             ))}

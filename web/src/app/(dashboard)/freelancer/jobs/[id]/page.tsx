@@ -1,20 +1,36 @@
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, BookmarkMinus } from "lucide-react";
 import Link from "next/link";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDBAsync } from "@/lib/auth/session";
 import { ProposalForm } from "@/components/freelancer/jobs/proposal-form";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import type { Tables } from "@/types/database";
+import { fromJsonArray } from "@/lib/db";
 
-type EmployerSummary = Pick<Tables<"profiles">, "full_name" | "company_name" | "title" | "location" | "bio">;
+interface JobRow {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  budget_mode: string;
+  budget_min: number | null;
+  budget_max: number | null;
+  experience_level: string;
+  skills: string | null;
+  deadline: string | null;
+  created_at: string;
+  employer_name: string | null;
+  employer_company: string | null;
+  employer_title: string | null;
+  employer_location: string | null;
+  employer_bio: string | null;
+}
 
-type SupabaseJobRecord = Tables<"jobs"> & {
-  employer: EmployerSummary | EmployerSummary[] | null;
-  proposals: { count: number | null }[] | null;
-};
+interface ExistingProposal {
+  id: string;
+  status: string;
+}
 
 interface JobDetailPageProps {
   params: Promise<{
@@ -29,49 +45,64 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
   }
 
   const { id } = await params;
-  const supabase = createSupabaseServerClient();
-  const { data: job, error } = await supabase
-    .from("jobs")
-    .select(
-      `
-      id,
-      title,
-      description,
-      category,
-      budget_mode,
-      budget_min,
-      budget_max,
-      experience_level,
-      skills,
-      deadline,
-      created_at,
-      employer:profiles!jobs_employer_id_fkey (
-        full_name,
-        company_name,
-        title,
-        location,
-        bio
-      ),
-      proposals(count)
-    `,
-    )
-    .eq("id", id)
-    .single();
-
-  if (error || !job) {
+  const d1 = await getDBAsync();
+  
+  if (!d1) {
     notFound();
   }
 
-  const typedJob = job as SupabaseJobRecord;
-  const employer = Array.isArray(typedJob.employer) ? typedJob.employer[0] ?? null : typedJob.employer ?? null;
-  const proposalCount = typedJob.proposals?.[0]?.count ?? 0;
+  let job: JobRow | null = null;
+  let proposalCount = 0;
+  let existingProposal: ExistingProposal | null = null;
 
-  const { data: existingProposal } = await supabase
-    .from("proposals")
-    .select("id, status")
-    .eq("job_id", typedJob.id)
-    .eq("freelancer_id", auth.profile.id)
-    .maybeSingle();
+  try {
+    job = await d1
+      .prepare(`
+        SELECT 
+          j.id,
+          j.title,
+          j.description,
+          j.category,
+          j.budget_mode,
+          j.budget_min,
+          j.budget_max,
+          j.experience_level,
+          j.skills,
+          j.deadline,
+          j.created_at,
+          p.full_name as employer_name,
+          p.company_name as employer_company,
+          p.title as employer_title,
+          p.location as employer_location,
+          p.bio as employer_bio
+        FROM jobs j
+        LEFT JOIN profiles p ON j.employer_id = p.id
+        WHERE j.id = ?
+      `)
+      .bind(id)
+      .first<JobRow>();
+
+    if (job) {
+      const countResult = await d1
+        .prepare(`SELECT COUNT(*) as count FROM proposals WHERE job_id = ?`)
+        .bind(id)
+        .first<{ count: number }>();
+      proposalCount = countResult?.count ?? 0;
+
+      existingProposal = await d1
+        .prepare(`SELECT id, status FROM proposals WHERE job_id = ? AND freelancer_id = ?`)
+        .bind(id, auth.profile.id)
+        .first<ExistingProposal>();
+    }
+  } catch (error) {
+    console.error("Failed to fetch job details:", error);
+  }
+
+  if (!job) {
+    notFound();
+  }
+
+  const skills = fromJsonArray(job.skills);
 
   return (
     <div className="space-y-8">
@@ -86,9 +117,9 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         <Card className="space-y-6 p-8">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <Badge variant="muted">{typedJob.category}</Badge>
-              <h1 className="mt-2 text-3xl font-semibold text-foreground">{typedJob.title}</h1>
-              <p className="mt-1 text-sm text-muted">Posted {formatDistanceFromNow(typedJob.created_at)}</p>
+              <Badge variant="muted">{job.category}</Badge>
+              <h1 className="mt-2 text-3xl font-semibold text-foreground">{job.title}</h1>
+              <p className="mt-1 text-sm text-muted">Posted {formatDistanceFromNow(job.created_at)}</p>
             </div>
             <Button variant="ghost" size="icon" aria-label="Save job">
               <BookmarkMinus className="h-5 w-5 text-muted" />
@@ -96,20 +127,20 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
           </div>
 
           <section className="grid gap-4 md:grid-cols-3">
-            <JobMeta label="Budget" value={`${typedJob.budget_mode === "hourly" ? "$" : "৳"}${typedJob.budget_min ?? "-"} - ${typedJob.budget_max ?? "-"}`} />
-            <JobMeta label="Experience" value={typedJob.experience_level} />
+            <JobMeta label="Budget" value={`${job.budget_mode === "hourly" ? "$" : "৳"}${job.budget_min ?? "-"} - ${job.budget_max ?? "-"}`} />
+            <JobMeta label="Experience" value={job.experience_level} />
             <JobMeta label="Proposals" value={proposalCount} />
           </section>
 
           <section>
             <h2 className="text-lg font-semibold text-foreground">Project overview</h2>
-            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-muted">{typedJob.description}</p>
+            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-muted">{job.description}</p>
           </section>
 
           <section>
             <h2 className="text-lg font-semibold text-foreground">Skills & tools</h2>
             <div className="mt-3 flex flex-wrap gap-2">
-              {typedJob.skills.length ? typedJob.skills.map((skill) => <Badge key={skill}>{skill}</Badge>) : (
+              {skills.length ? skills.map((skill) => <Badge key={skill}>{skill}</Badge>) : (
                 <p className="text-sm text-muted">No skills specified.</p>
               )}
             </div>
@@ -119,16 +150,16 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         <Card className="space-y-5 border border-card-border/70 p-6">
           <div>
             <h2 className="text-lg font-semibold text-foreground">Client details</h2>
-            <p className="mt-2 text-sm text-muted">{employer?.company_name ?? employer?.full_name}</p>
-            {employer?.location ? <p className="text-xs text-muted">Based in {employer.location}</p> : null}
+            <p className="mt-2 text-sm text-muted">{job.employer_company ?? job.employer_name}</p>
+            {job.employer_location ? <p className="text-xs text-muted">Based in {job.employer_location}</p> : null}
           </div>
-          <p className="text-sm text-muted">{employer?.bio ?? "Client bio not provided."}</p>
+          <p className="text-sm text-muted">{job.employer_bio ?? "Client bio not provided."}</p>
           {existingProposal ? (
             <div className="rounded-[var(--radius-md)] border border-accent/50 bg-accent/10 p-4 text-sm text-accent">
               You already submitted a proposal. Current status: {existingProposal.status}.
             </div>
           ) : (
-            <ProposalForm jobId={typedJob.id} />
+            <ProposalForm jobId={job.id} jobTitle={job.title} jobDescription={job.description} />
           )}
         </Card>
       </div>

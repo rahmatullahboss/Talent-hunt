@@ -1,32 +1,42 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDBAsync } from "@/lib/auth/session";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { JobStatusForm } from "@/components/employer/jobs/job-status-form";
 import { HireProposalForm } from "@/components/employer/jobs/hire-proposal-form";
-import type { Tables } from "@/types/database";
+import { fromJsonArray } from "@/lib/db";
 
-type FreelancerSummary = Pick<
-  Tables<"profiles">,
-  "id" | "full_name" | "title" | "bio" | "hourly_rate" | "skills" | "avatar_url"
->;
+interface JobRow {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  budget_mode: string;
+  budget_min: number | null;
+  budget_max: number | null;
+  skills: string | null;
+  experience_level: string;
+  created_at: string;
+}
 
-type ProposalRow = Tables<"proposals">;
-
-type SupabaseProposalRecord = ProposalRow & {
-  freelancer?: FreelancerSummary | FreelancerSummary[] | null;
-};
-
-type ProposalWithFreelancer = ProposalRow & {
-  freelancer: FreelancerSummary | null;
-};
-
-type EmployerJobRecord = Tables<"jobs"> & {
-  proposals: SupabaseProposalRecord[] | null;
-};
+interface ProposalRow {
+  id: string;
+  status: string;
+  cover_letter: string | null;
+  bid_amount: number;
+  bid_type: string;
+  estimated_hours: number | null;
+  created_at: string;
+  freelancer_id: string;
+  freelancer_name: string | null;
+  freelancer_title: string | null;
+  freelancer_bio: string | null;
+  freelancer_hourly_rate: number | null;
+  freelancer_skills: string | null;
+  freelancer_avatar_url: string | null;
+}
 
 interface EmployerJobDetailProps {
   params: Promise<{
@@ -41,85 +51,87 @@ export default async function EmployerJobDetailPage({ params }: EmployerJobDetai
   }
 
   const { id } = await params;
-  const supabase = createSupabaseServerClient();
-  const { data: job } = await supabase
-    .from("jobs")
-    .select(`
-      id,
-      title,
-      description,
-      status,
-      budget_mode,
-      budget_min,
-      budget_max,
-      skills,
-      experience_level,
-      created_at,
-      proposals:proposals(
-        id,
-        status,
-        cover_letter,
-        bid_amount,
-        bid_type,
-        estimated_hours,
-        created_at,
-        freelancer:profiles(
-          id,
-          full_name,
-          title,
-          bio,
-          hourly_rate,
-          skills,
-          avatar_url
-        )
-      )
-    `)
-    .eq("id", id)
-    .eq("employer_id", auth.profile.id)
-    .maybeSingle();
+  const d1 = await getDBAsync();
+  
+  if (!d1) {
+    notFound();
+  }
+
+  let job: JobRow | null = null;
+  let proposals: ProposalRow[] = [];
+
+  try {
+    job = await d1
+      .prepare(`
+        SELECT id, title, description, status, budget_mode, budget_min, budget_max, skills, experience_level, created_at
+        FROM jobs
+        WHERE id = ? AND employer_id = ?
+      `)
+      .bind(id, auth.profile.id)
+      .first<JobRow>();
+
+    if (job) {
+      const { results } = await d1
+        .prepare(`
+          SELECT 
+            p.id,
+            p.status,
+            p.cover_letter,
+            p.bid_amount,
+            p.bid_type,
+            p.estimated_hours,
+            p.created_at,
+            p.freelancer_id,
+            pr.full_name as freelancer_name,
+            pr.title as freelancer_title,
+            pr.bio as freelancer_bio,
+            pr.hourly_rate as freelancer_hourly_rate,
+            pr.skills as freelancer_skills,
+            pr.avatar_url as freelancer_avatar_url
+          FROM proposals p
+          LEFT JOIN profiles pr ON p.freelancer_id = pr.id
+          WHERE p.job_id = ?
+          ORDER BY p.created_at DESC
+        `)
+        .bind(id)
+        .all<ProposalRow>();
+
+      proposals = results ?? [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch job details:", error);
+  }
 
   if (!job) {
     notFound();
   }
 
-  const typedJob = {
-    ...job,
-    proposals: (job.proposals ?? []) as SupabaseProposalRecord[] | null,
-  } as EmployerJobRecord;
-
-  const proposals: ProposalWithFreelancer[] = (typedJob.proposals ?? []).map((proposal) => {
-    const freelancerCandidate = Array.isArray(proposal.freelancer) ? proposal.freelancer[0] : proposal.freelancer;
-
-    return {
-      ...proposal,
-      freelancer: freelancerCandidate ?? null,
-    };
-  });
+  const jobSkills = fromJsonArray(job.skills);
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="space-y-2">
-          <Badge variant="muted">{typedJob.status}</Badge>
-          <h1 className="text-3xl font-semibold text-foreground md:text-4xl">{typedJob.title}</h1>
-          <p className="text-sm text-muted">Posted {new Date(typedJob.created_at).toLocaleString()}</p>
+          <Badge variant="muted">{job.status}</Badge>
+          <h1 className="text-3xl font-semibold text-foreground md:text-4xl">{job.title}</h1>
+          <p className="text-sm text-muted">Posted {new Date(job.created_at).toLocaleString()}</p>
         </div>
-        <JobStatusForm jobId={typedJob.id} currentStatus={typedJob.status} />
+        <JobStatusForm jobId={job.id} currentStatus={job.status} />
       </div>
 
       <Card className="space-y-4 border border-card-border/70 bg-card/80 p-6">
         <h2 className="text-xl font-semibold text-foreground">Project overview</h2>
-        <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted">{typedJob.description}</p>
+        <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted">{job.description}</p>
         <div className="flex flex-wrap items-center gap-3 text-sm text-muted">
-          <span>Experience: {typedJob.experience_level}</span>
+          <span>Experience: {job.experience_level}</span>
           <span>
-            Budget: {typedJob.budget_mode === "hourly" ? "$" : "?"}
-            {typedJob.budget_min ?? "-"}
-            {typedJob.budget_max ? ` - ${typedJob.budget_mode === "hourly" ? "$" : "?"}${typedJob.budget_max}` : ""}
+            Budget: {job.budget_mode === "hourly" ? "$" : "৳"}
+            {job.budget_min ?? "-"}
+            {job.budget_max ? ` - ${job.budget_mode === "hourly" ? "$" : "৳"}${job.budget_max}` : ""}
           </span>
         </div>
         <div className="flex flex-wrap gap-2">
-          {typedJob.skills?.map((skill) => (
+          {jobSkills.map((skill) => (
             <Badge key={skill} variant="outline">
               {skill}
             </Badge>
@@ -136,38 +148,41 @@ export default async function EmployerJobDetailPage({ params }: EmployerJobDetai
         </div>
         {proposals.length ? (
           <div className="grid gap-4">
-            {proposals.map((proposal) => (
-              <Card key={proposal.id} className="space-y-4 border border-card-border/70 bg-card/80 p-5">
-                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                  <div>
-                    <p className="text-lg font-semibold text-foreground">{proposal.freelancer?.full_name}</p>
-                    <p className="text-sm text-muted">{proposal.freelancer?.title ?? "No headline"}</p>
-                    <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted">
-                      {proposal.freelancer?.skills?.slice(0, 6).map((skill) => (
-                        <Badge key={skill} variant="outline">
-                          {skill}
-                        </Badge>
-                      ))}
+            {proposals.map((proposal) => {
+              const freelancerSkills = fromJsonArray(proposal.freelancer_skills);
+              return (
+                <Card key={proposal.id} className="space-y-4 border border-card-border/70 bg-card/80 p-5">
+                  <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                    <div>
+                      <p className="text-lg font-semibold text-foreground">{proposal.freelancer_name}</p>
+                      <p className="text-sm text-muted">{proposal.freelancer_title ?? "No headline"}</p>
+                      <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted">
+                        {freelancerSkills.slice(0, 6).map((skill) => (
+                          <Badge key={skill} variant="outline">
+                            {skill}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="text-sm text-muted">
+                      <p>
+                        Bid: {proposal.bid_type === "hourly" ? "$" : "৳"}
+                        {proposal.bid_amount}
+                      </p>
+                      {proposal.estimated_hours ? <p>Est. hours: {proposal.estimated_hours}</p> : null}
+                      <p>Submitted {new Date(proposal.created_at).toLocaleString()}</p>
                     </div>
                   </div>
-                  <div className="text-sm text-muted">
-                    <p>
-                      Bid: {proposal.bid_type === "hourly" ? "$" : "?"}
-                      {proposal.bid_amount}
-                    </p>
-                    {proposal.estimated_hours ? <p>Est. hours: {proposal.estimated_hours}</p> : null}
-                    <p>Submitted {new Date(proposal.created_at).toLocaleString()}</p>
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground">Cover letter</h3>
+                    <p className="mt-2 whitespace-pre-wrap text-sm text-muted">{proposal.cover_letter}</p>
                   </div>
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground">Cover letter</h3>
-                  <p className="mt-2 whitespace-pre-wrap text-sm text-muted">{proposal.cover_letter}</p>
-                </div>
-                {proposal.status !== "hired" ? (
-                  <HireProposalForm jobId={typedJob.id} proposalId={proposal.id} defaultAmount={proposal.bid_amount} />
-                ) : null}
-              </Card>
-            ))}
+                  {proposal.status !== "hired" ? (
+                    <HireProposalForm jobId={job.id} proposalId={proposal.id} defaultAmount={proposal.bid_amount} />
+                  ) : null}
+                </Card>
+              );
+            })}
           </div>
         ) : (
           <Card className="border-dashed p-6 text-sm text-muted">

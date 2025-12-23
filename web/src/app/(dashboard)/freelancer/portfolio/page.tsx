@@ -1,11 +1,19 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDBAsync } from "@/lib/auth/session";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PortfolioForm } from "@/components/freelancer/portfolio/portfolio-form";
 import { DeletePortfolioButton } from "@/components/freelancer/portfolio/delete-button";
+
+interface PortfolioItem {
+  id: string;
+  title: string;
+  description: string | null;
+  image_url: string | null;
+  external_link: string | null;
+  created_at: string;
+}
 
 export default async function PortfolioPage() {
   const auth = await getCurrentUser();
@@ -13,14 +21,26 @@ export default async function PortfolioPage() {
     redirect("/signin");
   }
 
-  const supabase = createSupabaseServerClient();
-  const { data } = await supabase
-    .from("portfolio_items")
-    .select("id, title, description, image_url, external_link, created_at")
-    .eq("profile_id", auth.profile.id)
-    .order("created_at", { ascending: false });
+  const d1 = await getDBAsync();
+  let items: PortfolioItem[] = [];
 
-  const items = data ?? [];
+  if (d1) {
+    try {
+      const { results } = await d1
+        .prepare(`
+          SELECT id, title, description, image_url, external_link, created_at
+          FROM portfolio_items
+          WHERE profile_id = ?
+          ORDER BY created_at DESC
+        `)
+        .bind(auth.profile.id)
+        .all<PortfolioItem>();
+
+      items = results ?? [];
+    } catch (error) {
+      console.error("Failed to fetch portfolio items:", error);
+    }
+  }
 
   return (
     <div className="space-y-8">
