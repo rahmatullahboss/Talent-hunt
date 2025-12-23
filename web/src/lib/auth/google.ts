@@ -31,8 +31,7 @@ function base64URLEncode(buffer: Uint8Array): string {
 // Create Google authorization URL
 export async function createGoogleAuthUrl(state: string, codeVerifier: string): Promise<string> {
   const clientId = process.env.GOOGLE_CLIENT_ID;
-  // Use SITE_URL (runtime accessible) over NEXT_PUBLIC_SITE_URL (build-time only)
-  const siteUrl = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   const redirectUri = `${siteUrl}/api/auth/google/callback`;
   
   console.log('Creating Google Auth URL with:', { clientId: clientId ? 'set' : 'not set', siteUrl, redirectUri });
@@ -66,8 +65,7 @@ export async function exchangeCodeForTokens(code: string, codeVerifier: string):
 }> {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  // Use SITE_URL (runtime accessible) over NEXT_PUBLIC_SITE_URL (build-time only)
-  const siteUrl = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   const redirectUri = `${siteUrl}/api/auth/google/callback`;
   
   if (!clientId || !clientSecret) {
