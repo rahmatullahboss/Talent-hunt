@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import {
   ArrowRight,
   BadgeCheck,
@@ -21,6 +22,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { getCurrentUser } from "@/lib/auth/session";
 
 export const metadata: Metadata = {
   verification: {
@@ -115,7 +117,12 @@ const testimonials = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  // Redirect logged-in freelancers to Find Work page
+  const auth = await getCurrentUser();
+  if (auth?.profile?.role === "freelancer" && auth.profile.onboarding_complete) {
+    redirect("/freelancer/jobs");
+  }
   return (
     <div className="min-h-screen text-foreground">
       <SiteHeader />
