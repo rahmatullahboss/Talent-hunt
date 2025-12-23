@@ -26,6 +26,7 @@
 
   "vars": {
     "NEXTJS_ENV": "production",
+    "SITE_URL": "https://thbd.digitalcare.site",
     "NEXT_PUBLIC_SITE_URL": "https://thbd.digitalcare.site",
     "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME": "dpnccgsja"
   },
