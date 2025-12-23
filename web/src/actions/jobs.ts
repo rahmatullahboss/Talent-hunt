@@ -83,7 +83,7 @@ export async function createJobAction(_: JobActionState, formData: FormData): Pr
       )
       .bind(
         jobId,
-        auth.profile.id,
+        (auth.profile as { id: string }).id,
         parsed.data.title,
         parsed.data.description,
         parsed.data.category,
@@ -130,7 +130,7 @@ export async function updateJobStatusAction(_: JobActionState, formData: FormDat
       .prepare(
         `UPDATE jobs SET status = ?, updated_at = datetime('now') WHERE id = ? AND employer_id = ?`
       )
-      .bind(parsed.data.status, parsed.data.jobId, auth.profile.id)
+      .bind(parsed.data.status, parsed.data.jobId, (auth.profile as { id: string }).id)
       .run();
 
     revalidatePath(`/employer/jobs/${parsed.data.jobId}`);
@@ -201,7 +201,7 @@ export async function hireProposalAction(_: JobActionState, formData: FormData):
       .bind(parsed.data.jobId)
       .first<Job>();
 
-    if (!job || job.employer_id !== auth.profile.id) {
+    if (!job || job.employer_id !== (auth.profile as { id: string }).id) {
       return { status: "error", message: "You do not have access to this job." };
     }
 
@@ -216,7 +216,7 @@ export async function hireProposalAction(_: JobActionState, formData: FormData):
         contractId,
         proposal.id,
         job.id,
-        auth.profile.id,
+        (auth.profile as { id: string }).id,
         proposal.freelancer_id,
         parsed.data.escrowAmount ?? proposal.bid_amount,
         parsed.data.notes ?? null

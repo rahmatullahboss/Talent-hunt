@@ -73,7 +73,7 @@ export async function updateFreelancerProfileAction(_: ProfileActionState, formD
         parsed.data.bio,
         toJsonArray(parsed.data.skills),
         parsed.data.website ?? null,
-        auth.profile.id
+        (auth.profile as { id: string }).id
       )
       .run();
 

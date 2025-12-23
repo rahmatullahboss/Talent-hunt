@@ -61,6 +61,26 @@ export function fromJsonArray(json: string | null): string[] {
   }
 }
 
+// Profile record type from database (matches profiles table schema)
+export interface ProfileRecord {
+  id: string;
+  full_name: string;
+  role: "freelancer" | "employer" | "admin";
+  avatar_url: string | null;
+  title: string | null;
+  company_name: string | null;
+  bio: string | null;
+  hourly_rate: number | null;
+  skills: string | null; // JSON array stored as text
+  location: string | null;
+  phone: string | null;
+  website: string | null;
+  onboarding_complete: number;
+  is_suspended: number;
+  created_at: string;
+  updated_at: string;
+}
+
 // Common database operations
 export const db = {
   // Users
@@ -80,8 +100,8 @@ export const db = {
   },
 
   // Profiles
-  async getProfileById(d1: D1Database, id: string) {
-    return d1.prepare("SELECT * FROM profiles WHERE id = ?").bind(id).first();
+  async getProfileById(d1: D1Database, id: string): Promise<ProfileRecord | null> {
+    return d1.prepare("SELECT * FROM profiles WHERE id = ?").bind(id).first<ProfileRecord>();
   },
 
   async createProfile(

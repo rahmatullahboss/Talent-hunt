@@ -77,7 +77,7 @@ export async function createMilestoneAction(_: MilestoneActionState, formData: F
       .bind(parsed.data.contractId)
       .first<Contract>();
 
-    if (!contract || contract.employer_id !== auth.profile.id) {
+    if (!contract || contract.employer_id !== (auth.profile as { id: string }).id) {
       return { status: "error", message: "You do not have permission to modify this contract." };
     }
 
@@ -134,7 +134,7 @@ export async function submitMilestoneAction(_: MilestoneActionState, formData: F
       .bind(milestone.contract_id)
       .first<Contract>();
 
-    if (!contract || contract.freelancer_id !== auth.profile.id) {
+    if (!contract || contract.freelancer_id !== (auth.profile as { id: string }).id) {
       return { status: "error", message: "You do not have permission to update this milestone." };
     }
 
@@ -188,7 +188,7 @@ export async function updateMilestoneStatusAction(_: MilestoneActionState, formD
       .bind(milestone.contract_id)
       .first<Contract>();
 
-    if (!contract || contract.employer_id !== auth.profile.id) {
+    if (!contract || contract.employer_id !== (auth.profile as { id: string }).id) {
       return { status: "error", message: "You do not have permission to update this milestone." };
     }
 

@@ -54,7 +54,7 @@ export async function requestWithdrawalAction(_: WalletActionState, formData: Fo
       )
       .bind(
         requestId,
-        auth.profile.id,
+        (auth.profile as { id: string }).id,
         parsed.data.amount,
         parsed.data.accountName,
         parsed.data.accountNumber,

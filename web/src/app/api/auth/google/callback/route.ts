@@ -27,10 +27,12 @@ export async function GET(request: NextRequest) {
     const tokens = await exchangeCodeForTokens(code, storedCodeVerifier);
     const googleUser = await getGoogleUser(tokens.access_token);
 
+    // Use sync getLucia/getDB for API routes per OpenNext.js docs
     const lucia = getLucia();
     const d1 = getDB();
     
     if (!lucia || !d1) {
+      console.error("Auth unavailable - lucia:", !!lucia, "d1:", !!d1);
       return NextResponse.redirect(new URL("/signin?error=auth_unavailable", request.url));
     }
 

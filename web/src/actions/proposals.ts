@@ -51,7 +51,7 @@ export async function submitProposalAction(_: ProposalActionState, formData: For
     // Check for existing proposal
     const existingProposal = await db
       .prepare("SELECT id FROM proposals WHERE job_id = ? AND freelancer_id = ?")
-      .bind(parsed.data.jobId, auth.profile.id)
+      .bind(parsed.data.jobId, (auth.profile as { id: string }).id)
       .first();
 
     if (existingProposal) {
@@ -68,7 +68,7 @@ export async function submitProposalAction(_: ProposalActionState, formData: For
       .bind(
         proposalId,
         parsed.data.jobId,
-        auth.profile.id,
+        (auth.profile as { id: string }).id,
         parsed.data.coverLetter,
         parsed.data.bidAmount,
         parsed.data.bidType,
@@ -119,7 +119,7 @@ export async function withdrawProposalAction(_: ProposalActionState, formData: F
       .bind(parsed.data.proposalId)
       .first<Proposal>();
 
-    if (!proposal || proposal.freelancer_id !== auth.profile.id) {
+    if (!proposal || proposal.freelancer_id !== (auth.profile as { id: string }).id) {
       return { status: "error", message: "Proposal not found." };
     }
 

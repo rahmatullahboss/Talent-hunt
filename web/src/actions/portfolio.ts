@@ -58,7 +58,7 @@ export async function createPortfolioItemAction(_: ActionState, formData: FormDa
         `INSERT INTO portfolio_items (id, profile_id, title, description, external_link, image_url)
          VALUES (?, ?, ?, ?, ?, ?)`
       )
-      .bind(itemId, auth.profile.id, parsed.data.title, parsed.data.description, parsed.data.externalLink ?? null, parsed.data.imageUrl ?? null)
+      .bind(itemId, (auth.profile as { id: string }).id, parsed.data.title, parsed.data.description, parsed.data.externalLink ?? null, parsed.data.imageUrl ?? null)
       .run();
 
     revalidatePath("/freelancer/portfolio");
@@ -92,7 +92,7 @@ export async function deletePortfolioItemAction(_: ActionState, formData: FormDa
   try {
     await db
       .prepare("DELETE FROM portfolio_items WHERE id = ? AND profile_id = ?")
-      .bind(parsed.data.id, auth.profile.id)
+      .bind(parsed.data.id, (auth.profile as { id: string }).id)
       .run();
 
     revalidatePath("/freelancer/portfolio");
