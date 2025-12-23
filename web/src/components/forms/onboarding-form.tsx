@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import type { Tables } from "@/types/database";
+import type { Profile } from "@/lib/auth/session";
+import { fromJsonArray } from "@/lib/db";
 
 const freelancerSchema = z.object({
   title: z.string().min(3, "Add a short professional headline"),
@@ -72,7 +72,7 @@ interface EmployerValues {
 }
 
 interface OnboardingFormProps {
-  profile: Tables<"profiles"> | null;
+  profile: Profile | null;
 }
 
 export function OnboardingForm({ profile }: OnboardingFormProps) {
@@ -95,11 +95,10 @@ export function OnboardingForm({ profile }: OnboardingFormProps) {
   );
 }
 
-function FreelancerOnboardingForm({ profile }: { profile: Tables<"profiles"> }) {
-  const supabase = createSupabaseBrowserClient();
+function FreelancerOnboardingForm({ profile }: { profile: Profile }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const defaultSkills = useMemo(() => profile.skills?.join(", ") ?? "", [profile.skills]);
+  const defaultSkills = useMemo(() => fromJsonArray(profile.skills).join(", "), [profile.skills]);
 
   const {
     register,
@@ -120,35 +119,30 @@ function FreelancerOnboardingForm({ profile }: { profile: Tables<"profiles"> }) 
 
   const onSubmit = async (values: FreelancerValues) => {
     setLoading(true);
-    const skillArray = values.skills
-      .split(",")
-      .map((skill) => skill.trim())
-      .filter((skill) => skill.length > 0);
+    try {
+      const response = await fetch("/api/profile/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...values,
+          role: "freelancer",
+        }),
+      });
 
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        title: values.title,
-        bio: values.bio,
-        skills: skillArray,
-        hourly_rate: values.hourlyRate ?? null,
-        location: values.location,
-        website: values.website ?? null,
-        phone: values.phone ?? null,
-        onboarding_complete: true,
-      })
-      .eq("id", profile.id);
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to save profile");
+      }
 
-    if (error) {
-      toast.error(error.message);
+      toast.success("Your profile is ready!");
+      router.push("/freelancer/dashboard");
+      router.refresh();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to save profile";
+      toast.error(message);
+    } finally {
       setLoading(false);
-      return;
     }
-
-    toast.success("Your profile is ready!");
-    router.push("/freelancer/dashboard");
-    router.refresh();
-    setLoading(false);
   };
 
   return (
@@ -239,8 +233,7 @@ function FreelancerOnboardingForm({ profile }: { profile: Tables<"profiles"> }) 
   );
 }
 
-function EmployerOnboardingForm({ profile }: { profile: Tables<"profiles"> }) {
-  const supabase = createSupabaseBrowserClient();
+function EmployerOnboardingForm({ profile }: { profile: Profile }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -262,29 +255,30 @@ function EmployerOnboardingForm({ profile }: { profile: Tables<"profiles"> }) {
 
   const onSubmit = async (values: EmployerValues) => {
     setLoading(true);
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        title: values.title,
-        company_name: values.companyName,
-        bio: values.hiringNeeds,
-        location: values.location,
-        website: values.website ?? null,
-        phone: values.phone ?? null,
-        onboarding_complete: true,
-      })
-      .eq("id", profile.id);
+    try {
+      const response = await fetch("/api/profile/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...values,
+          role: "employer",
+        }),
+      });
 
-    if (error) {
-      toast.error(error.message);
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to save profile");
+      }
+
+      toast.success("Your company profile is ready!");
+      router.push("/employer/dashboard");
+      router.refresh();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to save profile";
+      toast.error(message);
+    } finally {
       setLoading(false);
-      return;
     }
-
-    toast.success("Your company profile is ready!");
-    router.push("/employer/dashboard");
-    router.refresh();
-    setLoading(false);
   };
 
   return (

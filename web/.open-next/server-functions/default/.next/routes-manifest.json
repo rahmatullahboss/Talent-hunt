@@ -1,0 +1,345 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/contracts/[id]",
+      "regex": "^/contracts/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/contracts/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/employer/jobs/[id]",
+      "regex": "^/employer/jobs/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/employer/jobs/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/freelancer/jobs/[id]",
+      "regex": "^/freelancer/jobs/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/freelancer/jobs/(?<nxtPid>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/about",
+      "regex": "^/about(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/about(?:/)?$"
+    },
+    {
+      "page": "/admin/dashboard",
+      "regex": "^/admin/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/dashboard(?:/)?$"
+    },
+    {
+      "page": "/admin/disputes",
+      "regex": "^/admin/disputes(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/disputes(?:/)?$"
+    },
+    {
+      "page": "/admin/jobs",
+      "regex": "^/admin/jobs(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/jobs(?:/)?$"
+    },
+    {
+      "page": "/admin/settings",
+      "regex": "^/admin/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings(?:/)?$"
+    },
+    {
+      "page": "/admin/users",
+      "regex": "^/admin/users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/users(?:/)?$"
+    },
+    {
+      "page": "/api/auth/google",
+      "regex": "^/api/auth/google(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/google(?:/)?$"
+    },
+    {
+      "page": "/api/auth/google/callback",
+      "regex": "^/api/auth/google/callback(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/google/callback(?:/)?$"
+    },
+    {
+      "page": "/api/auth/session",
+      "regex": "^/api/auth/session(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/session(?:/)?$"
+    },
+    {
+      "page": "/api/auth/signin",
+      "regex": "^/api/auth/signin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/signin(?:/)?$"
+    },
+    {
+      "page": "/api/auth/signout",
+      "regex": "^/api/auth/signout(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/signout(?:/)?$"
+    },
+    {
+      "page": "/api/auth/signup",
+      "regex": "^/api/auth/signup(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/signup(?:/)?$"
+    },
+    {
+      "page": "/api/profile/onboarding",
+      "regex": "^/api/profile/onboarding(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/profile/onboarding(?:/)?$"
+    },
+    {
+      "page": "/callback",
+      "regex": "^/callback(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/callback(?:/)?$"
+    },
+    {
+      "page": "/careers",
+      "regex": "^/careers(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/careers(?:/)?$"
+    },
+    {
+      "page": "/employer/contracts",
+      "regex": "^/employer/contracts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/employer/contracts(?:/)?$"
+    },
+    {
+      "page": "/employer/dashboard",
+      "regex": "^/employer/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/employer/dashboard(?:/)?$"
+    },
+    {
+      "page": "/employer/freelancers",
+      "regex": "^/employer/freelancers(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/employer/freelancers(?:/)?$"
+    },
+    {
+      "page": "/employer/jobs",
+      "regex": "^/employer/jobs(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/employer/jobs(?:/)?$"
+    },
+    {
+      "page": "/employer/jobs/new",
+      "regex": "^/employer/jobs/new(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/employer/jobs/new(?:/)?$"
+    },
+    {
+      "page": "/employer/messages",
+      "regex": "^/employer/messages(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/employer/messages(?:/)?$"
+    },
+    {
+      "page": "/employer/payments",
+      "regex": "^/employer/payments(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/employer/payments(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/freelancer/dashboard",
+      "regex": "^/freelancer/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/freelancer/dashboard(?:/)?$"
+    },
+    {
+      "page": "/freelancer/jobs",
+      "regex": "^/freelancer/jobs(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/freelancer/jobs(?:/)?$"
+    },
+    {
+      "page": "/freelancer/messages",
+      "regex": "^/freelancer/messages(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/freelancer/messages(?:/)?$"
+    },
+    {
+      "page": "/freelancer/portfolio",
+      "regex": "^/freelancer/portfolio(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/freelancer/portfolio(?:/)?$"
+    },
+    {
+      "page": "/freelancer/profile",
+      "regex": "^/freelancer/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/freelancer/profile(?:/)?$"
+    },
+    {
+      "page": "/freelancer/proposals",
+      "regex": "^/freelancer/proposals(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/freelancer/proposals(?:/)?$"
+    },
+    {
+      "page": "/freelancer/wallet",
+      "regex": "^/freelancer/wallet(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/freelancer/wallet(?:/)?$"
+    },
+    {
+      "page": "/google8e80767e6782e05e.html",
+      "regex": "^/google8e80767e6782e05e\\.html(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/google8e80767e6782e05e\\.html(?:/)?$"
+    },
+    {
+      "page": "/hire",
+      "regex": "^/hire(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hire(?:/)?$"
+    },
+    {
+      "page": "/jobs",
+      "regex": "^/jobs(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/jobs(?:/)?$"
+    },
+    {
+      "page": "/marketplace",
+      "regex": "^/marketplace(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/marketplace(?:/)?$"
+    },
+    {
+      "page": "/onboarding",
+      "regex": "^/onboarding(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/onboarding(?:/)?$"
+    },
+    {
+      "page": "/privacy",
+      "regex": "^/privacy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/privacy(?:/)?$"
+    },
+    {
+      "page": "/reset-password",
+      "regex": "^/reset\\-password(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/reset\\-password(?:/)?$"
+    },
+    {
+      "page": "/signin",
+      "regex": "^/signin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/signin(?:/)?$"
+    },
+    {
+      "page": "/signup",
+      "regex": "^/signup(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/signup(?:/)?$"
+    },
+    {
+      "page": "/support",
+      "regex": "^/support(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/support(?:/)?$"
+    },
+    {
+      "page": "/talent",
+      "regex": "^/talent(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/talent(?:/)?$"
+    },
+    {
+      "page": "/terms",
+      "regex": "^/terms(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/terms(?:/)?$"
+    },
+    {
+      "page": "/update-password",
+      "regex": "^/update\\-password(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/update\\-password(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

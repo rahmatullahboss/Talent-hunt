@@ -68,7 +68,7 @@ export const validateSession = cache(async () => {
 });
 
 // Get current user with profile
-export const getCurrentUser = cache(async () => {
+export const getCurrentUser = cache(async (): Promise<{ user: NonNullable<Awaited<ReturnType<typeof validateSession>>["user"]>; session: NonNullable<Awaited<ReturnType<typeof validateSession>>["session"]>; profile: Profile } | null> => {
   const { user, session } = await validateSession();
 
   if (!user || !session) {
@@ -80,7 +80,11 @@ export const getCurrentUser = cache(async () => {
     return null;
   }
 
-  const profile = await db.getProfileById(d1, user.id);
+  const profile = await db.getProfileById(d1, user.id) as Profile | null;
+
+  if (!profile) {
+    return null;
+  }
 
   return {
     user,

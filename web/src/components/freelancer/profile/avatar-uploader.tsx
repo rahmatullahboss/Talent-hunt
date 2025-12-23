@@ -3,16 +3,19 @@
 import { useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import type { Tables } from "@/types/database";
+
+interface Profile {
+  id: string;
+  full_name: string;
+  avatar_url: string | null;
+}
 
 interface AvatarUploaderProps {
-  profile: Tables<"profiles">;
+  profile: Profile;
 }
 
 export function AvatarUploader({ profile }: AvatarUploaderProps) {
-  const supabase = createSupabaseBrowserClient();
   const [preview, setPreview] = useState<string | null>(profile.avatar_url);
   const [loading, setLoading] = useState(false);
 
@@ -27,30 +30,23 @@ export function AvatarUploader({ profile }: AvatarUploaderProps) {
 
     try {
       setLoading(true);
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${profile.id}-${Date.now()}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage.from("avatars").upload(fileName, file, {
-        cacheControl: "3600",
-        upsert: false,
+      
+      // Upload via API route
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("userId", profile.id);
+      
+      const response = await fetch("/api/upload/avatar", {
+        method: "POST",
+        body: formData,
       });
-
-      if (uploadError) {
-        throw uploadError;
+      
+      if (!response.ok) {
+        throw new Error("Failed to upload avatar");
       }
-
-      const { data: publicUrlData } = supabase.storage.from("avatars").getPublicUrl(fileName);
-      const publicUrl = publicUrlData?.publicUrl;
-
-      if (!publicUrl) {
-        throw new Error("Could not generate public URL.");
-      }
-
-      const { error: updateError } = await supabase.from("profiles").update({ avatar_url: publicUrl }).eq("id", profile.id);
-      if (updateError) {
-        throw updateError;
-      }
-
-      setPreview(publicUrl);
+      
+      const data = await response.json();
+      setPreview(data.url);
       toast.success("Profile photo updated.");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to upload avatar.";

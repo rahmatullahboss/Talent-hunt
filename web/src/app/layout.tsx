@@ -1,8 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
-import { Analytics } from "@vercel/analytics/react";
-import { SupabaseProvider } from "@/components/providers/supabase-provider";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -30,12 +27,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" data-theme="light">
       <body className="min-h-screen text-foreground antialiased">
-        <SupabaseProvider>
-          {children}
-          <Toaster position="top-right" richColors closeButton />
-          <Analytics />
-          <SpeedInsights />
-        </SupabaseProvider>
+        {children}
+        <Toaster position="top-right" richColors closeButton />
       </body>
     </html>
   );

@@ -1,8 +1,16 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDB } from "@/lib/auth/session";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+interface WithdrawalRequest {
+  id: string;
+  amount: number;
+  status: string;
+  created_at: string;
+  freelancer_id: string;
+  freelancer_name: string;
+}
 
 export default async function AdminDashboardPage() {
   const auth = await getCurrentUser();
@@ -10,25 +18,31 @@ export default async function AdminDashboardPage() {
     redirect("/signin");
   }
 
-  const supabase = createSupabaseServerClient();
+  const db = getDB();
+  if (!db) {
+    return <div>Database not available</div>;
+  }
+
   const [profilesCount, suspendedCount, jobsCount, disputesCount, withdrawals] = await Promise.all([
-    supabase.from("profiles").select("id", { count: "exact", head: true }),
-    supabase.from("profiles").select("id", { count: "exact", head: true }).eq("is_suspended", true),
-    supabase.from("jobs").select("id", { count: "exact", head: true }).eq("status", "open"),
-    supabase.from("disputes").select("id", { count: "exact", head: true }).in("status", ["open", "under_review"]),
-    supabase
-      .from("withdrawal_requests")
-      .select("id, amount, status, created_at, freelancer_id, freelancer:profiles!withdrawal_requests_freelancer_id_fkey(full_name)")
-      .in("status", ["pending", "processing"])
-      .order("created_at", { ascending: false })
-      .limit(5),
+    db.prepare("SELECT COUNT(*) as count FROM profiles").first<{ count: number }>(),
+    db.prepare("SELECT COUNT(*) as count FROM profiles WHERE is_suspended = 1").first<{ count: number }>(),
+    db.prepare("SELECT COUNT(*) as count FROM jobs WHERE status = 'open'").first<{ count: number }>(),
+    db.prepare("SELECT COUNT(*) as count FROM disputes WHERE status IN ('open', 'under_review')").first<{ count: number }>(),
+    db.prepare(`
+      SELECT wr.id, wr.amount, wr.status, wr.created_at, wr.freelancer_id, p.full_name as freelancer_name
+      FROM withdrawal_requests wr
+      LEFT JOIN profiles p ON wr.freelancer_id = p.id
+      WHERE wr.status IN ('pending', 'processing')
+      ORDER BY wr.created_at DESC
+      LIMIT 5
+    `).all<WithdrawalRequest>(),
   ]);
 
-  const totalUsers = profilesCount.count ?? 0;
-  const totalSuspended = suspendedCount.count ?? 0;
-  const openJobs = jobsCount.count ?? 0;
-  const openDisputes = disputesCount.count ?? 0;
-  const pendingWithdrawals = withdrawals.data ?? [];
+  const totalUsers = profilesCount?.count ?? 0;
+  const totalSuspended = suspendedCount?.count ?? 0;
+  const openJobs = jobsCount?.count ?? 0;
+  const openDisputes = disputesCount?.count ?? 0;
+  const pendingWithdrawals = withdrawals.results ?? [];
 
   return (
     <div className="space-y-6">
@@ -53,20 +67,15 @@ export default async function AdminDashboardPage() {
           <p className="text-sm text-muted">No payout requests are waiting for review.</p>
         ) : (
           <div className="grid gap-3">
-            {pendingWithdrawals.map((request) => {
-              const freelancer = Array.isArray(request.freelancer) ? request.freelancer[0] : request.freelancer;
-              const freelancerName = freelancer?.full_name ?? "Freelancer";
-
-              return (
-                <Card key={request.id} className="flex items-center justify-between border border-card-border/70 bg-card/80 p-4 text-sm">
-                  <div>
-                    <p className="font-semibold text-foreground">৳{Number(request.amount).toLocaleString()}</p>
-                    <p className="text-xs text-muted">{freelancerName}</p>
-                  </div>
-                  <Badge variant="muted">{request.status}</Badge>
-                </Card>
-              );
-            })}
+            {pendingWithdrawals.map((request) => (
+              <Card key={request.id} className="flex items-center justify-between border border-card-border/70 bg-card/80 p-4 text-sm">
+                <div>
+                  <p className="font-semibold text-foreground">৳{Number(request.amount).toLocaleString()}</p>
+                  <p className="text-xs text-muted">{request.freelancer_name || "Freelancer"}</p>
+                </div>
+                <Badge variant="muted">{request.status}</Badge>
+              </Card>
+            ))}
           </div>
         )}
       </Card>

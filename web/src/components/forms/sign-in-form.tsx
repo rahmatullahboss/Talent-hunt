@@ -8,8 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createSupabaseBrowserClient, inferSupportedOAuthFlow } from "@/lib/supabase/client";
-import { getNormalizedSiteUrl } from "@/lib/site-url";
 import { GoogleIcon } from "@/components/icons/google";
 
 const schema = z.object({
@@ -23,8 +21,10 @@ export function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo");
+  const error = searchParams.get("error");
   const [loading, setLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(false);
+  
   const {
     handleSubmit,
     register,
@@ -34,90 +34,50 @@ export function SignInForm() {
     defaultValues: { email: "", password: "" },
   });
 
+  // Show OAuth error if present
+  if (error) {
+    toast.error("Authentication failed. Please try again.");
+  }
+
   const handleGoogleSignIn = async () => {
     setOauthLoading(true);
-    const supabase = createSupabaseBrowserClient({ flowType: inferSupportedOAuthFlow() });
-    const normalizedSiteUrl = getNormalizedSiteUrl();
-
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${normalizedSiteUrl}/callback`,
-        skipBrowserRedirect: true,
-      },
-    });
-
-    if (error) {
-      toast.error(error.message);
-      setOauthLoading(false);
-      return;
-    }
-
-    if (data?.url) {
-      window.location.href = data.url;
-      return;
-    }
-
-    setOauthLoading(false);
+    window.location.href = "/api/auth/google";
   };
 
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
-    const supabase = createSupabaseBrowserClient();
+    
+    try {
+      const response = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
 
-    const { error, data } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
-    });
+      const data = await response.json();
 
-    if (error) {
-      toast.error(error.message);
-      setLoading(false);
-      return;
-    }
-
-    if (!data.user) {
-      toast.error("We could not find your account. Please try again.");
-      setLoading(false);
-      return;
-    }
-
-    const { data: profileData, error: profileError } = await supabase
-      .from("profiles")
-      .select("role, onboarding_complete")
-      .eq("id", data.user.id)
-      .maybeSingle();
-
-    if (profileError) {
-      toast.error(profileError.message);
-      setLoading(false);
-      return;
-    }
-
-    toast.success("Welcome back!");
-
-    if (redirectTo) {
-      router.push(redirectTo);
-    } else if (profileData?.onboarding_complete === false) {
-      router.push("/onboarding");
-    } else {
-      switch (profileData?.role) {
-        case "employer":
-          router.push("/employer/dashboard");
-          break;
-        case "freelancer":
-          router.push("/freelancer/dashboard");
-          break;
-        case "admin":
-          router.push("/admin/dashboard");
-          break;
-        default:
-          router.push("/onboarding");
+      if (!response.ok) {
+        toast.error(data.error || "Login failed");
+        setLoading(false);
+        return;
       }
-    }
 
-    router.refresh();
-    setLoading(false);
+      toast.success("Welcome back!");
+
+      if (redirectTo) {
+        router.push(redirectTo);
+      } else if (data.redirect) {
+        router.push(data.redirect);
+      } else {
+        router.push("/freelancer/dashboard");
+      }
+
+      router.refresh();
+    } catch {
+      toast.error("Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

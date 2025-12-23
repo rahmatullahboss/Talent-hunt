@@ -1,10 +1,21 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDB } from "@/lib/auth/session";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DisputeStatusForm } from "@/components/admin/dispute-status-form";
+
+interface Dispute {
+  id: string;
+  status: string;
+  reason: string;
+  resolution: string | null;
+  created_at: string;
+  contract_id: string;
+  opened_by_id: string;
+  job_title: string | null;
+  opened_by_name: string | null;
+}
 
 export default async function AdminDisputesPage() {
   const auth = await getCurrentUser();
@@ -12,21 +23,24 @@ export default async function AdminDisputesPage() {
     redirect("/signin");
   }
 
-  const supabase = createSupabaseServerClient();
-  const { data } = await supabase
-    .from("disputes")
-    .select(`
-      id,
-      status,
-      reason,
-      resolution,
-      created_at,
-      contract:contracts(id, jobs(title)),
-      opened_by:profiles(id, full_name)
-    `)
-    .order("created_at", { ascending: false });
+  const db = getDB();
+  if (!db) {
+    return <div>Database not available</div>;
+  }
 
-  const disputes = data ?? [];
+  const result = await db.prepare(`
+    SELECT 
+      d.id, d.status, d.reason, d.resolution, d.created_at, d.contract_id, d.opened_by_id,
+      j.title as job_title,
+      p.full_name as opened_by_name
+    FROM disputes d
+    LEFT JOIN contracts c ON d.contract_id = c.id
+    LEFT JOIN jobs j ON c.job_id = j.id
+    LEFT JOIN profiles p ON d.opened_by_id = p.id
+    ORDER BY d.created_at DESC
+  `).all<Dispute>();
+
+  const disputes = result.results ?? [];
 
   return (
     <div className="space-y-6">
@@ -36,34 +50,26 @@ export default async function AdminDisputesPage() {
       </div>
 
       <div className="grid gap-4">
-        {disputes.map((dispute) => {
-          const contract = Array.isArray(dispute.contract) ? dispute.contract[0] : dispute.contract;
-          const job = (Array.isArray(contract?.jobs) ? contract?.jobs[0] : contract?.jobs) as { title?: string } | null;
-
-          const openedBy = Array.isArray(dispute.opened_by) ? dispute.opened_by[0] : dispute.opened_by;
-          const openedByName = openedBy?.full_name ?? "User";
-
-          return (
-            <Card key={dispute.id} className="space-y-3 border border-card-border/70 bg-card/80 p-5">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="text-lg font-semibold text-foreground">{job?.title ?? "Contract"}</p>
-                  <p className="text-xs text-muted">Opened by {openedByName}</p>
-                  <p className="text-xs text-muted">{new Date(dispute.created_at).toLocaleString()}</p>
-                </div>
-                <Badge variant="muted">{dispute.status}</Badge>
+        {disputes.map((dispute) => (
+          <Card key={dispute.id} className="space-y-3 border border-card-border/70 bg-card/80 p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-lg font-semibold text-foreground">{dispute.job_title ?? "Contract"}</p>
+                <p className="text-xs text-muted">Opened by {dispute.opened_by_name ?? "User"}</p>
+                <p className="text-xs text-muted">{new Date(dispute.created_at).toLocaleString()}</p>
               </div>
-              <p className="text-sm text-muted">Reason: {dispute.reason}</p>
-              {dispute.resolution ? <p className="text-sm text-muted">Resolution: {dispute.resolution}</p> : null}
-              <div className="flex items-center gap-3 text-sm">
-                <Link href={`/contracts/${contract?.id ?? ""}`} className="text-accent underline">
-                  Open workspace
-                </Link>
-              </div>
-              <DisputeStatusForm disputeId={dispute.id} currentStatus={dispute.status} resolution={dispute.resolution} />
-            </Card>
-          );
-        })}
+              <Badge variant="muted">{dispute.status}</Badge>
+            </div>
+            <p className="text-sm text-muted">Reason: {dispute.reason}</p>
+            {dispute.resolution ? <p className="text-sm text-muted">Resolution: {dispute.resolution}</p> : null}
+            <div className="flex items-center gap-3 text-sm">
+              <Link href={`/contracts/${dispute.contract_id ?? ""}`} className="text-accent underline">
+                Open workspace
+              </Link>
+            </div>
+            <DisputeStatusForm disputeId={dispute.id} currentStatus={dispute.status} resolution={dispute.resolution} />
+          </Card>
+        ))}
       </div>
     </div>
   );

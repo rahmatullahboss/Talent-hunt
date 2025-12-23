@@ -56,7 +56,7 @@ export async function toggleUserSuspensionAction(_: AdminActionState, formData: 
       suspend: formData.get("suspend") === "true",
     });
 
-    if (parsed.userId === auth.profile?.id) {
+    if (parsed.userId === (auth.profile as { id: string })?.id) {
       return { status: "error", message: "You cannot suspend your own admin account." };
     }
 

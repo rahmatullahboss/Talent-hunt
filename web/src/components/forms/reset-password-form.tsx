@@ -7,8 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { getNormalizedSiteUrl } from "@/lib/site-url";
 
 const schema = z.object({
   email: z.string().email("Enter the email you used to sign up"),
@@ -29,20 +27,25 @@ export function ResetPasswordForm() {
 
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
-    const supabase = createSupabaseBrowserClient({ flowType: "implicit" });
-    const normalizedSiteUrl = getNormalizedSiteUrl();
-    const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
-      redirectTo: `${normalizedSiteUrl}/update-password`,
-    });
+    try {
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: values.email }),
+      });
 
-    if (error) {
-      toast.error(error.message);
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to send reset email");
+      }
+
+      toast.success("Check your email for a password reset link.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to send reset email";
+      toast.error(message);
+    } finally {
       setLoading(false);
-      return;
     }
-
-    toast.success("Check your email for a password reset link.");
-    setLoading(false);
   };
 
   return (

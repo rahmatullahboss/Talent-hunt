@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentUser, getDB } from "@/lib/auth/session";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CancelJobButton } from "@/components/admin/cancel-job-button";
+
+interface Job {
+  id: string;
+  title: string;
+  status: string;
+  created_at: string;
+  employer_name: string | null;
+}
 
 export default async function AdminJobsPage() {
   const auth = await getCurrentUser();
@@ -12,14 +19,20 @@ export default async function AdminJobsPage() {
     redirect("/signin");
   }
 
-  const supabase = createSupabaseServerClient();
-  const { data } = await supabase
-    .from("jobs")
-    .select("id, title, status, created_at, employer:profiles(full_name)")
-    .order("created_at", { ascending: false })
-    .limit(100);
+  const db = getDB();
+  if (!db) {
+    return <div>Database not available</div>;
+  }
 
-  const jobs = data ?? [];
+  const result = await db.prepare(`
+    SELECT j.id, j.title, j.status, j.created_at, p.full_name as employer_name
+    FROM jobs j
+    LEFT JOIN profiles p ON j.employer_id = p.id
+    ORDER BY j.created_at DESC
+    LIMIT 100
+  `).all<Job>();
+
+  const jobs = result.results ?? [];
 
   return (
     <div className="space-y-6">
@@ -29,24 +42,19 @@ export default async function AdminJobsPage() {
       </div>
 
       <div className="grid gap-4">
-        {jobs.map((job) => {
-          const employer = Array.isArray(job.employer) ? job.employer[0] : job.employer;
-          const employerName = employer?.full_name ?? "Unknown";
-
-          return (
-            <Card key={job.id} className="flex flex-col gap-3 border border-card-border/70 bg-card/80 p-5 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p className="text-lg font-semibold text-foreground">{job.title}</p>
-                <p className="text-xs text-muted">Employer: {employerName}</p>
-                <p className="text-xs text-muted">Posted {new Date(job.created_at).toLocaleString()}</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <Badge variant="muted">{job.status}</Badge>
-                <ButtonGroup jobId={job.id} isCancelled={job.status === "cancelled"} />
-              </div>
-            </Card>
-          );
-        })}
+        {jobs.map((job) => (
+          <Card key={job.id} className="flex flex-col gap-3 border border-card-border/70 bg-card/80 p-5 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-lg font-semibold text-foreground">{job.title}</p>
+              <p className="text-xs text-muted">Employer: {job.employer_name ?? "Unknown"}</p>
+              <p className="text-xs text-muted">Posted {new Date(job.created_at).toLocaleString()}</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Badge variant="muted">{job.status}</Badge>
+              <ButtonGroup jobId={job.id} isCancelled={job.status === "cancelled"} />
+            </div>
+          </Card>
+        ))}
       </div>
     </div>
   );

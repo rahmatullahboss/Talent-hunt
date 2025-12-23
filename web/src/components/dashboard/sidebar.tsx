@@ -21,7 +21,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import type { Tables } from "@/types/database";
+import type { Profile } from "@/lib/auth/session";
 
 const iconMap = {
   layoutDashboard: LayoutDashboard,
@@ -50,7 +50,7 @@ export type SidebarLink = {
 };
 
 interface DashboardSidebarProps {
-  profile: Tables<"profiles">;
+  profile: Profile;
   links: SidebarLink[];
   footer?: React.ReactNode;
 }

@@ -3,12 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import type { Session } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useSupabase } from "@/components/providers/supabase-provider";
-import type { Tables } from "@/types/database";
 
 const links = [
   { href: "/marketplace", label: "Talent Marketplace" },
@@ -18,12 +15,15 @@ const links = [
   { href: "/#why-talenthunt", label: "Why TalentHunt" },
 ];
 
-type ProfileSummary = Pick<Tables<"profiles">, "role" | "onboarding_complete" | "full_name">;
+type ProfileSummary = {
+  role: "freelancer" | "employer" | "admin";
+  onboarding_complete: number;
+  full_name: string;
+};
 
 export function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
-  const supabase = useSupabase();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [profile, setProfile] = useState<ProfileSummary | null>(null);
   const [hasSession, setHasSession] = useState(false);
@@ -32,82 +32,48 @@ export function SiteHeader() {
   const closeMenu = () => setIsMenuOpen(false);
 
   useEffect(() => {
-    let isMounted = true;
-
-    const applySession = async (session: Session | null) => {
-      if (!isMounted) {
-        return;
-      }
-
-      if (!session) {
-        setHasSession(false);
-        setProfile(null);
-        setIsCheckingSession(false);
-        return;
-      }
-
-      setHasSession(true);
+    // Check for auth_session cookie (Lucia Auth)
+    const checkSession = async () => {
       try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("role,onboarding_complete,full_name")
-          .eq("id", session.user.id)
-          .maybeSingle();
-
-        if (!isMounted) {
-          return;
-        }
-
-        if (error) {
-          console.error(error);
-          setProfile(null);
+        const response = await fetch("/api/auth/session");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.user && data.profile) {
+            setHasSession(true);
+            setProfile(data.profile);
+          } else {
+            setHasSession(false);
+            setProfile(null);
+          }
         } else {
-          setProfile((data as ProfileSummary | null) ?? null);
-        }
-      } finally {
-        if (isMounted) {
-          setIsCheckingSession(false);
-        }
-      }
-    };
-
-    supabase
-      .auth
-      .getSession()
-      .then(({ data }) => {
-        void applySession(data.session);
-      })
-      .catch(() => {
-        if (isMounted) {
           setHasSession(false);
           setProfile(null);
-          setIsCheckingSession(false);
         }
-      });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      void applySession(session);
-    });
-
-    return () => {
-      isMounted = false;
-      subscription.unsubscribe();
+      } catch {
+        setHasSession(false);
+        setProfile(null);
+      } finally {
+        setIsCheckingSession(false);
+      }
     };
-  }, [supabase]);
+
+    checkSession();
+  }, [pathname]);
 
   const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast.error(error.message);
-      return;
+    try {
+      const response = await fetch("/api/auth/signout", { method: "POST" });
+      if (response.ok) {
+        toast.success("Signed out successfully.");
+        closeMenu();
+        router.push("/signin");
+        router.refresh();
+      } else {
+        toast.error("Failed to sign out.");
+      }
+    } catch {
+      toast.error("Failed to sign out.");
     }
-
-    toast.success("Signed out successfully.");
-    closeMenu();
-    router.push("/signin");
-    router.refresh();
   };
 
   const dashboardHref = useMemo(() => {
@@ -115,7 +81,7 @@ export function SiteHeader() {
       return "/onboarding";
     }
 
-    if (profile.onboarding_complete === false) {
+    if (profile.onboarding_complete === 0) {
       return "/onboarding";
     }
 

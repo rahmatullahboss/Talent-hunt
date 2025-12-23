@@ -5,28 +5,35 @@ import { LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import type { Tables } from "@/types/database";
+
+interface Profile {
+  id: string;
+  full_name: string;
+  role: string;
+  avatar_url: string | null;
+}
 
 interface DashboardTopbarProps {
-  profile: Tables<"profiles">;
+  profile: Profile;
   actions?: React.ReactNode;
 }
 
 export function DashboardTopbar({ profile, actions }: DashboardTopbarProps) {
-  const supabase = createSupabaseBrowserClient();
   const router = useRouter();
 
   const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast.error(error.message);
-      return;
+    try {
+      const response = await fetch("/api/auth/signout", { method: "POST" });
+      if (response.ok) {
+        toast.success("Signed out successfully");
+        router.push("/signin");
+        router.refresh();
+      } else {
+        toast.error("Failed to sign out");
+      }
+    } catch {
+      toast.error("Failed to sign out");
     }
-
-    toast.success("Signed out successfully");
-    router.push("/signin");
-    router.refresh();
   };
 
   return (

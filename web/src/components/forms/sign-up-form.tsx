@@ -9,9 +9,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { createSupabaseBrowserClient, inferSupportedOAuthFlow } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { getNormalizedSiteUrl } from "@/lib/site-url";
 import { GoogleIcon } from "@/components/icons/google";
 
 const signUpSchema = z
@@ -50,10 +48,9 @@ export function SignUpForm() {
   const presetRole = searchParams.get("role") === "employer" ? "employer" : searchParams.get("role") === "freelancer" ? "freelancer" : undefined;
   const [loading, setLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(false);
-  const supabase = createSupabaseBrowserClient();
   const initialRole: FormValues["role"] = presetRole ?? "freelancer";
   const [role, setRole] = useState<FormValues["role"]>(initialRole);
-  const normalizedSiteUrl = getNormalizedSiteUrl();
+  
   const {
     register,
     handleSubmit,
@@ -74,61 +71,41 @@ export function SignUpForm() {
 
   const handleGoogleSignUp = async () => {
     setOauthLoading(true);
-    const oauthSupabase = createSupabaseBrowserClient({ flowType: inferSupportedOAuthFlow() });
-    const { data, error } = await oauthSupabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${normalizedSiteUrl}/callback?role=${encodeURIComponent(role)}`,
-        skipBrowserRedirect: true,
-      },
-    });
-
-    if (error) {
-      toast.error(error.message);
-      setOauthLoading(false);
-      return;
-    }
-
-    if (data?.url) {
-      window.location.href = data.url;
-      return;
-    }
-
-    setOauthLoading(false);
+    window.location.href = `/api/auth/google?role=${encodeURIComponent(role)}`;
   };
 
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
-    const { data, error } = await supabase.auth.signUp({
-      email: values.email,
-      password: values.password,
-      options: {
-        emailRedirectTo: `${normalizedSiteUrl}/callback`,
-        data: {
-          full_name: values.fullName,
+    
+    try {
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+          fullName: values.fullName,
           role: values.role,
-          company_name: values.role === "employer" ? values.companyName : undefined,
-          short_bio: values.shortBio,
-        },
-      },
-    });
+          companyName: values.role === "employer" ? values.companyName : undefined,
+          bio: values.shortBio,
+        }),
+      });
 
-    if (error) {
-      toast.error(error.message);
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error(data.error || "Signup failed");
+        setLoading(false);
+        return;
+      }
+
+      toast.success("Account created! Please sign in.");
+      router.push("/signin");
+    } catch {
+      toast.error("Signup failed. Please try again.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const requiresEmailConfirmation = !data.session;
-
-    if (requiresEmailConfirmation) {
-      toast.success("Account created! Please check your inbox to verify your email before logging in.");
-    } else {
-      toast.success("Account created! Let's complete your onboarding.");
-    }
-
-    router.push("/signin");
-    setLoading(false);
   };
 
   return (

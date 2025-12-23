@@ -28,5 +28,5 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect("/");
   }
 
-  return <DashboardShell profile={auth.profile!} links={links}>{children}</DashboardShell>;
+  return <DashboardShell profile={auth.profile} links={links}>{children}</DashboardShell>;
 }

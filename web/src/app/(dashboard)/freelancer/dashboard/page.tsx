@@ -4,101 +4,94 @@ import { ArrowRight, Briefcase, MessageCircle, Trophy, Wallet } from "lucide-rea
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getCurrentUser } from "@/lib/auth/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { Tables } from "@/types/database";
+import { getCurrentUser, getDB } from "@/lib/auth/session";
+import { fromJsonArray } from "@/lib/db";
 
-type Stats = {
+interface Profile {
+  id: string;
+  full_name: string;
+  role: string;
+  skills: string;
+}
+
+interface Stats {
   totalProposals: number;
   activeContracts: number;
   pendingReviews: number;
   walletBalance: number;
-};
+}
 
-type RecommendedJob = Pick<
-  Tables<"jobs">,
-  "id" | "title" | "category" | "budget_mode" | "budget_min" | "budget_max" | "skills" | "created_at"
->;
+interface Job {
+  id: string;
+  title: string;
+  category: string;
+  budget_mode: string;
+  budget_min: number | null;
+  budget_max: number | null;
+  skills: string;
+  created_at: string;
+}
 
-type ProposalJobSummary = Pick<Tables<"jobs">, "id" | "title" | "category" | "budget_mode">;
+interface Proposal {
+  id: string;
+  status: string;
+  bid_amount: number;
+  bid_type: string;
+  created_at: string;
+  job_id: string;
+  job_title?: string;
+  job_category?: string;
+}
 
-type ProposalRecord = Tables<"proposals"> & {
-  jobs: ProposalJobSummary | ProposalJobSummary[] | null;
-};
+async function getFreelancerStats(db: ReturnType<typeof getDB>, profileId: string): Promise<Stats> {
+  if (!db) return { totalProposals: 0, activeContracts: 0, pendingReviews: 0, walletBalance: 0 };
 
-type ProposalSummary = Tables<"proposals"> & {
-  job: ProposalJobSummary | null;
-};
-
-async function getFreelancerStats(profile: Tables<"profiles">): Promise<Stats> {
-  const supabase = createSupabaseServerClient();
-
-  const [{ count: totalProposals }, { count: activeContracts }, walletTransactions] = await Promise.all([
-    supabase
-      .from("proposals")
-      .select("id", { head: true, count: "exact" })
-      .eq("freelancer_id", profile.id),
-    supabase
-      .from("contracts")
-      .select("id", { head: true, count: "exact" })
-      .eq("freelancer_id", profile.id)
-      .in("status", ["active", "submitted"]),
-    supabase
-      .from("wallet_transactions")
-      .select("type, amount, status")
-      .eq("user_id", profile.id)
-      .in("status", ["pending", "cleared"]),
+  const [proposalsResult, contractsResult, walletResult, reviewsResult] = await Promise.all([
+    db.prepare("SELECT COUNT(*) as count FROM proposals WHERE freelancer_id = ?").bind(profileId).first<{ count: number }>(),
+    db.prepare("SELECT COUNT(*) as count FROM contracts WHERE freelancer_id = ? AND status IN ('active', 'submitted')").bind(profileId).first<{ count: number }>(),
+    db.prepare("SELECT type, amount, status FROM wallet_transactions WHERE user_id = ? AND status IN ('pending', 'cleared')").bind(profileId).all<{ type: string; amount: number; status: string }>(),
+    db.prepare("SELECT COUNT(*) as count FROM contracts WHERE freelancer_id = ? AND status = 'completed'").bind(profileId).first<{ count: number }>(),
   ]);
 
-  const balance =
-    walletTransactions.data?.reduce((acc, transaction) => {
-      const sign = transaction.type === "withdrawal" ? -1 : 1;
-      return acc + sign * Number(transaction.amount ?? 0);
-    }, 0) ?? 0;
-
-  const { count: pendingReviews } = await supabase
-    .from("contracts")
-    .select("id", { head: true, count: "exact" })
-    .eq("freelancer_id", profile.id)
-    .eq("status", "completed");
+  const balance = walletResult.results?.reduce((acc, tx) => {
+    const sign = tx.type === "withdrawal" ? -1 : 1;
+    return acc + sign * Number(tx.amount ?? 0);
+  }, 0) ?? 0;
 
   return {
-    totalProposals: totalProposals ?? 0,
-    activeContracts: activeContracts ?? 0,
-    pendingReviews: pendingReviews ?? 0,
+    totalProposals: proposalsResult?.count ?? 0,
+    activeContracts: contractsResult?.count ?? 0,
+    pendingReviews: reviewsResult?.count ?? 0,
     walletBalance: Math.max(balance, 0),
   };
 }
 
-async function getRecommendedJobs(profile: Tables<"profiles">): Promise<RecommendedJob[]> {
-  const supabase = createSupabaseServerClient();
+async function getRecommendedJobs(db: ReturnType<typeof getDB>): Promise<Job[]> {
+  if (!db) return [];
 
-  const { data } = await supabase
-    .from("jobs")
-    .select("id, title, category, budget_mode, budget_min, budget_max, skills, created_at")
-    .eq("status", "open")
-    .order("created_at", { ascending: false })
-    .limit(5)
-    .overlaps("skills", profile.skills.length ? profile.skills : [""]);
+  const result = await db
+    .prepare("SELECT id, title, category, budget_mode, budget_min, budget_max, skills, created_at FROM jobs WHERE status = 'open' ORDER BY created_at DESC LIMIT 5")
+    .all<Job>();
 
-  return (data ?? []) as RecommendedJob[];
+  return result.results ?? [];
 }
 
-async function getRecentProposals(profile: Tables<"profiles">): Promise<ProposalSummary[]> {
-  const supabase = createSupabaseServerClient();
-  const { data } = await supabase
-    .from("proposals")
-    .select("id, status, bid_amount, bid_type, created_at, jobs ( id, title, category, budget_mode )")
-    .eq("freelancer_id", profile.id)
-    .order("created_at", { ascending: false })
-    .limit(4);
+async function getRecentProposals(db: ReturnType<typeof getDB>, profileId: string): Promise<Proposal[]> {
+  if (!db) return [];
 
-  const typedData = (data ?? []) as ProposalRecord[];
+  const result = await db
+    .prepare(`
+      SELECT p.id, p.status, p.bid_amount, p.bid_type, p.created_at, p.job_id, j.title as job_title, j.category as job_category
+      FROM proposals p
+      LEFT JOIN jobs j ON p.job_id = j.id
+      WHERE p.freelancer_id = ?
+      ORDER BY p.created_at DESC
+      LIMIT 4
+    `)
+    .bind(profileId)
+    .all<Proposal>();
 
-  return typedData.map(({ jobs, ...proposal }) => ({
-    ...proposal,
-    job: Array.isArray(jobs) ? jobs[0] ?? null : jobs ?? null,
-  }));
+  return result.results ?? [];
 }
 
 export default async function FreelancerDashboardPage() {
@@ -108,7 +101,14 @@ export default async function FreelancerDashboardPage() {
     redirect("/signin");
   }
 
-  const [stats, jobs, proposals] = await Promise.all([getFreelancerStats(auth.profile), getRecommendedJobs(auth.profile), getRecentProposals(auth.profile)]);
+  const db = getDB();
+  const profile = auth.profile as Profile;
+  
+  const [stats, jobs, proposals] = await Promise.all([
+    getFreelancerStats(db, profile.id),
+    getRecommendedJobs(db),
+    getRecentProposals(db, profile.id),
+  ]);
 
   return (
     <div className="space-y-8">
@@ -145,28 +145,31 @@ export default async function FreelancerDashboardPage() {
             {jobs.length === 0 ? (
               <EmptyState message="Add more skills to your profile to receive tailored job suggestions." />
             ) : (
-              jobs.map((job) => (
-                <Link
-                  key={job.id}
-                  href={`/freelancer/jobs/${job.id}`}
-                  className="block rounded-[var(--radius-md)] border border-card-border/60 bg-card/60 p-5 transition hover:border-accent/40 hover:bg-accent/5"
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <h3 className="text-lg font-semibold text-foreground">{job.title}</h3>
-                    <Badge variant="muted">{job.category}</Badge>
-                  </div>
-                  <p className="mt-2 text-sm text-muted">
-                    Budget {job.budget_mode === "fixed" ? "৳" : "$"} {job.budget_min ?? "—"} - {job.budget_max ?? "—"}
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {job.skills.slice(0, 5).map((skill) => (
-                      <Badge key={skill} variant="outline" className="border-accent/30 text-muted">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </Link>
-              ))
+              jobs.map((job) => {
+                const skills = fromJsonArray(job.skills);
+                return (
+                  <Link
+                    key={job.id}
+                    href={`/freelancer/jobs/${job.id}`}
+                    className="block rounded-[var(--radius-md)] border border-card-border/60 bg-card/60 p-5 transition hover:border-accent/40 hover:bg-accent/5"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <h3 className="text-lg font-semibold text-foreground">{job.title}</h3>
+                      <Badge variant="muted">{job.category}</Badge>
+                    </div>
+                    <p className="mt-2 text-sm text-muted">
+                      Budget {job.budget_mode === "fixed" ? "৳" : "$"} {job.budget_min ?? "—"} - {job.budget_max ?? "—"}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {skills.slice(0, 5).map((skill) => (
+                        <Badge key={skill} variant="outline" className="border-accent/30 text-muted">
+                          {skill}
+                        </Badge>
+                      ))}
+                    </div>
+                  </Link>
+                );
+              })
             )}
           </div>
         </Card>
@@ -204,23 +207,21 @@ export default async function FreelancerDashboardPage() {
               <p>No proposals yet. Start pitching by exploring open jobs.</p>
             </Card>
           ) : (
-            proposals.map((proposal) =>
-              proposal.job ? (
-                <Card key={proposal.id} className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-foreground">{proposal.job.title}</h3>
-                    <Badge variant="muted">{proposal.status}</Badge>
-                  </div>
-                  <p className="text-sm text-muted">
-                    Bid {proposal.bid_type === "hourly" ? "$" : "৳"}
-                    {proposal.bid_amount}
-                  </p>
-                  <Button asChild variant="ghost" className="w-full justify-start">
-                    <Link href={`/freelancer/jobs/${proposal.job.id}`}>View job</Link>
-                  </Button>
-                </Card>
-              ) : null,
-            )
+            proposals.map((proposal) => (
+              <Card key={proposal.id} className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-foreground">{proposal.job_title || "Job"}</h3>
+                  <Badge variant="muted">{proposal.status}</Badge>
+                </div>
+                <p className="text-sm text-muted">
+                  Bid {proposal.bid_type === "hourly" ? "$" : "৳"}
+                  {proposal.bid_amount}
+                </p>
+                <Button asChild variant="ghost" className="w-full justify-start">
+                  <Link href={`/freelancer/jobs/${proposal.job_id}`}>View job</Link>
+                </Button>
+              </Card>
+            ))
           )}
         </div>
       </section>

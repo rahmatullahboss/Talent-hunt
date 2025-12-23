@@ -1,0 +1,3 @@
+module.exports=[76717,a=>{"use strict";var b=a.i(7997);function c(){return(0,b.jsxs)("div",{className:"flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center",children:[(0,b.jsx)("div",{className:"h-10 w-10 animate-spin rounded-full border-2 border-accent border-t-transparent","aria-hidden":"true"}),(0,b.jsx)("p",{className:"text-sm text-muted",children:"Confirming your account..."})]})}a.s(["default",()=>c])}];
+
+//# sourceMappingURL=src_app_%28auth%29_callback_loading_tsx_38306192._.js.map

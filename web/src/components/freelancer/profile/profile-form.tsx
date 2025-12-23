@@ -7,13 +7,15 @@ import { updateFreelancerProfileAction, type ProfileActionState } from "@/action
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import type { Tables } from "@/types/database";
+import type { Profile } from "@/lib/auth/session";
+import { fromJsonArray } from "@/lib/db";
 
 const initialState: ProfileActionState = { status: "idle" };
 
-export function FreelancerProfileForm({ profile }: { profile: Tables<"profiles"> }) {
+export function FreelancerProfileForm({ profile }: { profile: Profile }) {
   const [state, formAction] = useFormState(updateFreelancerProfileAction, initialState);
   const [isPending, startTransition] = useTransition();
+  const skills = fromJsonArray(profile.skills);
 
   useEffect(() => {
     if (state.status === "error" && state.message) {
@@ -78,7 +80,7 @@ export function FreelancerProfileForm({ profile }: { profile: Tables<"profiles">
         <label className="text-sm font-medium text-muted" htmlFor="skills">
           Skills (comma separated)
         </label>
-        <Input id="skills" name="skills" defaultValue={profile.skills.join(", ")} placeholder="React, Tailwind, GraphQL" required />
+        <Input id="skills" name="skills" defaultValue={skills.join(", ")} placeholder="React, Tailwind, GraphQL" required />
       </div>
 
       <div className="space-y-1.5">

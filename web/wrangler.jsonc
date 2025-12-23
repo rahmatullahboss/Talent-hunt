@@ -21,8 +21,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "talent-hunt-db",
-      "database_id": "YOUR_DATABASE_ID_HERE",
+      "database_name": "talenthunt-db",
+      "database_id": "43c55fea-2f11-4f0f-9c1d-67072bfd56b7",
       "migrations_dir": "migrations"
     }
   ]

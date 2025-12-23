@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
-import type { Tables } from "@/types/database";
+import type { Profile } from "@/lib/auth/session";
 import { DashboardSidebar, type SidebarLink } from "@/components/dashboard/sidebar";
 import { DashboardTopbar } from "@/components/dashboard/topbar";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 
 interface DashboardShellProps {
-  profile: Tables<"profiles">;
+  profile: Profile;
   links: SidebarLink[];
   children: ReactNode;
   topbarActions?: ReactNode;

@@ -1,0 +1,271 @@
+{
+  "version": 3,
+  "middleware": {
+    "/": {
+      "files": [
+        "server/edge/chunks/[root-of-the-server]__b0766c94._.js",
+        "server/edge/chunks/node_modules_next_dist_a7ebf276._.js",
+        "server/edge/chunks/turbopack-edge-wrapper_4d512c8f.js"
+      ],
+      "name": "middleware",
+      "page": "/",
+      "matchers": [
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/signin(\\\\.json)?[\\/#\\?]?$",
+          "originalSource": "/signin"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/signup(\\\\.json)?[\\/#\\?]?$",
+          "originalSource": "/signup"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/freelancer(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\\\.json)?[\\/#\\?]?$",
+          "originalSource": "/freelancer/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/employer(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\\\.json)?[\\/#\\?]?$",
+          "originalSource": "/employer/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/admin(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\\\.json)?[\\/#\\?]?$",
+          "originalSource": "/admin/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/onboarding(\\\\.json)?[\\/#\\?]?$",
+          "originalSource": "/onboarding"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/contracts(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\\\.json)?[\\/#\\?]?$",
+          "originalSource": "/contracts/:path*"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "oLiwZNhzFw4A16H8rwcvr",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "57nMNF12VO4iPG4eme4R3sdexldcny1ydbfQqNhsIZM=",
+        "__NEXT_PREVIEW_MODE_ID": "f0358411882d0d21e6675c095dea432a",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "62c97a9896d4c6a7320a3658b375172d94563fb999b1f23eb083bc3c0efd4cfd",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "81c8686b294f45b4067164f7d1d51c482577d2df2cd0ef82fa2dec3b998b8a3b"
+      }
+    }
+  },
+  "sortedMiddleware": [
+    "/"
+  ],
+  "functions": {
+    "/api/auth/google/callback/route": {
+      "files": [
+        "server/middleware-build-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/server-reference-manifest.js",
+        "server/app/api/auth/google/callback/route_client-reference-manifest.js",
+        "server/edge/chunks/_next-internal_server_app_api_auth_google_callback_route_actions_2d032024.js",
+        "server/edge/chunks/[root-of-the-server]__e75a6416._.js",
+        "server/edge/chunks/node_modules_next_dist_esm_build_templates_edge-app-route_02f3ac85.js",
+        "server/edge/chunks/node_modules_abccca1e._.js",
+        "server/edge/chunks/src_lib_auth_google_ts_bbefa5fd._.js",
+        "server/edge/chunks/_a35e0ca9._.js",
+        "server/edge/chunks/turbopack-edge-wrapper_fefc805d.js"
+      ],
+      "name": "app/api/auth/google/callback/route",
+      "page": "/api/auth/google/callback/route",
+      "matchers": [
+        {
+          "regexp": "^/api/auth/google/callback(?:/)?$",
+          "originalSource": "/api/auth/google/callback"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "oLiwZNhzFw4A16H8rwcvr",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "57nMNF12VO4iPG4eme4R3sdexldcny1ydbfQqNhsIZM=",
+        "__NEXT_PREVIEW_MODE_ID": "f0358411882d0d21e6675c095dea432a",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "62c97a9896d4c6a7320a3658b375172d94563fb999b1f23eb083bc3c0efd4cfd",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "81c8686b294f45b4067164f7d1d51c482577d2df2cd0ef82fa2dec3b998b8a3b"
+      }
+    },
+    "/api/auth/google/route": {
+      "files": [
+        "server/middleware-build-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/server-reference-manifest.js",
+        "server/app/api/auth/google/route_client-reference-manifest.js",
+        "server/edge/chunks/_next-internal_server_app_api_auth_google_route_actions_51bf37ee.js",
+        "server/edge/chunks/[root-of-the-server]__b99037b1._.js",
+        "server/edge/chunks/node_modules_abccca1e._.js",
+        "server/edge/chunks/src_lib_auth_google_ts_bbefa5fd._.js",
+        "server/edge/chunks/turbopack-edge-wrapper_9b0bbd5c.js"
+      ],
+      "name": "app/api/auth/google/route",
+      "page": "/api/auth/google/route",
+      "matchers": [
+        {
+          "regexp": "^/api/auth/google(?:/)?$",
+          "originalSource": "/api/auth/google"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "oLiwZNhzFw4A16H8rwcvr",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "57nMNF12VO4iPG4eme4R3sdexldcny1ydbfQqNhsIZM=",
+        "__NEXT_PREVIEW_MODE_ID": "f0358411882d0d21e6675c095dea432a",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "62c97a9896d4c6a7320a3658b375172d94563fb999b1f23eb083bc3c0efd4cfd",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "81c8686b294f45b4067164f7d1d51c482577d2df2cd0ef82fa2dec3b998b8a3b"
+      }
+    },
+    "/api/auth/session/route": {
+      "files": [
+        "server/middleware-build-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/server-reference-manifest.js",
+        "server/app/api/auth/session/route_client-reference-manifest.js",
+        "server/edge/chunks/_next-internal_server_app_api_auth_session_route_actions_19177379.js",
+        "server/edge/chunks/[root-of-the-server]__33cdd657._.js",
+        "server/edge/chunks/node_modules_804f462c._.js",
+        "server/edge/chunks/_a35e0ca9._.js",
+        "server/edge/chunks/turbopack-edge-wrapper_9ff12bae.js"
+      ],
+      "name": "app/api/auth/session/route",
+      "page": "/api/auth/session/route",
+      "matchers": [
+        {
+          "regexp": "^/api/auth/session(?:/)?$",
+          "originalSource": "/api/auth/session"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "oLiwZNhzFw4A16H8rwcvr",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "57nMNF12VO4iPG4eme4R3sdexldcny1ydbfQqNhsIZM=",
+        "__NEXT_PREVIEW_MODE_ID": "f0358411882d0d21e6675c095dea432a",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "62c97a9896d4c6a7320a3658b375172d94563fb999b1f23eb083bc3c0efd4cfd",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "81c8686b294f45b4067164f7d1d51c482577d2df2cd0ef82fa2dec3b998b8a3b"
+      }
+    },
+    "/api/auth/signin/route": {
+      "files": [
+        "server/middleware-build-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/server-reference-manifest.js",
+        "server/app/api/auth/signin/route_client-reference-manifest.js",
+        "server/edge/chunks/_next-internal_server_app_api_auth_signin_route_actions_5f8ada49.js",
+        "server/edge/chunks/[root-of-the-server]__5eb19a6c._.js",
+        "server/edge/chunks/_a35e0ca9._.js",
+        "server/edge/chunks/node_modules_abccca1e._.js",
+        "server/edge/chunks/node_modules_next_dist_esm_build_templates_edge-app-route_f503e7c1.js",
+        "server/edge/chunks/turbopack-edge-wrapper_68b77c75.js"
+      ],
+      "name": "app/api/auth/signin/route",
+      "page": "/api/auth/signin/route",
+      "matchers": [
+        {
+          "regexp": "^/api/auth/signin(?:/)?$",
+          "originalSource": "/api/auth/signin"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "oLiwZNhzFw4A16H8rwcvr",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "57nMNF12VO4iPG4eme4R3sdexldcny1ydbfQqNhsIZM=",
+        "__NEXT_PREVIEW_MODE_ID": "f0358411882d0d21e6675c095dea432a",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "62c97a9896d4c6a7320a3658b375172d94563fb999b1f23eb083bc3c0efd4cfd",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "81c8686b294f45b4067164f7d1d51c482577d2df2cd0ef82fa2dec3b998b8a3b"
+      }
+    },
+    "/api/auth/signout/route": {
+      "files": [
+        "server/middleware-build-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/server-reference-manifest.js",
+        "server/app/api/auth/signout/route_client-reference-manifest.js",
+        "server/edge/chunks/_next-internal_server_app_api_auth_signout_route_actions_cc17fe78.js",
+        "server/edge/chunks/[root-of-the-server]__43d49fca._.js",
+        "server/edge/chunks/node_modules_abccca1e._.js",
+        "server/edge/chunks/_a35e0ca9._.js",
+        "server/edge/chunks/turbopack-edge-wrapper_400dbd73.js"
+      ],
+      "name": "app/api/auth/signout/route",
+      "page": "/api/auth/signout/route",
+      "matchers": [
+        {
+          "regexp": "^/api/auth/signout(?:/)?$",
+          "originalSource": "/api/auth/signout"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "oLiwZNhzFw4A16H8rwcvr",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "57nMNF12VO4iPG4eme4R3sdexldcny1ydbfQqNhsIZM=",
+        "__NEXT_PREVIEW_MODE_ID": "f0358411882d0d21e6675c095dea432a",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "62c97a9896d4c6a7320a3658b375172d94563fb999b1f23eb083bc3c0efd4cfd",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "81c8686b294f45b4067164f7d1d51c482577d2df2cd0ef82fa2dec3b998b8a3b"
+      }
+    },
+    "/api/auth/signup/route": {
+      "files": [
+        "server/middleware-build-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/server-reference-manifest.js",
+        "server/app/api/auth/signup/route_client-reference-manifest.js",
+        "server/edge/chunks/_next-internal_server_app_api_auth_signup_route_actions_d6811381.js",
+        "server/edge/chunks/[root-of-the-server]__30140d11._.js",
+        "server/edge/chunks/node_modules_804f462c._.js",
+        "server/edge/chunks/_a35e0ca9._.js",
+        "server/edge/chunks/turbopack-edge-wrapper_5b9659bd.js"
+      ],
+      "name": "app/api/auth/signup/route",
+      "page": "/api/auth/signup/route",
+      "matchers": [
+        {
+          "regexp": "^/api/auth/signup(?:/)?$",
+          "originalSource": "/api/auth/signup"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "oLiwZNhzFw4A16H8rwcvr",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "57nMNF12VO4iPG4eme4R3sdexldcny1ydbfQqNhsIZM=",
+        "__NEXT_PREVIEW_MODE_ID": "f0358411882d0d21e6675c095dea432a",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "62c97a9896d4c6a7320a3658b375172d94563fb999b1f23eb083bc3c0efd4cfd",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "81c8686b294f45b4067164f7d1d51c482577d2df2cd0ef82fa2dec3b998b8a3b"
+      }
+    },
+    "/api/profile/onboarding/route": {
+      "files": [
+        "server/middleware-build-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/server-reference-manifest.js",
+        "server/app/api/profile/onboarding/route_client-reference-manifest.js",
+        "server/edge/chunks/_next-internal_server_app_api_profile_onboarding_route_actions_a881bb2a.js",
+        "server/edge/chunks/[root-of-the-server]__cef53928._.js",
+        "server/edge/chunks/node_modules_804f462c._.js",
+        "server/edge/chunks/_a35e0ca9._.js",
+        "server/edge/chunks/turbopack-edge-wrapper_852791ad.js"
+      ],
+      "name": "app/api/profile/onboarding/route",
+      "page": "/api/profile/onboarding/route",
+      "matchers": [
+        {
+          "regexp": "^/api/profile/onboarding(?:/)?$",
+          "originalSource": "/api/profile/onboarding"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "oLiwZNhzFw4A16H8rwcvr",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "57nMNF12VO4iPG4eme4R3sdexldcny1ydbfQqNhsIZM=",
+        "__NEXT_PREVIEW_MODE_ID": "f0358411882d0d21e6675c095dea432a",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "62c97a9896d4c6a7320a3658b375172d94563fb999b1f23eb083bc3c0efd4cfd",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "81c8686b294f45b4067164f7d1d51c482577d2df2cd0ef82fa2dec3b998b8a3b"
+      }
+    }
+  }
+}

@@ -1,11 +1,9 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import type { Json } from "@/types/database";
 import { LinkPreview } from "./link-preview";
 
 type Message = {
@@ -21,44 +19,60 @@ type Participant = {
 };
 
 export function ContractChat({ contractId, currentUserId, participants, initialMessages }: { contractId: string; currentUserId: string; participants: Participant[]; initialMessages: Message[] }) {
-  const supabase = createSupabaseBrowserClient();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
+  const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const channel = supabase
-      .channel(`contract-chat-${contractId}`)
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `contract_id=eq.${contractId}` }, (payload) => {
-        const newMessage = payload.new as Json as Message;
-        setMessages((prev) => [...prev, newMessage]);
-      })
-      .subscribe();
+  // Poll for new messages every 5 seconds
+  const fetchMessages = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/contracts/${contractId}/messages`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.messages) {
+          setMessages(data.messages);
+        }
+      }
+    } catch {
+      // Silently fail on polling errors
+    }
+  }, [contractId]);
 
-    return () => {
-      channel.unsubscribe();
-    };
-  }, [contractId, supabase]);
+  useEffect(() => {
+    const interval = setInterval(fetchMessages, 5000);
+    return () => clearInterval(interval);
+  }, [fetchMessages]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || sending) return;
 
-    const { error } = await supabase.from("messages").insert({
-      contract_id: contractId,
-      sender_id: currentUserId,
-      content: input.trim(),
-    });
+    setSending(true);
+    try {
+      const response = await fetch(`/api/contracts/${contractId}/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: input.trim() }),
+      });
 
-    if (error) {
-      toast.error(error.message);
-      return;
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to send message");
+      }
+
+      setInput("");
+      // Refresh messages
+      await fetchMessages();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to send message";
+      toast.error(message);
+    } finally {
+      setSending(false);
     }
-
-    setInput("");
   };
 
   return (
@@ -127,7 +141,7 @@ export function ContractChat({ contractId, currentUserId, participants, initialM
           rows={3}
           placeholder="Share updates, questions, or files (paste link)."
         />
-        <Button onClick={sendMessage}>Send</Button>
+        <Button onClick={sendMessage} loading={sending}>Send</Button>
       </div>
     </div>
   );
