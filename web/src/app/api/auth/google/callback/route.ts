@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
-import { getGoogleOAuth, getGoogleUser } from "@/lib/auth/google";
+import { exchangeCodeForTokens, getGoogleUser } from "@/lib/auth/google";
 import { getLucia, getDB } from "@/lib/auth/session";
 import { db, generateId } from "@/lib/db";
 
@@ -25,9 +25,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const google = getGoogleOAuth();
-    const tokens = await google.validateAuthorizationCode(code, storedCodeVerifier);
-    const googleUser = await getGoogleUser(tokens.accessToken());
+    const tokens = await exchangeCodeForTokens(code, storedCodeVerifier);
+    const googleUser = await getGoogleUser(tokens.access_token);
 
     const lucia = getLucia();
     const d1 = getDB();
@@ -107,6 +106,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL(dashboardUrl, request.url));
   } catch (error) {
     console.error("Google callback error:", error);
-    return NextResponse.redirect(new URL("/signin?error=callback_failed", request.url));
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.redirect(new URL(`/signin?error=callback_failed&message=${encodeURIComponent(errorMessage)}`, request.url));
   }
 }
