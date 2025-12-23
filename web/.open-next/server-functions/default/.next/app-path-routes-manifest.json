@@ -35,6 +35,7 @@
   "/api/auth/signout/route": "/api/auth/signout",
   "/api/auth/signup/route": "/api/auth/signup",
   "/api/profile/onboarding/route": "/api/profile/onboarding",
+  "/api/upload/route": "/api/upload",
   "/careers/page": "/careers",
   "/contracts/[id]/page": "/contracts/[id]",
   "/favicon.ico/route": "/favicon.ico",

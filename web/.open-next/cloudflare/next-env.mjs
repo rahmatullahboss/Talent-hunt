@@ -1,3 +1,3 @@
-export const production = {};
-export const development = {};
-export const test = {};
+export const production = {"GOOGLE_CLIENT_ID":"216593264391-2n94701ljv8v1hqmvcpl3eq36vhf5j0f.apps.googleusercontent.com","GOOGLE_CLIENT_SECRET":"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","NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME":"dpnccgsja","CLOUDINARY_API_KEY":"223629775136636","CLOUDINARY_API_SECRET":"ImwHQajBZueW9QUvAjwIXpEOLIo","NEXT_PUBLIC_SITE_URL":"https://thbd.digitalcare.site"};
+export const development = {"GOOGLE_CLIENT_ID":"216593264391-2n94701ljv8v1hqmvcpl3eq36vhf5j0f.apps.googleusercontent.com","GOOGLE_CLIENT_SECRET":"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","NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME":"dpnccgsja","CLOUDINARY_API_KEY":"223629775136636","CLOUDINARY_API_SECRET":"ImwHQajBZueW9QUvAjwIXpEOLIo","NEXT_PUBLIC_SITE_URL":"https://thbd.digitalcare.site"};
+export const test = {"GOOGLE_CLIENT_ID":"216593264391-2n94701ljv8v1hqmvcpl3eq36vhf5j0f.apps.googleusercontent.com","GOOGLE_CLIENT_SECRET":"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","NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME":"dpnccgsja","CLOUDINARY_API_KEY":"223629775136636","CLOUDINARY_API_SECRET":"ImwHQajBZueW9QUvAjwIXpEOLIo","NEXT_PUBLIC_SITE_URL":"https://thbd.digitalcare.site"};

@@ -143,6 +143,12 @@
       "namedRegex": "^/api/profile/onboarding(?:/)?$"
     },
     {
+      "page": "/api/upload",
+      "regex": "^/api/upload(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/upload(?:/)?$"
+    },
+    {
       "page": "/callback",
       "regex": "^/callback(?:/)?$",
       "routeKeys": {},

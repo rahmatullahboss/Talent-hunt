@@ -35,6 +35,7 @@
   "/api/auth/signout/route": "app-edge-has-no-entrypoint",
   "/api/auth/signup/route": "app-edge-has-no-entrypoint",
   "/api/profile/onboarding/route": "app-edge-has-no-entrypoint",
+  "/api/upload/route": "app-edge-has-no-entrypoint",
   "/careers/page": "app/careers/page.js",
   "/contracts/[id]/page": "app/contracts/[id]/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",

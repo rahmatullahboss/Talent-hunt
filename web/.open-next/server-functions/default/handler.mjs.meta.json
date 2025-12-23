@@ -3541,13 +3541,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/support/page_client-reference-manifest.js": {
-      "bytes": 11526,
-      "imports": [],
-      "format": "cjs"
-    },
-    ".open-next/server-functions/default/.next/server/app/privacy/page_client-reference-manifest.js": {
-      "bytes": 8824,
+    ".open-next/server-functions/default/.next/server/app/onboarding/page_client-reference-manifest.js": {
+      "bytes": 11307,
       "imports": [],
       "format": "cjs"
     },
@@ -3556,8 +3551,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/onboarding/page_client-reference-manifest.js": {
-      "bytes": 11307,
+    ".open-next/server-functions/default/.next/server/app/support/page_client-reference-manifest.js": {
+      "bytes": 11526,
       "imports": [],
       "format": "cjs"
     },
@@ -3576,6 +3571,11 @@
       "imports": [],
       "format": "cjs"
     },
+    ".open-next/server-functions/default/.next/server/app/privacy/page_client-reference-manifest.js": {
+      "bytes": 8824,
+      "imports": [],
+      "format": "cjs"
+    },
     ".open-next/server-functions/default/.next/server/app/google8e80767e6782e05e.html/route_client-reference-manifest.js": {
       "bytes": 330,
       "imports": [],
@@ -3583,6 +3583,11 @@
     },
     ".open-next/server-functions/default/.next/server/app/careers/page_client-reference-manifest.js": {
       "bytes": 11526,
+      "imports": [],
+      "format": "cjs"
+    },
+    ".open-next/server-functions/default/.next/server/app/_global-error/page_client-reference-manifest.js": {
+      "bytes": 5988,
       "imports": [],
       "format": "cjs"
     },
@@ -3596,11 +3601,6 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/_global-error/page_client-reference-manifest.js": {
-      "bytes": 5988,
-      "imports": [],
-      "format": "cjs"
-    },
     ".open-next/server-functions/default/.next/server/app/contracts/[id]/page_client-reference-manifest.js": {
       "bytes": 10082,
       "imports": [],
@@ -3608,11 +3608,6 @@
     },
     ".open-next/server-functions/default/.next/server/app/(auth)/update-password/page_client-reference-manifest.js": {
       "bytes": 10605,
-      "imports": [],
-      "format": "cjs"
-    },
-    ".open-next/server-functions/default/.next/server/app/(auth)/signup/page_client-reference-manifest.js": {
-      "bytes": 10861,
       "imports": [],
       "format": "cjs"
     },
@@ -3626,18 +3621,23 @@
       "imports": [],
       "format": "cjs"
     },
+    ".open-next/server-functions/default/.next/server/app/(auth)/signup/page_client-reference-manifest.js": {
+      "bytes": 10861,
+      "imports": [],
+      "format": "cjs"
+    },
     ".open-next/server-functions/default/.next/server/app/(auth)/callback/page_client-reference-manifest.js": {
       "bytes": 10372,
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/proposals/page_client-reference-manifest.js": {
-      "bytes": 16034,
+    ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/wallet/page_client-reference-manifest.js": {
+      "bytes": 13727,
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/wallet/page_client-reference-manifest.js": {
-      "bytes": 13727,
+    ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/proposals/page_client-reference-manifest.js": {
+      "bytes": 16034,
       "imports": [],
       "format": "cjs"
     },
@@ -3656,8 +3656,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/payments/page_client-reference-manifest.js": {
-      "bytes": 12598,
+    ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/dashboard/page_client-reference-manifest.js": {
+      "bytes": 14955,
       "imports": [],
       "format": "cjs"
     },
@@ -3666,13 +3666,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/page_client-reference-manifest.js": {
-      "bytes": 15995,
-      "imports": [],
-      "format": "cjs"
-    },
-    ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/dashboard/page_client-reference-manifest.js": {
-      "bytes": 14955,
+    ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/payments/page_client-reference-manifest.js": {
+      "bytes": 12598,
       "imports": [],
       "format": "cjs"
     },
@@ -3681,18 +3676,28 @@
       "imports": [],
       "format": "cjs"
     },
+    ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/contracts/page_client-reference-manifest.js": {
+      "bytes": 14945,
+      "imports": [],
+      "format": "cjs"
+    },
+    ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/page_client-reference-manifest.js": {
+      "bytes": 15995,
+      "imports": [],
+      "format": "cjs"
+    },
     ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/jobs/page_client-reference-manifest.js": {
       "bytes": 16071,
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/dashboard/page_client-reference-manifest.js": {
-      "bytes": 14945,
+    ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/users/page_client-reference-manifest.js": {
+      "bytes": 13693,
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/contracts/page_client-reference-manifest.js": {
-      "bytes": 14945,
+    ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/disputes/page_client-reference-manifest.js": {
+      "bytes": 14854,
       "imports": [],
       "format": "cjs"
     },
@@ -3701,8 +3706,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/users/page_client-reference-manifest.js": {
-      "bytes": 13693,
+    ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/dashboard/page_client-reference-manifest.js": {
+      "bytes": 14945,
       "imports": [],
       "format": "cjs"
     },
@@ -3713,11 +3718,6 @@
     },
     ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/dashboard/page_client-reference-manifest.js": {
       "bytes": 12586,
-      "imports": [],
-      "format": "cjs"
-    },
-    ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/disputes/page_client-reference-manifest.js": {
-      "bytes": 14854,
       "imports": [],
       "format": "cjs"
     },
@@ -3737,7 +3737,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/node_modules/next/dist/server/load-manifest.external.js": {
-      "bytes": 93514,
+      "bytes": 95185,
       "imports": [
         {
           "path": "path",
@@ -3770,14 +3770,9 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/terms/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/support/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/onboarding/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/support/page_client-reference-manifest.js"
-        },
-        {
-          "path": ".open-next/server-functions/default/.next/server/app/privacy/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/privacy/page_client-reference-manifest.js"
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/onboarding/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/talent/page_client-reference-manifest.js",
@@ -3785,9 +3780,9 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/talent/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/onboarding/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/support/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/onboarding/page_client-reference-manifest.js"
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/support/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/marketplace/page_client-reference-manifest.js",
@@ -3805,6 +3800,11 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/jobs/page_client-reference-manifest.js"
         },
         {
+          "path": ".open-next/server-functions/default/.next/server/app/privacy/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/privacy/page_client-reference-manifest.js"
+        },
+        {
           "path": ".open-next/server-functions/default/.next/server/app/google8e80767e6782e05e.html/route_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/google8e80767e6782e05e.html/route_client-reference-manifest.js"
@@ -3813,6 +3813,11 @@
           "path": ".open-next/server-functions/default/.next/server/app/careers/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/careers/page_client-reference-manifest.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/app/_global-error/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/_global-error/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/about/page_client-reference-manifest.js",
@@ -3825,11 +3830,6 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/_not-found/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/_global-error/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/_global-error/page_client-reference-manifest.js"
-        },
-        {
           "path": ".open-next/server-functions/default/.next/server/app/contracts/[id]/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/contracts/[id]/page_client-reference-manifest.js"
@@ -3838,11 +3838,6 @@
           "path": ".open-next/server-functions/default/.next/server/app/(auth)/update-password/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(auth)/update-password/page_client-reference-manifest.js"
-        },
-        {
-          "path": ".open-next/server-functions/default/.next/server/app/(auth)/signup/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(auth)/signup/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(auth)/signin/page_client-reference-manifest.js",
@@ -3855,19 +3850,24 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(auth)/reset-password/page_client-reference-manifest.js"
         },
         {
+          "path": ".open-next/server-functions/default/.next/server/app/(auth)/signup/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(auth)/signup/page_client-reference-manifest.js"
+        },
+        {
           "path": ".open-next/server-functions/default/.next/server/app/(auth)/callback/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(auth)/callback/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/proposals/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/proposals/page_client-reference-manifest.js"
-        },
-        {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/wallet/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/wallet/page_client-reference-manifest.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/proposals/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/proposals/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/profile/page_client-reference-manifest.js",
@@ -3885,9 +3885,9 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/messages/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/payments/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/dashboard/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/payments/page_client-reference-manifest.js"
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/dashboard/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/messages/page_client-reference-manifest.js",
@@ -3895,14 +3895,9 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/messages/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/payments/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/page_client-reference-manifest.js"
-        },
-        {
-          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/dashboard/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/dashboard/page_client-reference-manifest.js"
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/payments/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/freelancers/page_client-reference-manifest.js",
@@ -3910,19 +3905,29 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/freelancers/page_client-reference-manifest.js"
         },
         {
+          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/contracts/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/contracts/page_client-reference-manifest.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/page_client-reference-manifest.js"
+        },
+        {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/jobs/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/jobs/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/dashboard/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/users/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/dashboard/page_client-reference-manifest.js"
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/admin/users/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/contracts/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/disputes/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/contracts/page_client-reference-manifest.js"
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/admin/disputes/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/settings/page_client-reference-manifest.js",
@@ -3930,9 +3935,9 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/admin/settings/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/users/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/dashboard/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/admin/users/page_client-reference-manifest.js"
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/dashboard/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/jobs/page_client-reference-manifest.js",
@@ -3943,11 +3948,6 @@
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/dashboard/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/admin/dashboard/page_client-reference-manifest.js"
-        },
-        {
-          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/disputes/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/admin/disputes/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/new/page_client-reference-manifest.js",
@@ -9583,7 +9583,7 @@
       "format": "cjs"
     },
     "node_modules/next/dist/server/load-manifest.external.js": {
-      "bytes": 93514,
+      "bytes": 95185,
       "imports": [
         {
           "path": "path",
@@ -9616,11 +9616,6 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/terms/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/talent/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/talent/page_client-reference-manifest.js"
-        },
-        {
           "path": ".open-next/server-functions/default/.next/server/app/support/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/support/page_client-reference-manifest.js"
@@ -9636,6 +9631,11 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/onboarding/page_client-reference-manifest.js"
         },
         {
+          "path": ".open-next/server-functions/default/.next/server/app/talent/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/talent/page_client-reference-manifest.js"
+        },
+        {
           "path": ".open-next/server-functions/default/.next/server/app/marketplace/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/marketplace/page_client-reference-manifest.js"
@@ -9646,19 +9646,14 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/jobs/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/hire/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/hire/page_client-reference-manifest.js"
-        },
-        {
           "path": ".open-next/server-functions/default/.next/server/app/google8e80767e6782e05e.html/route_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/google8e80767e6782e05e.html/route_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/careers/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/hire/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/careers/page_client-reference-manifest.js"
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/hire/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/about/page_client-reference-manifest.js",
@@ -9674,6 +9669,11 @@
           "path": ".open-next/server-functions/default/.next/server/app/_global-error/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/_global-error/page_client-reference-manifest.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/app/careers/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/careers/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/contracts/[id]/page_client-reference-manifest.js",
@@ -9751,14 +9751,14 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/messages/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/page_client-reference-manifest.js"
-        },
-        {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/freelancers/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/freelancers/page_client-reference-manifest.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/dashboard/page_client-reference-manifest.js",
@@ -9771,14 +9771,19 @@
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/employer/contracts/page_client-reference-manifest.js"
         },
         {
+          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/settings/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/admin/settings/page_client-reference-manifest.js"
+        },
+        {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/users/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/admin/users/page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/settings/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/jobs/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/admin/settings/page_client-reference-manifest.js"
+          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/admin/jobs/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/disputes/page_client-reference-manifest.js",
@@ -9789,11 +9794,6 @@
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/dashboard/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/admin/dashboard/page_client-reference-manifest.js"
-        },
-        {
-          "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/jobs/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "/Users/rahmatullahzisan/Desktop/Dev/Talent-hunt/web/.open-next/server-functions/default/.next/server/app/(dashboard)/admin/jobs/page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/jobs/[id]/page_client-reference-manifest.js",
@@ -11951,7 +11951,7 @@
       "format": "esm"
     },
     ".open-next/server-functions/default/index.mjs": {
-      "bytes": 116564,
+      "bytes": 117916,
       "imports": [
         {
           "path": "node:module",
@@ -13607,17 +13607,14 @@
         ".open-next/server-functions/default/.next/server/app/terms/page_client-reference-manifest.js": {
           "bytesInOutput": 8418
         },
-        ".open-next/server-functions/default/.next/server/app/support/page_client-reference-manifest.js": {
-          "bytesInOutput": 10984
-        },
-        ".open-next/server-functions/default/.next/server/app/privacy/page_client-reference-manifest.js": {
-          "bytesInOutput": 8426
+        ".open-next/server-functions/default/.next/server/app/onboarding/page_client-reference-manifest.js": {
+          "bytesInOutput": 10816
         },
         ".open-next/server-functions/default/.next/server/app/talent/page_client-reference-manifest.js": {
           "bytesInOutput": 11856
         },
-        ".open-next/server-functions/default/.next/server/app/onboarding/page_client-reference-manifest.js": {
-          "bytesInOutput": 10816
+        ".open-next/server-functions/default/.next/server/app/support/page_client-reference-manifest.js": {
+          "bytesInOutput": 10984
         },
         ".open-next/server-functions/default/.next/server/app/marketplace/page_client-reference-manifest.js": {
           "bytesInOutput": 11000
@@ -13628,11 +13625,17 @@
         ".open-next/server-functions/default/.next/server/app/jobs/page_client-reference-manifest.js": {
           "bytesInOutput": 10972
         },
+        ".open-next/server-functions/default/.next/server/app/privacy/page_client-reference-manifest.js": {
+          "bytesInOutput": 8426
+        },
         ".open-next/server-functions/default/.next/server/app/google8e80767e6782e05e.html/route_client-reference-manifest.js": {
           "bytesInOutput": 495
         },
         ".open-next/server-functions/default/.next/server/app/careers/page_client-reference-manifest.js": {
           "bytesInOutput": 10985
+        },
+        ".open-next/server-functions/default/.next/server/app/_global-error/page_client-reference-manifest.js": {
+          "bytesInOutput": 5755
         },
         ".open-next/server-functions/default/.next/server/app/about/page_client-reference-manifest.js": {
           "bytesInOutput": 10977
@@ -13640,17 +13643,11 @@
         ".open-next/server-functions/default/.next/server/app/_not-found/page_client-reference-manifest.js": {
           "bytesInOutput": 6400
         },
-        ".open-next/server-functions/default/.next/server/app/_global-error/page_client-reference-manifest.js": {
-          "bytesInOutput": 5755
-        },
         ".open-next/server-functions/default/.next/server/app/contracts/[id]/page_client-reference-manifest.js": {
           "bytesInOutput": 9596
         },
         ".open-next/server-functions/default/.next/server/app/(auth)/update-password/page_client-reference-manifest.js": {
           "bytesInOutput": 10154
-        },
-        ".open-next/server-functions/default/.next/server/app/(auth)/signup/page_client-reference-manifest.js": {
-          "bytesInOutput": 10401
         },
         ".open-next/server-functions/default/.next/server/app/(auth)/signin/page_client-reference-manifest.js": {
           "bytesInOutput": 10405
@@ -13658,14 +13655,17 @@
         ".open-next/server-functions/default/.next/server/app/(auth)/reset-password/page_client-reference-manifest.js": {
           "bytesInOutput": 10450
         },
+        ".open-next/server-functions/default/.next/server/app/(auth)/signup/page_client-reference-manifest.js": {
+          "bytesInOutput": 10401
+        },
         ".open-next/server-functions/default/.next/server/app/(auth)/callback/page_client-reference-manifest.js": {
           "bytesInOutput": 9914
         },
-        ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/proposals/page_client-reference-manifest.js": {
-          "bytesInOutput": 15367
-        },
         ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/wallet/page_client-reference-manifest.js": {
           "bytesInOutput": 13153
+        },
+        ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/proposals/page_client-reference-manifest.js": {
+          "bytesInOutput": 15367
         },
         ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/profile/page_client-reference-manifest.js": {
           "bytesInOutput": 13201
@@ -13676,44 +13676,44 @@
         ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/messages/page_client-reference-manifest.js": {
           "bytesInOutput": 16484
         },
-        ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/payments/page_client-reference-manifest.js": {
-          "bytesInOutput": 12072
+        ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/dashboard/page_client-reference-manifest.js": {
+          "bytesInOutput": 14336
         },
         ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/messages/page_client-reference-manifest.js": {
           "bytesInOutput": 16472
         },
-        ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/page_client-reference-manifest.js": {
-          "bytesInOutput": 15321
-        },
-        ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/dashboard/page_client-reference-manifest.js": {
-          "bytesInOutput": 14336
+        ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/payments/page_client-reference-manifest.js": {
+          "bytesInOutput": 12072
         },
         ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/freelancers/page_client-reference-manifest.js": {
           "bytesInOutput": 14287
         },
+        ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/contracts/page_client-reference-manifest.js": {
+          "bytesInOutput": 14324
+        },
+        ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/page_client-reference-manifest.js": {
+          "bytesInOutput": 15321
+        },
         ".open-next/server-functions/default/.next/server/app/(dashboard)/freelancer/jobs/page_client-reference-manifest.js": {
           "bytesInOutput": 15399
         },
-        ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/dashboard/page_client-reference-manifest.js": {
-          "bytesInOutput": 14324
+        ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/users/page_client-reference-manifest.js": {
+          "bytesInOutput": 13113
         },
-        ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/contracts/page_client-reference-manifest.js": {
-          "bytesInOutput": 14324
+        ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/disputes/page_client-reference-manifest.js": {
+          "bytesInOutput": 14229
         },
         ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/settings/page_client-reference-manifest.js": {
           "bytesInOutput": 12024
         },
-        ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/users/page_client-reference-manifest.js": {
-          "bytesInOutput": 13113
+        ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/dashboard/page_client-reference-manifest.js": {
+          "bytesInOutput": 14324
         },
         ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/jobs/page_client-reference-manifest.js": {
           "bytesInOutput": 14210
         },
         ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/dashboard/page_client-reference-manifest.js": {
           "bytesInOutput": 12058
-        },
-        ".open-next/server-functions/default/.next/server/app/(dashboard)/admin/disputes/page_client-reference-manifest.js": {
-          "bytesInOutput": 14229
         },
         ".open-next/server-functions/default/.next/server/app/(dashboard)/employer/jobs/new/page_client-reference-manifest.js": {
           "bytesInOutput": 12047
@@ -13725,7 +13725,7 @@
           "bytesInOutput": 15353
         },
         ".open-next/server-functions/default/node_modules/next/dist/server/load-manifest.external.js": {
-          "bytesInOutput": 64717
+          "bytesInOutput": 66026
         },
         "node_modules/next/dist/compiled/@vercel/og/index.edge.js": {
           "bytesInOutput": 534632
@@ -14622,7 +14622,7 @@
           "bytesInOutput": 554
         },
         "node_modules/next/dist/server/load-manifest.external.js": {
-          "bytesInOutput": 64683
+          "bytesInOutput": 65992
         },
         "node_modules/next/dist/server/runtime-reacts.external.js": {
           "bytesInOutput": 781
@@ -14946,10 +14946,10 @@
           "bytesInOutput": 4971
         },
         ".open-next/server-functions/default/index.mjs": {
-          "bytesInOutput": 87591
+          "bytesInOutput": 88851
         }
       },
-      "bytes": 7990504
+      "bytes": 7994382
     }
   }
 }
