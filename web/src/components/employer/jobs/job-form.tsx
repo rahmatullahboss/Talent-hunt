@@ -1,18 +1,33 @@
 "use client";
 
-import { useEffect, useTransition } from "react";
+import { useEffect, useTransition, useState, useCallback } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { createJobAction, type JobActionState } from "@/actions/jobs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { AIGenerateButton } from "@/components/ai/ai-generate-button";
 
 const initialState: JobActionState = { status: "idle" };
 
 export function JobForm() {
   const [state, formAction] = useFormState(createJobAction, initialState);
   const [isPending, startTransition] = useTransition();
+  
+  // Controlled state for AI generation
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
+  const [skills, setSkills] = useState("");
+
+  // AI context for job description generation
+  const aiContext = `Job title: ${title}\nCategory: ${category}\nRequired skills: ${skills}`;
+
+  // Handle AI generated description
+  const handleAIDescription = useCallback((text: string) => {
+    setDescription(text);
+  }, []);
 
   useEffect(() => {
     if (state.status === "error" && state.message) {
@@ -33,18 +48,35 @@ export function JobForm() {
         <label className="text-sm font-medium text-muted" htmlFor="title">
           Job title
         </label>
-        <Input id="title" name="title" placeholder="Looking for a React Native developer" required />
+        <Input 
+          id="title" 
+          name="title" 
+          placeholder="Looking for a React Native developer" 
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required 
+        />
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-sm font-medium text-muted" htmlFor="description">
-          Project description
-        </label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium text-muted" htmlFor="description">
+            Project description
+          </label>
+          <AIGenerateButton
+            contentType="job_description"
+            context={aiContext}
+            onGenerate={handleAIDescription}
+            disabled={!title.trim()}
+          />
+        </div>
         <Textarea
           id="description"
           name="description"
           rows={8}
           placeholder="Share the project context, expected deliverables, timeline, and collaboration style."
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           required
         />
       </div>
@@ -54,7 +86,14 @@ export function JobForm() {
           <label className="text-sm font-medium text-muted" htmlFor="category">
             Category
           </label>
-          <Input id="category" name="category" placeholder="Product Design" required />
+          <Input 
+            id="category" 
+            name="category" 
+            placeholder="Product Design" 
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required 
+          />
         </div>
         <div className="space-y-1.5">
           <label className="text-sm font-medium text-muted" htmlFor="budgetMode">
@@ -111,7 +150,14 @@ export function JobForm() {
         <label className="text-sm font-medium text-muted" htmlFor="skills">
           Required skills (comma separated)
         </label>
-        <Input id="skills" name="skills" placeholder="React Native, REST APIs, Firebase" required />
+        <Input 
+          id="skills" 
+          name="skills" 
+          placeholder="React Native, REST APIs, Firebase" 
+          value={skills}
+          onChange={(e) => setSkills(e.target.value)}
+          required 
+        />
       </div>
 
       <Button type="submit" loading={isPending}>

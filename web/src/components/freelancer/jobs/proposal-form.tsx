@@ -1,18 +1,36 @@
 "use client";
 
-import { useEffect, useTransition } from "react";
+import { useEffect, useTransition, useState, useCallback } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { submitProposalAction, type ProposalActionState } from "@/actions/proposals";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { AIGenerateButton } from "@/components/ai/ai-generate-button";
 
 const initialState: ProposalActionState = { status: "idle" };
 
-export function ProposalForm({ jobId }: { jobId: string }) {
+interface ProposalFormProps {
+  jobId: string;
+  jobTitle?: string;
+  jobDescription?: string;
+}
+
+export function ProposalForm({ jobId, jobTitle, jobDescription }: ProposalFormProps) {
   const [state, formAction] = useFormState(submitProposalAction, initialState);
   const [isPending, startTransition] = useTransition();
+  
+  // Controlled state for AI generation
+  const [coverLetter, setCoverLetter] = useState("");
+
+  // AI context for proposal/cover letter generation
+  const aiContext = `Job title: ${jobTitle || "Not specified"}\nJob description: ${jobDescription || "Not provided"}\n\nWrite a compelling cover letter for this job application.`;
+
+  // Handle AI generated cover letter
+  const handleAICoverLetter = useCallback((text: string) => {
+    setCoverLetter(text);
+  }, []);
 
   useEffect(() => {
     if (state.status === "error" && state.message) {
@@ -63,15 +81,25 @@ export function ProposalForm({ jobId }: { jobId: string }) {
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-sm font-medium text-muted" htmlFor="coverLetter">
-          Cover letter
-        </label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium text-muted" htmlFor="coverLetter">
+            Cover letter
+          </label>
+          <AIGenerateButton
+            contentType="proposal"
+            context={aiContext}
+            onGenerate={handleAICoverLetter}
+            disabled={!jobTitle}
+          />
+        </div>
         <Textarea
           id="coverLetter"
           name="coverLetter"
           rows={8}
           required
           placeholder="Explain how you will approach the project, relevant experience, and availability."
+          value={coverLetter}
+          onChange={(e) => setCoverLetter(e.target.value)}
         />
         <p className="text-xs text-muted">Minimum 50 characters. Highlight relevant outcomes and similar work.</p>
       </div>
