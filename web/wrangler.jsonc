@@ -18,6 +18,10 @@
     "NEXTJS_ENV": "production"
   },
 
+  "routes": [
+    { "pattern": "talenthuntbd.digitalcare.site", "custom_domain": true }
+  ],
+
   "d1_databases": [
     {
       "binding": "DB",
