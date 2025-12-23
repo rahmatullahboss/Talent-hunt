@@ -1,15 +1,9 @@
-// Groq AI client configuration
-import Groq from "groq-sdk";
+// Groq AI client configuration - REST API version for Cloudflare Workers
+// Using fetch instead of SDK for better compatibility
 
-// Initialize Groq client
-export function createGroqClient(apiKey: string) {
-  return new Groq({
-    apiKey,
-  });
-}
+export const DEFAULT_MODEL = "openai/gpt-oss-120b";
 
-// Default model for text generation
-export const DEFAULT_MODEL = "llama-3.3-70b-versatile";
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 // Content type configurations with system prompts
 export const CONTENT_TYPES = {
@@ -49,40 +43,6 @@ Maintain a helpful tone.`,
 
 export type ContentType = keyof typeof CONTENT_TYPES;
 
-// Generate content with streaming
-export async function* generateContent(
-  client: Groq,
-  contentType: ContentType,
-  context: string,
-  userInstructions?: string
-): AsyncGenerator<string, void, unknown> {
-  const config = CONTENT_TYPES[contentType];
-  
-  let userPrompt = `Context: ${context}`;
-  if (userInstructions) {
-    userPrompt += `\n\nAdditional instructions from user: ${userInstructions}`;
-  }
-  userPrompt += "\n\nGenerate the content based on the above context.";
-
-  const stream = await client.chat.completions.create({
-    model: DEFAULT_MODEL,
-    messages: [
-      { role: "system", content: config.systemPrompt },
-      { role: "user", content: userPrompt },
-    ],
-    max_tokens: config.maxTokens,
-    temperature: 0.7,
-    stream: true,
-  });
-
-  for await (const chunk of stream) {
-    const content = chunk.choices[0]?.delta?.content;
-    if (content) {
-      yield content;
-    }
-  }
-}
-
 // Chat message interface
 export interface ChatMessage {
   role: "user" | "assistant" | "system";
@@ -107,12 +67,68 @@ Your role:
 
 Keep responses concise and helpful. Use Bangla/Bengali terms when appropriate since this is a Bangladeshi platform.`;
 
-// Generate chat response with streaming
-export async function* generateChatResponse(
-  client: Groq,
+// Non-streaming chat completion using REST API
+export async function chatCompletion(
+  apiKey: string,
+  messages: ChatMessage[],
+  maxTokens: number = 1000
+): Promise<string> {
+  const response = await fetch(GROQ_API_URL, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: DEFAULT_MODEL,
+      messages,
+      max_tokens: maxTokens,
+      temperature: 0.7,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error("Groq API error:", response.status, errorText);
+    throw new Error(`Groq API error: ${response.status}`);
+  }
+
+  const data = await response.json() as {
+    choices: Array<{ message: { content: string } }>;
+  };
+
+  return data.choices[0]?.message?.content ?? "";
+}
+
+// Generate content for specific content type
+export async function generateContent(
+  apiKey: string,
+  contentType: ContentType,
+  context: string,
+  userInstructions?: string
+): Promise<string> {
+  const config = CONTENT_TYPES[contentType];
+  
+  let userPrompt = `Context: ${context}`;
+  if (userInstructions) {
+    userPrompt += `\n\nAdditional instructions from user: ${userInstructions}`;
+  }
+  userPrompt += "\n\nGenerate the content based on the above context.";
+
+  const messages: ChatMessage[] = [
+    { role: "system", content: config.systemPrompt },
+    { role: "user", content: userPrompt },
+  ];
+
+  return chatCompletion(apiKey, messages, config.maxTokens);
+}
+
+// Generate chat response
+export async function generateChatResponse(
+  apiKey: string,
   messages: ChatMessage[],
   userContext?: string
-): AsyncGenerator<string, void, unknown> {
+): Promise<string> {
   const systemMessages: ChatMessage[] = [
     { role: "system", content: CHATBOT_SYSTEM_PROMPT },
   ];
@@ -124,18 +140,5 @@ export async function* generateChatResponse(
     });
   }
 
-  const stream = await client.chat.completions.create({
-    model: DEFAULT_MODEL,
-    messages: [...systemMessages, ...messages],
-    max_tokens: 1000,
-    temperature: 0.7,
-    stream: true,
-  });
-
-  for await (const chunk of stream) {
-    const content = chunk.choices[0]?.delta?.content;
-    if (content) {
-      yield content;
-    }
-  }
+  return chatCompletion(apiKey, [...systemMessages, ...messages], 1000);
 }

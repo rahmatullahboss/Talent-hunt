@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { createGroqClient, generateChatResponse, type ChatMessage } from "@/lib/ai/groq";
+import { generateChatResponse, type ChatMessage } from "@/lib/ai/groq";
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     
     if (!apiKey) {
       return new Response(
-        JSON.stringify({ error: "AI service not configured" }),
+        JSON.stringify({ error: "AI service not configured. Please set GROQ_API_KEY." }),
         { status: 503, headers: { "Content-Type": "application/json" } }
       );
     }
@@ -26,35 +26,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const client = createGroqClient(apiKey);
-    
-    // Create a readable stream for the response
-    const encoder = new TextEncoder();
-    const stream = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of generateChatResponse(client, messages, userContext)) {
-            controller.enqueue(encoder.encode(chunk));
-          }
-          controller.close();
-        } catch (error) {
-          console.error("AI chat error:", error);
-          controller.error(error);
-        }
-      },
-    });
+    // Generate chat response using REST API
+    const response = await generateChatResponse(apiKey, messages, userContext);
 
-    return new Response(stream, {
+    return new Response(response, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
-        "Transfer-Encoding": "chunked",
         "Cache-Control": "no-cache",
       },
     });
   } catch (error) {
     console.error("AI chat route error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to process chat";
     return new Response(
-      JSON.stringify({ error: "Failed to process chat" }),
+      JSON.stringify({ error: errorMessage }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

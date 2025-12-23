@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { createGroqClient, generateContent, type ContentType, CONTENT_TYPES } from "@/lib/ai/groq";
+import { generateContent, CONTENT_TYPES, type ContentType } from "@/lib/ai/groq";
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     
     if (!apiKey) {
       return new Response(
-        JSON.stringify({ error: "AI service not configured" }),
+        JSON.stringify({ error: "AI service not configured. Please set GROQ_API_KEY." }),
         { status: 503, headers: { "Content-Type": "application/json" } }
       );
     }
@@ -35,35 +35,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const client = createGroqClient(apiKey);
-    
-    // Create a readable stream for the response
-    const encoder = new TextEncoder();
-    const stream = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of generateContent(client, contentType, context, instructions)) {
-            controller.enqueue(encoder.encode(chunk));
-          }
-          controller.close();
-        } catch (error) {
-          console.error("AI generation error:", error);
-          controller.error(error);
-        }
-      },
-    });
+    // Generate content using REST API
+    const generatedText = await generateContent(apiKey, contentType, context, instructions);
 
-    return new Response(stream, {
+    return new Response(generatedText, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
-        "Transfer-Encoding": "chunked",
         "Cache-Control": "no-cache",
       },
     });
   } catch (error) {
     console.error("AI generate route error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to generate content";
     return new Response(
-      JSON.stringify({ error: "Failed to generate content" }),
+      JSON.stringify({ error: errorMessage }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
