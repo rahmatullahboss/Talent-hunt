@@ -4,10 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { ChevronDown, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-const links = [
+const publicLinks = [
   { href: "/marketplace", label: "Talent Marketplace" },
   { href: "/hire", label: "How to Hire" },
   { href: "/jobs", label: "Find Work" },
@@ -15,11 +16,73 @@ const links = [
   { href: "/#why-talenthunt", label: "Why TalentHunt" },
 ];
 
+// Freelancer dropdown menus
+const freelancerMenus = {
+  findWork: {
+    label: "Find Work",
+    items: [
+      { href: "/freelancer/jobs", label: "Find Work" },
+      { href: "/freelancer/proposals", label: "My Proposals" },
+    ],
+  },
+  deliverWork: {
+    label: "Deliver Work",
+    items: [
+      { href: "/freelancer/contracts", label: "Active Contracts" },
+      { href: "/freelancer/portfolio", label: "Portfolio" },
+    ],
+  },
+  finances: {
+    label: "Finances",
+    items: [
+      { href: "/freelancer/wallet", label: "Wallet & Earnings" },
+    ],
+  },
+};
+
 type ProfileSummary = {
   role: "freelancer" | "employer" | "admin";
   onboarding_complete: number;
   full_name: string;
 };
+
+function DropdownMenu({ 
+  label, 
+  items, 
+  isOpen, 
+  onToggle 
+}: { 
+  label: string; 
+  items: { href: string; label: string }[]; 
+  isOpen: boolean; 
+  onToggle: () => void;
+}) {
+  return (
+    <div className="relative">
+      <button
+        onClick={onToggle}
+        className="flex items-center gap-1 text-sm font-medium text-black transition hover:text-black/70"
+      >
+        {label}
+        <ChevronDown className={cn("h-4 w-4 transition-transform", isOpen && "rotate-180")} />
+      </button>
+      {isOpen && (
+        <div className="absolute left-0 top-full z-50 mt-2 min-w-[200px] rounded-xl border border-card-border bg-white p-2 shadow-lg">
+          {items.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="block rounded-lg px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-100"
+              onClick={onToggle}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -28,11 +91,11 @@ export function SiteHeader() {
   const [profile, setProfile] = useState<ProfileSummary | null>(null);
   const [hasSession, setHasSession] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const closeMenu = () => setIsMenuOpen(false);
 
   useEffect(() => {
-    // Check for auth_session cookie (Lucia Auth)
     const checkSession = async () => {
       try {
         const response = await fetch("/api/auth/session");
@@ -60,6 +123,15 @@ export function SiteHeader() {
     checkSession();
   }, [pathname]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => setOpenDropdown(null);
+    if (openDropdown) {
+      document.addEventListener("click", handleClickOutside);
+      return () => document.removeEventListener("click", handleClickOutside);
+    }
+  }, [openDropdown]);
+
   const handleSignOut = async () => {
     try {
       const response = await fetch("/api/auth/signout", { method: "POST" });
@@ -77,13 +149,8 @@ export function SiteHeader() {
   };
 
   const dashboardHref = useMemo(() => {
-    if (!profile) {
-      return "/onboarding";
-    }
-
-    if (profile.onboarding_complete === 0) {
-      return "/onboarding";
-    }
+    if (!profile) return "/onboarding";
+    if (profile.onboarding_complete === 0) return "/onboarding";
 
     switch (profile.role) {
       case "freelancer":
@@ -98,24 +165,70 @@ export function SiteHeader() {
   }, [profile]);
 
   const isAuthenticated = hasSession;
+  const isFreelancer = profile?.role === "freelancer";
 
   return (
     <header className="sticky inset-x-0 top-0 z-50 border-b border-card-border/80 bg-white shadow-sm md:bg-white/90 md:shadow-none md:backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 text-black sm:px-6">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 text-black sm:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="TalentHunt BD" className="h-10" />
+          <img src="/logo.png" alt="TalentHunt BD" className="h-12" />
         </Link>
+
+        {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 text-sm font-medium text-black md:flex">
-          {links.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn("transition hover:text-black/80", pathname === item.href ? "text-black" : undefined)}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {isAuthenticated && isFreelancer ? (
+            <>
+              {/* Freelancer Dropdown Menus */}
+              <DropdownMenu
+                label={freelancerMenus.findWork.label}
+                items={freelancerMenus.findWork.items}
+                isOpen={openDropdown === "findWork"}
+                onToggle={(e?: React.MouseEvent) => {
+                  e?.stopPropagation?.();
+                  setOpenDropdown(openDropdown === "findWork" ? null : "findWork");
+                }}
+              />
+              <DropdownMenu
+                label={freelancerMenus.deliverWork.label}
+                items={freelancerMenus.deliverWork.items}
+                isOpen={openDropdown === "deliverWork"}
+                onToggle={(e?: React.MouseEvent) => {
+                  e?.stopPropagation?.();
+                  setOpenDropdown(openDropdown === "deliverWork" ? null : "deliverWork");
+                }}
+              />
+              <DropdownMenu
+                label={freelancerMenus.finances.label}
+                items={freelancerMenus.finances.items}
+                isOpen={openDropdown === "finances"}
+                onToggle={(e?: React.MouseEvent) => {
+                  e?.stopPropagation?.();
+                  setOpenDropdown(openDropdown === "finances" ? null : "finances");
+                }}
+              />
+              <Link
+                href="/freelancer/messages"
+                className="flex items-center gap-1 transition hover:text-black/70"
+              >
+                <MessageSquare className="h-4 w-4" />
+                Messages
+              </Link>
+            </>
+          ) : (
+            // Public Navigation
+            publicLinks.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn("transition hover:text-black/80", pathname === item.href ? "text-black" : undefined)}
+              >
+                {item.label}
+              </Link>
+            ))
+          )}
         </nav>
+
+        {/* Auth Buttons */}
         <div className="hidden items-center gap-3 md:flex">
           {isAuthenticated ? (
             <>
@@ -137,13 +250,14 @@ export function SiteHeader() {
             </>
           )}
         </div>
+
+        {/* Mobile Menu Button */}
         <Button
           variant="secondary"
           size="icon"
           className="md:hidden"
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-expanded={isMenuOpen}
-          aria-controls={isMenuOpen ? "mobile-menu" : undefined}
         >
           <span className="sr-only">Toggle menu</span>
           <svg
@@ -168,7 +282,9 @@ export function SiteHeader() {
           </svg>
         </Button>
       </div>
-      {isMenuOpen ? (
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
         <div className="md:hidden">
           <div
             className="fixed inset-x-0 bottom-0 top-[4.5rem] z-30 bg-black/10 backdrop-blur-sm"
@@ -184,19 +300,42 @@ export function SiteHeader() {
             )}
           >
             <nav className="flex flex-col gap-4 text-base font-medium text-black/80">
-              {links.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={closeMenu}
-                  className={cn(
-                    "rounded-md px-2 py-1.5 transition hover:bg-muted/70 hover:text-black",
-                    pathname === item.href ? "text-black" : undefined,
-                  )}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {isAuthenticated && isFreelancer ? (
+                <>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Find Work</p>
+                  {freelancerMenus.findWork.items.map((item) => (
+                    <Link key={item.href} href={item.href} onClick={closeMenu} className="rounded-md px-2 py-1.5 hover:bg-gray-100">
+                      {item.label}
+                    </Link>
+                  ))}
+                  <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-gray-500">Deliver Work</p>
+                  {freelancerMenus.deliverWork.items.map((item) => (
+                    <Link key={item.href} href={item.href} onClick={closeMenu} className="rounded-md px-2 py-1.5 hover:bg-gray-100">
+                      {item.label}
+                    </Link>
+                  ))}
+                  <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-gray-500">Finances</p>
+                  {freelancerMenus.finances.items.map((item) => (
+                    <Link key={item.href} href={item.href} onClick={closeMenu} className="rounded-md px-2 py-1.5 hover:bg-gray-100">
+                      {item.label}
+                    </Link>
+                  ))}
+                  <Link href="/freelancer/messages" onClick={closeMenu} className="mt-4 rounded-md px-2 py-1.5 hover:bg-gray-100">
+                    Messages
+                  </Link>
+                </>
+              ) : (
+                publicLinks.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={closeMenu}
+                    className={cn("rounded-md px-2 py-1.5 hover:bg-gray-100", pathname === item.href ? "text-black" : undefined)}
+                  >
+                    {item.label}
+                  </Link>
+                ))
+              )}
             </nav>
             <div className="mt-6 flex flex-col gap-3">
               {isAuthenticated ? (
@@ -221,7 +360,7 @@ export function SiteHeader() {
             </div>
           </div>
         </div>
-      ) : null}
+      )}
     </header>
   );
 }
