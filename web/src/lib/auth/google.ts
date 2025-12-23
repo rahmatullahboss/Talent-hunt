@@ -66,7 +66,8 @@ export async function exchangeCodeForTokens(code: string, codeVerifier: string):
 }> {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  // Use SITE_URL (runtime accessible) over NEXT_PUBLIC_SITE_URL (build-time only)
+  const siteUrl = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   const redirectUri = `${siteUrl}/api/auth/google/callback`;
   
   if (!clientId || !clientSecret) {
