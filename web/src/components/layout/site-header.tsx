@@ -169,7 +169,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky inset-x-0 top-0 z-50 border-b border-card-border/80 bg-white shadow-sm md:bg-white/90 md:shadow-none md:backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 text-black sm:px-6">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-2 text-black sm:px-6">
         <Link href="/" className="flex items-center gap-2">
           <img src="/logo.png" alt="TalentHunt BD" className="h-8 w-auto" />
         </Link>
