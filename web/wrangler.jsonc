@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "talent-hunt",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2024-12-23",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".open-next/assets"
+  },
+
+  "observability": {
+    "enabled": true
+  },
+
+  "vars": {
+    "NEXTJS_ENV": "production"
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "talent-hunt-db",
+      "database_id": "YOUR_DATABASE_ID_HERE",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

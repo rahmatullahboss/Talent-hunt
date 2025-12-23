@@ -2,8 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/session";
+import { getDB } from "@/lib/auth/session";
+import { generateId, toJsonArray } from "@/lib/db";
 
 const jobSchema = z.object({
   title: z.string().min(5, "Provide a descriptive job title."),
@@ -29,13 +30,13 @@ const jobSchema = z.object({
 });
 
 const statusSchema = z.object({
-  jobId: z.string().uuid(),
+  jobId: z.string(),
   status: z.enum(["draft", "open", "in_progress", "completed", "cancelled"]),
 });
 
 const hireSchema = z.object({
-  proposalId: z.string().uuid(),
-  jobId: z.string().uuid(),
+  proposalId: z.string(),
+  jobId: z.string(),
   escrowAmount: z.coerce.number().optional(),
   notes: z.string().optional(),
 });
@@ -64,33 +65,44 @@ export async function createJobAction(_: JobActionState, formData: FormData): Pr
   }
 
   const auth = await getCurrentUser();
-  if (!auth?.profile || auth.profile.role !== "employer") {
+  if (!auth?.profile || (auth.profile as { role: string }).role !== "employer") {
     return { status: "error", message: "Only employers can post jobs." };
   }
 
-  const supabase = createSupabaseServerClient();
-  const { error } = await supabase.from("jobs").insert({
-    employer_id: auth.profile.id,
-    title: parsed.data.title,
-    description: parsed.data.description,
-    category: parsed.data.category,
-    budget_mode: parsed.data.budgetMode,
-    budget_min: parsed.data.budgetMin,
-    budget_max: parsed.data.budgetMax ?? null,
-    skills: parsed.data.skills,
-    experience_level: parsed.data.experience,
-    deadline: parsed.data.deadline ?? null,
-    status: "open",
-  });
-
-  if (error) {
-    return { status: "error", message: error.message };
+  const db = getDB();
+  if (!db) {
+    return { status: "error", message: "Database not available." };
   }
 
-  revalidatePath("/employer/jobs");
-  revalidatePath("/employer/dashboard");
+  try {
+    const jobId = generateId();
+    await db
+      .prepare(
+        `INSERT INTO jobs (id, employer_id, title, description, category, budget_mode, budget_min, budget_max, skills, experience_level, deadline, status)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'open')`
+      )
+      .bind(
+        jobId,
+        auth.profile.id,
+        parsed.data.title,
+        parsed.data.description,
+        parsed.data.category,
+        parsed.data.budgetMode,
+        parsed.data.budgetMin,
+        parsed.data.budgetMax ?? null,
+        toJsonArray(parsed.data.skills),
+        parsed.data.experience,
+        parsed.data.deadline ?? null
+      )
+      .run();
 
-  return { status: "success", message: "Job posted successfully." };
+    revalidatePath("/employer/jobs");
+    revalidatePath("/employer/dashboard");
+
+    return { status: "success", message: "Job posted successfully." };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "Failed to create job." };
+  }
 }
 
 export async function updateJobStatusAction(_: JobActionState, formData: FormData): Promise<JobActionState> {
@@ -104,26 +116,46 @@ export async function updateJobStatusAction(_: JobActionState, formData: FormDat
   }
 
   const auth = await getCurrentUser();
-  if (!auth?.profile || auth.profile.role !== "employer") {
+  if (!auth?.profile || (auth.profile as { role: string }).role !== "employer") {
     return { status: "error", message: "Only employers can update job status." };
   }
 
-  const supabase = createSupabaseServerClient();
-  const { error } = await supabase
-    .from("jobs")
-    .update({ status: parsed.data.status })
-    .eq("id", parsed.data.jobId)
-    .eq("employer_id", auth.profile.id);
-
-  if (error) {
-    return { status: "error", message: error.message };
+  const db = getDB();
+  if (!db) {
+    return { status: "error", message: "Database not available." };
   }
 
-  revalidatePath(`/employer/jobs/${parsed.data.jobId}`);
-  revalidatePath("/employer/jobs");
-  revalidatePath("/freelancer/jobs");
+  try {
+    await db
+      .prepare(
+        `UPDATE jobs SET status = ?, updated_at = datetime('now') WHERE id = ? AND employer_id = ?`
+      )
+      .bind(parsed.data.status, parsed.data.jobId, auth.profile.id)
+      .run();
 
-  return { status: "success", message: "Job updated." };
+    revalidatePath(`/employer/jobs/${parsed.data.jobId}`);
+    revalidatePath("/employer/jobs");
+    revalidatePath("/freelancer/jobs");
+
+    return { status: "success", message: "Job updated." };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "Failed to update job." };
+  }
+}
+
+interface Proposal {
+  id: string;
+  freelancer_id: string;
+  job_id: string;
+  status: string;
+  bid_amount: number;
+  bid_type: string;
+}
+
+interface Job {
+  id: string;
+  employer_id: string;
+  status: string;
 }
 
 export async function hireProposalAction(_: JobActionState, formData: FormData): Promise<JobActionState> {
@@ -139,56 +171,76 @@ export async function hireProposalAction(_: JobActionState, formData: FormData):
   }
 
   const auth = await getCurrentUser();
-  if (!auth?.profile || auth.profile.role !== "employer") {
+  if (!auth?.profile || (auth.profile as { role: string }).role !== "employer") {
     return { status: "error", message: "Only employers can hire freelancers." };
   }
 
-  const supabase = createSupabaseServerClient();
-
-  const { data: proposal, error: proposalError } = await supabase
-    .from("proposals")
-    .select("id, freelancer_id, job_id, status, bid_amount, bid_type")
-    .eq("id", parsed.data.proposalId)
-    .maybeSingle();
-
-  if (proposalError || !proposal || proposal.job_id !== parsed.data.jobId) {
-    return { status: "error", message: "Proposal not found." };
+  const db = getDB();
+  if (!db) {
+    return { status: "error", message: "Database not available." };
   }
 
-  if (proposal.status === "hired") {
-    return { status: "error", message: "Proposal is already marked as hired." };
+  try {
+    // Get proposal
+    const proposal = await db
+      .prepare("SELECT id, freelancer_id, job_id, status, bid_amount, bid_type FROM proposals WHERE id = ?")
+      .bind(parsed.data.proposalId)
+      .first<Proposal>();
+
+    if (!proposal || proposal.job_id !== parsed.data.jobId) {
+      return { status: "error", message: "Proposal not found." };
+    }
+
+    if (proposal.status === "hired") {
+      return { status: "error", message: "Proposal is already marked as hired." };
+    }
+
+    // Get job
+    const job = await db
+      .prepare("SELECT id, employer_id, status FROM jobs WHERE id = ?")
+      .bind(parsed.data.jobId)
+      .first<Job>();
+
+    if (!job || job.employer_id !== auth.profile.id) {
+      return { status: "error", message: "You do not have access to this job." };
+    }
+
+    // Create contract
+    const contractId = generateId();
+    await db
+      .prepare(
+        `INSERT INTO contracts (id, proposal_id, job_id, employer_id, freelancer_id, status, escrow_amount, notes)
+         VALUES (?, ?, ?, ?, ?, 'active', ?, ?)`
+      )
+      .bind(
+        contractId,
+        proposal.id,
+        job.id,
+        auth.profile.id,
+        proposal.freelancer_id,
+        parsed.data.escrowAmount ?? proposal.bid_amount,
+        parsed.data.notes ?? null
+      )
+      .run();
+
+    // Update proposal status
+    await db
+      .prepare("UPDATE proposals SET status = 'hired', updated_at = datetime('now') WHERE id = ?")
+      .bind(proposal.id)
+      .run();
+
+    // Update job status
+    await db
+      .prepare("UPDATE jobs SET status = 'in_progress', updated_at = datetime('now') WHERE id = ?")
+      .bind(job.id)
+      .run();
+
+    revalidatePath(`/employer/jobs/${job.id}`);
+    revalidatePath("/employer/contracts");
+    revalidatePath("/freelancer/dashboard");
+
+    return { status: "success", message: "Freelancer hired successfully. Contract created." };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "Failed to hire freelancer." };
   }
-
-  const { data: job, error: jobError } = await supabase
-    .from("jobs")
-    .select("id, employer_id, status")
-    .eq("id", parsed.data.jobId)
-    .maybeSingle();
-
-  if (jobError || !job || job.employer_id !== auth.profile.id) {
-    return { status: "error", message: "You do not have access to this job." };
-  }
-
-  const { error: contractError } = await supabase.from("contracts").insert({
-    proposal_id: proposal.id,
-    job_id: job.id,
-    employer_id: auth.profile.id,
-    freelancer_id: proposal.freelancer_id,
-    status: "active",
-    escrow_amount: parsed.data.escrowAmount ?? proposal.bid_amount,
-    notes: parsed.data.notes ?? null,
-  });
-
-  if (contractError) {
-    return { status: "error", message: contractError.message };
-  }
-
-  await supabase.from("proposals").update({ status: "hired" }).eq("id", proposal.id);
-  await supabase.from("jobs").update({ status: "in_progress" }).eq("id", job.id);
-
-  revalidatePath(`/employer/jobs/${job.id}`);
-  revalidatePath("/employer/contracts");
-  revalidatePath("/freelancer/dashboard");
-
-  return { status: "success", message: "Freelancer hired successfully. Contract created." };
 }
